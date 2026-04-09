@@ -354,6 +354,97 @@
   .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
   .footer-cities { font-size: 11px; letter-spacing: 0.1em; color: rgba(255,255,255,0.18); font-family: 'Geist Mono', monospace; }
   .footer-copy { font-size: 11px; color: rgba(255,255,255,0.14); font-family: 'Geist Mono', monospace; }
+
+  /* ── RESPONSIVE ─────────────────────────────────────────── */
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 28px; }
+    .nav-links { gap: 20px; }
+    .nav-links a { font-size: 10px; }
+
+    .hero { padding: 100px 36px 64px; }
+    .hero-stats-row { gap: 32px; }
+    .hero-stat-num { font-size: 42px; }
+
+    /* panels: stack photo + text vertically */
+    .split, .split.flip { grid-template-columns: 1fr; }
+    .split.flip .photo-cell { order: -1; }
+    .photo-cell { min-height: 56vw !important; }
+    .photo-fade-r, .photo-fade-l {
+      background: linear-gradient(to top, rgba(17,17,16,0.8) 0%, transparent 55%);
+    }
+    .text-cell { padding: 56px 40px; }
+
+    /* timeline: 3 columns */
+    .timeline-track { grid-template-columns: repeat(3, 1fr); }
+
+    section { padding: 80px 32px; }
+
+    .catalog-header { flex-direction: column; align-items: flex-start; }
+    .catalog-sub { text-align: left; max-width: 100%; }
+    .catalog-grid-big { grid-template-columns: 1fr 1fr; height: auto; }
+    .catalog-grid-big .catalog-card { height: 38vw; }
+    .catalog-grid-big .catalog-card:first-child { grid-column: 1 / -1; height: 52vw; }
+    .catalog-grid-small { grid-template-columns: repeat(3, 1fr); }
+    .catalog-grid-row3 { grid-template-columns: repeat(3, 1fr) !important; }
+
+    .networks-grid { grid-template-columns: 1fr; gap: 48px; }
+    .govt-grid { grid-template-columns: 1fr; gap: 48px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 18px 20px; }
+    .nav-links { display: none; }
+
+    .hero { padding: 80px 24px 52px; }
+    .hero-sup { font-size: 9px; letter-spacing: 0.16em; }
+    .hero-bridge { font-size: 9px; letter-spacing: 0.18em; }
+    .hero-tagline { font-size: clamp(17px, 4.5vw, 22px); margin-bottom: 44px; }
+    .hero-stats-row { gap: 0; justify-content: space-around; }
+    .hero-stat-num { font-size: 36px; }
+    .hero-stat-label { font-size: 9px; letter-spacing: 0.07em; }
+    .hero-stat-div { height: 28px; }
+
+    .photo-cell { min-height: 72vw !important; }
+    .text-cell { padding: 44px 24px; }
+    .pull-quote { padding: 12px 16px; }
+    .pull-quote p { font-size: 16px; }
+    .persons-row { flex-wrap: wrap; gap: 16px; }
+    .person-div { display: none; }
+    .photo-caption-year { font-size: 56px; }
+    .photo-badge { bottom: 20px; right: 20px; padding: 10px 16px; }
+
+    .timeline-track { grid-template-columns: repeat(2, 1fr); }
+    .tl-node { padding: 22px 18px; }
+    .tl-year { font-size: 30px; }
+
+    section { padding: 60px 20px; }
+    .section-label { margin-bottom: 32px; }
+
+    .catalog-grid-big { grid-template-columns: 1fr; }
+    .catalog-grid-big .catalog-card { height: 72vw; }
+    .catalog-grid-big .catalog-card:first-child { grid-column: auto; height: 85vw; }
+    .catalog-grid-small { grid-template-columns: repeat(2, 1fr); }
+    .catalog-grid-row3 { grid-template-columns: repeat(2, 1fr) !important; }
+    .catalog-header { gap: 20px; }
+
+    .govt-cards { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+
+    .form-row { grid-template-columns: 1fr; }
+    .form-submit { width: 100%; text-align: center; padding: 16px; }
+
+    .closing { padding: 60px 24px; }
+    .closing-sup { font-size: 9px; letter-spacing: 0.14em; }
+    .closing-bridge { font-size: 9px; letter-spacing: 0.18em; }
+    .closing-body { font-size: 14px; margin-bottom: 48px; }
+    .closing-cities { gap: 14px; font-size: 10px; }
+
+    footer { padding: 28px 20px; flex-direction: column; gap: 10px; text-align: center; }
+    .footer-cities { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -646,7 +737,7 @@
     </div>
 
     <!-- ROW 3 -->
-    <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:4px; margin-bottom:40px;">
+    <div class="catalog-grid-row3" style="display:grid; grid-template-columns: repeat(5,1fr); gap:4px; margin-bottom:40px;">
 
       <div class="catalog-card" data-mal="392" style="--fallback: #1A2E0A;">
         <img class="catalog-card-img" alt="Yu Yu Hakusho">
