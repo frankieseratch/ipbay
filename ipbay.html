@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP Bay — Our Legacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Geist+Mono:wght@300;400&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #C0392B; --red-dim: #8B2820;
+    --ink: #111110; --ink-mid: #1a1a18;
+    --cream: #F5F0E8; --cream-dark: #EAE4D8;
+    --muted: #6B6860;
+    --rule: rgba(255,255,255,0.07);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Geist', sans-serif; background: var(--ink); color: #fff; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 24px 48px; background: linear-gradient(to bottom, rgba(17,17,16,0.97) 0%, transparent 100%); }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; text-decoration: none; }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: #fff; }
+
+  /* HERO — Philosophia-inspired centered spotlight */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(192,57,43,0.07) 0%, transparent 70%); }
+  .hero-sup { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 28px; position: relative; }
+  .hero-rule { width: min(800px, 100%); height: 1px; background: rgba(255,255,255,0.08); position: relative; }
+  .hero-wordmark { font-family: 'Cormorant Garamond', serif; font-size: clamp(100px, 18vw, 220px); font-weight: 300; line-height: 0.88; letter-spacing: -0.01em; color: #fff; position: relative; margin: 20px 0; }
+  .hero-bridge { font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--red); margin: 28px 0 14px; position: relative; }
+  .hero-tagline { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 2.2vw, 28px); font-style: italic; font-weight: 300; color: rgba(255,255,255,0.4); margin-bottom: 72px; position: relative; }
+  .hero-stats-row { display: flex; justify-content: center; align-items: center; gap: 56px; position: relative; }
+  .hero-stat-div { width: 1px; height: 44px; background: rgba(255,255,255,0.1); }
+  .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: #fff; line-height: 1; }
+  .hero-stat-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 8px; font-family: 'Geist Mono', monospace; }
+
+  /* photo panels */
+  .photo-panel { border-bottom: 1px solid var(--rule); }
+  .split { display: grid; grid-template-columns: 1fr 1fr; }
+  .split.flip { grid-template-columns: 1fr 1fr; }
+  .photo-cell { position: relative; overflow: hidden; min-height: 70vh; }
+  .photo-cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s ease; }
+  .photo-cell:hover img { transform: scale(1.03); }
+  .photo-fade-r { position: absolute; inset: 0; background: linear-gradient(to right, transparent 45%, var(--ink) 100%), linear-gradient(to top, rgba(17,17,16,0.6) 0%, transparent 45%); }
+  .photo-fade-l { position: absolute; inset: 0; background: linear-gradient(to left, transparent 45%, var(--ink) 100%), linear-gradient(to top, rgba(17,17,16,0.6) 0%, transparent 45%); }
+  .photo-fade-full { position: absolute; inset: 0; background: linear-gradient(to top, rgba(17,17,16,0.85) 0%, rgba(17,17,16,0.2) 55%, transparent 100%); }
+  .photo-tag { position: absolute; top: 28px; left: 28px; background: rgba(17,17,16,0.82); border: 1px solid rgba(255,255,255,0.08); padding: 8px 14px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.45); font-family: 'Geist Mono', monospace; }
+  .photo-caption { position: absolute; bottom: 36px; left: 36px; right: 36px; }
+  .photo-caption-year { font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 300; color: rgba(255,255,255,0.08); line-height: 1; margin-bottom: 8px; }
+  .photo-caption-text { font-size: 11px; color: rgba(255,255,255,0.4); font-family: 'Geist Mono', monospace; letter-spacing: 0.1em; }
+  .photo-badge { position: absolute; bottom: 32px; right: 32px; background: rgba(17,17,16,0.88); border: 1px solid rgba(255,255,255,0.08); padding: 14px 22px; text-align: right; }
+  .photo-badge-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; color: #fff; margin-bottom: 4px; }
+  .photo-badge-sub { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); font-family: 'Geist Mono', monospace; }
+
+  .text-cell { display: flex; flex-direction: column; justify-content: center; padding: 80px 72px; background: var(--ink); }
+  .text-cell.mid { background: var(--ink-mid); }
+  .eyebrow { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin-bottom: 28px; }
+  .panel-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(34px, 3.2vw, 50px); font-weight: 300; line-height: 1.1; color: #fff; margin-bottom: 28px; }
+  .panel-headline em { font-style: italic; color: rgba(255,255,255,0.35); }
+  .panel-body p { font-size: 15px; line-height: 1.9; color: rgba(255,255,255,0.52); font-weight: 300; margin-bottom: 18px; }
+  .panel-body p strong { color: rgba(255,255,255,0.88); font-weight: 400; }
+  .pull-quote { border-left: 2px solid var(--red); padding: 16px 24px; margin: 28px 0; background: rgba(192,57,43,0.05); }
+  .pull-quote p { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 300; font-style: italic; line-height: 1.55; color: rgba(255,255,255,0.72) !important; margin: 0 !important; }
+
+  .persons-row { display: flex; gap: 24px; margin-top: 40px; padding-top: 36px; border-top: 1px solid var(--rule); }
+  .person-tag { display: flex; flex-direction: column; gap: 4px; }
+  .person-name { font-size: 14px; color: rgba(255,255,255,0.78); font-weight: 400; }
+  .person-role { font-size: 10px; color: rgba(255,255,255,0.32); font-family: 'Geist Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+  .person-div { width: 1px; background: var(--rule); align-self: stretch; }
+
+  /* timeline */
+  .timeline-section { background: var(--ink); border-bottom: 1px solid var(--rule); padding: 0; }
+  .timeline-track { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
+  .tl-node { background: var(--ink-mid); padding: 32px 28px; border-top: 2px solid rgba(255,255,255,0.05); transition: border-color 0.2s; }
+  .tl-node:hover { border-top-color: rgba(255,255,255,0.2); }
+  .tl-node.now { border-top-color: var(--red); background: rgba(192,57,43,0.07); }
+  .tl-year { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: rgba(255,255,255,0.15); line-height: 1; margin-bottom: 14px; }
+  .tl-node.now .tl-year { color: var(--red); }
+  .tl-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.82); margin-bottom: 6px; }
+  .tl-desc { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.55; font-family: 'Geist Mono', monospace; }
+
+  /* catalog */
+  section { padding: 120px 48px; border-bottom: 1px solid var(--rule); }
+  .section-inner { max-width: 1400px; margin: 0 auto; }
+  .section-label { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin-bottom: 56px; display: flex; align-items: center; gap: 16px; }
+  .section-label::after { content: ''; display: block; height: 1px; width: 48px; background: var(--red-dim); }
+
+  .catalog { background: var(--ink); color: #fff; border-bottom: 1px solid var(--rule); }
+  .catalog .section-label { color: var(--red); }
+  .catalog .section-label::after { background: var(--red-dim); }
+  .catalog-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; gap: 40px; }
+  .catalog-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 4vw, 54px); font-weight: 300; line-height: 1.1; color: #fff; max-width: 600px; }
+  .catalog-sub { font-size: 15px; color: rgba(255,255,255,0.4); font-weight: 300; max-width: 380px; line-height: 1.7; flex-shrink: 0; text-align: right; }
+
+  /* BIG 4 catalog grid */
+  .catalog-grid-big {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .catalog-grid-big .catalog-card { height: 560px; }
+  .catalog-grid-big .catalog-card::after { display: none; }
+  .catalog-grid-big .catalog-card-content { padding: 28px 28px; }
+  .catalog-grid-big .catalog-card:first-child .catalog-card-content { padding: 36px 36px; }
+  .catalog-grid-big .catalog-card-title { font-size: 22px; }
+  .catalog-grid-big .catalog-card:first-child .catalog-card-title { font-size: 32px; margin-bottom: 10px; }
+  .catalog-grid-big .catalog-card-tag { font-size: 11px; color: rgba(255,255,255,0.55); }
+  .catalog-grid-big .catalog-card:first-child .catalog-card-label { display: block; }
+
+  /* smaller catalog grid */
+  .catalog-grid-small {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .catalog-card {
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    background-color: var(--ink-mid);
+    background-size: cover;
+    background-position: center top;
+  }
+
+  .catalog-card::after {
+    content: '';
+    display: block;
+    padding-bottom: 150%;
+  }
+
+  .catalog-card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.7s ease;
+  }
+
+  .catalog-card-img.loaded { opacity: 1; }
+  .catalog-card:hover .catalog-card-img { transform: scale(1.04); }
+
+  .catalog-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+      rgba(0,0,0,0.92) 0%,
+      rgba(0,0,0,0.55) 35%,
+      rgba(0,0,0,0.15) 65%,
+      transparent 100%);
+    transition: background 0.3s;
+    z-index: 1;
+  }
+
+  .catalog-card:hover .catalog-card-overlay {
+    background: linear-gradient(to top,
+      rgba(0,0,0,0.96) 0%,
+      rgba(0,0,0,0.7) 45%,
+      rgba(0,0,0,0.25) 75%,
+      transparent 100%);
+  }
+
+  .catalog-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px 22px;
+    z-index: 2;
+  }
+
+  .catalog-card-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-family: 'Geist Mono', monospace;
+    margin-bottom: 8px;
+    display: none;
+  }
+
+  .catalog-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .catalog-card-tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.42);
+    font-family: 'Geist Mono', monospace;
+    line-height: 1.5;
+  }
+
+  /* loading shimmer */
+  .catalog-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--fallback, #1a1a18) 0%, rgba(255,255,255,0.03) 50%, var(--fallback, #1a1a18) 100%);
+    background-size: 200% 200%;
+    animation: shimmer 2.5s ease infinite;
+    z-index: 0;
+    transition: opacity 0.5s;
+  }
+
+  .catalog-card.img-loaded::before { opacity: 0; }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 200%; }
+    100% { background-position: -200% -200%; }
+  }
+
+  .catalog-footer { display: flex; align-items: center; gap: 24px; padding-top: 8px; }
+  .catalog-count { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 300; color: rgba(255,255,255,0.3); }
+  .catalog-count-label { font-size: 13px; color: rgba(255,255,255,0.35); line-height: 1.4; }
+
+  /* networks */
+  .networks { background: var(--ink-mid); }
+  .networks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .networks-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 4vw, 54px); font-weight: 300; line-height: 1.1; color: #fff; margin-bottom: 24px; }
+  .networks-desc { font-size: 16px; color: rgba(255,255,255,0.52); line-height: 1.8; font-weight: 300; margin-bottom: 28px; }
+  .network-group { margin-bottom: 32px; }
+  .network-group-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--red); font-family: 'Geist Mono', monospace; margin-bottom: 14px; }
+  .network-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .network-tag { border: 1px solid rgba(255,255,255,0.1); padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.55); }
+  .network-tag.pub { border-color: rgba(192,57,43,0.4); color: rgba(255,200,195,0.85); background: rgba(192,57,43,0.08); }
+
+  /* Japan government access */
+  .govt { background: var(--ink); }
+  .govt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .govt-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(34px, 3.5vw, 50px); font-weight: 300; line-height: 1.1; color: #fff; margin-bottom: 24px; }
+  .govt-desc { font-size: 15px; color: rgba(255,255,255,0.52); line-height: 1.85; font-weight: 300; margin-bottom: 24px; }
+  .govt-badge { display: inline-block; margin-top: 12px; padding: 10px 18px; border: 1px solid rgba(192,57,43,0.35); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,200,195,0.75); font-family: 'Geist Mono', monospace; }
+  .govt-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+  .govt-card { background: var(--ink-mid); padding: 30px 26px; border-top: 2px solid rgba(192,57,43,0.35); }
+  .govt-card-icon { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); font-family: 'Geist Mono', monospace; margin-bottom: 12px; }
+  .govt-card-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+  .govt-card-desc { font-size: 13px; line-height: 1.75; color: rgba(255,255,255,0.42); font-weight: 300; }
+
+  /* services */
+  .services { background: var(--cream); color: var(--ink); border-bottom: 1px solid var(--cream-dark); }
+  .services .section-label { color: var(--red); }
+  .services .section-label::after { background: var(--red-dim); }
+  .services-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 4vw, 54px); font-weight: 300; color: var(--ink); margin-bottom: 64px; max-width: 600px; line-height: 1.1; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .svc { background: #fff; padding: 40px 36px; border-top: 2px solid var(--ink); transition: border-color 0.2s; }
+  .svc:hover { border-color: var(--red); }
+  .svc-num { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--cream-dark); margin-bottom: 24px; line-height: 1; }
+  .svc-title { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 16px; }
+  .svc-desc { font-size: 14px; line-height: 1.7; color: var(--muted); font-weight: 300; }
+  .svc-note { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--cream-dark); font-size: 12px; color: var(--red); font-family: 'Geist Mono', monospace; }
+
+  /* contact form */
+  .contact-section { background: var(--ink-mid); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 4vw, 54px); font-weight: 300; line-height: 1.1; color: #fff; margin-bottom: 20px; }
+  .contact-desc { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.85; font-weight: 300; margin-bottom: 40px; }
+  .contact-detail { margin-bottom: 20px; }
+  .contact-detail-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); font-family: 'Geist Mono', monospace; margin-bottom: 6px; }
+  .contact-detail-value { font-size: 14px; color: rgba(255,255,255,0.5); }
+  .contact-form { display: flex; flex-direction: column; gap: 18px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.32); font-family: 'Geist Mono', monospace; }
+  .form-input, .form-textarea {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-top-color: rgba(255,255,255,0.06);
+    color: #fff;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: rgba(192,57,43,0.55); }
+  .form-textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+  .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.2); }
+  .form-submit {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    padding: 16px 44px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    align-self: flex-start;
+    margin-top: 6px;
+  }
+  .form-submit:hover { background: var(--red-dim); }
+
+  /* closing */
+  .closing {
+    background: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 48px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--rule);
+  }
+  .closing-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(192,57,43,0.055) 0%, transparent 68%); pointer-events: none; }
+  .closing-content { position: relative; max-width: 960px; width: 100%; }
+  .closing-sup { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 28px; }
+  .closing-rule { width: 100%; height: 1px; background: rgba(255,255,255,0.07); }
+  .closing-wordmark { font-family: 'Cormorant Garamond', serif; font-size: clamp(100px, 18vw, 210px); font-weight: 300; line-height: 0.88; letter-spacing: -0.01em; color: #fff; margin: 18px 0; }
+  .closing-bridge { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--red); margin: 28px 0 20px; }
+  .closing-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 2.6vw, 36px); font-weight: 300; line-height: 1.35; color: rgba(255,255,255,0.65); margin-bottom: 28px; }
+  .closing-title em { font-style: italic; color: rgba(255,255,255,0.28); }
+  .closing-body { font-size: 15px; color: rgba(255,255,255,0.3); line-height: 1.85; font-weight: 300; max-width: 520px; margin: 0 auto 64px; }
+  .closing-cities { display: flex; justify-content: center; align-items: center; gap: 20px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
+  .closing-dot { color: var(--red); opacity: 0.45; }
+
+  footer { background: var(--ink); border-top: 1px solid var(--rule); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+  .footer-cities { font-size: 11px; letter-spacing: 0.1em; color: rgba(255,255,255,0.18); font-family: 'Geist Mono', monospace; }
+  .footer-copy { font-size: 11px; color: rgba(255,255,255,0.14); font-family: 'Geist Mono', monospace; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">IP <span>Bay</span></a>
+  <ul class="nav-links">
+    <li><a href="#origin">Legacy</a></li>
+    <li><a href="#catalog">Catalog</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-sup">Est. 2026 · Brooklyn · Tokyo · Los Angeles</div>
+  <div class="hero-rule"></div>
+  <h1 class="hero-wordmark">IP Bay</h1>
+  <div class="hero-rule"></div>
+  <p class="hero-bridge">The Bridge Between Japan and Hollywood</p>
+  <p class="hero-tagline">From Tokyo to the world's biggest screens.</p>
+  <div class="hero-stats-row">
+    <div class="hero-stat">
+      <div class="hero-stat-num">35+</div>
+      <div class="hero-stat-label">Years of Publisher Relationships</div>
+    </div>
+    <div class="hero-stat-div"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">3</div>
+      <div class="hero-stat-label">Legacy Publishers</div>
+    </div>
+    <div class="hero-stat-div"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">20+</div>
+      <div class="hero-stat-label">Japanese Publishers</div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL 1: Cloverway group — focus on Yasuo far left -->
+<div class="photo-panel" id="origin">
+  <div class="split">
+    <div class="photo-cell" style="min-height: 75vh;">
+      <img src="cloverway_team.jpg" alt="Cloverway Inc. team — Yasuo Matsuo far left, with staff, Sailor Moon and anime merchandise visible behind" style="object-position: 15% 20%;">
+      <div class="photo-fade-r"></div>
+      <div class="photo-tag">Cloverway Inc. · Long Beach, California</div>
+      <div class="photo-caption">
+        <div class="photo-caption-year">CWI</div>
+        <div class="photo-caption-text">Yasuo Matsuo · Founder & President · c. 2000s</div>
+      </div>
+    </div>
+    <div class="text-cell">
+      <div class="eyebrow">Our Foundation</div>
+      <h2 class="panel-headline">IP Bay is not a new<br>entrant to this business.<br><em>It built it.</em></h2>
+      <div class="panel-body">
+        <p>In 1991, <strong>Yasuo Matsuo</strong> founded Cloverway Inc. in Long Beach, California — becoming one of the first people in the world to operate as an independent intermediary between Japanese animation studios and Western audiences.</p>
+        <p>Sailor Moon, Dragon Ball Z, Saint Seiya, Kinnikuman. These were not collectibles. These were the active inventory of a company placing Japan's most beloved properties on television screens across two continents.</p>
+        <p>Before there was a market for anime in the Americas, <strong>Yasuo was building one.</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL 2: Yasuo at his desk -->
+<div class="photo-panel">
+  <div class="split flip">
+    <div class="text-cell mid">
+      <div class="eyebrow">Yasuo Matsuo — Chairman</div>
+      <h2 class="panel-headline">The trusted intermediary<br>for Japan's most important<br><em>publishers.</em></h2>
+      <div class="panel-body">
+        <p>Through Cloverway, Yasuo served as the official representative of <strong>Toei Animation for the entire Americas</strong> — the sole gateway through which some of the most important Japanese IP of the 20th century reached Western screens.</p>
+        <p>His company acted as trusted partner for <strong>Shueisha, Shogakukan, Nippon Animation, and Tezuka Productions</strong>, placing properties with Viz Communications, Tokyopop, Pioneer Entertainment, and Bandai in the U.S. — and with Televisa, TV Azteca, Cartoon Network, and Telemundo across Latin America.</p>
+        <div class="pull-quote">
+          <p>"For major Japanese producers including Shueisha and Nippon Animation, Cloverway was the company they trusted to guide them through an impenetrable market they didn't know anything about."</p>
+        </div>
+        <p>His approach never wavered: <strong>preserve the creative integrity of the original work.</strong> Cloverway refused to censor the properties it distributed when most Western distributors cut and rewrote content entirely.</p>
+      </div>
+    </div>
+    <div class="photo-cell" style="min-height: 65vh;">
+      <img src="yasuo_desk.jpg" alt="Yasuo Matsuo at his desk at Cloverway Inc., Long Beach CA — shelves of Sailor Moon, Dragon Ball Z, Saint Seiya merchandise behind him" style="object-position: center 25%;">
+      <div class="photo-fade-l"></div>
+      <div class="photo-tag" style="left: auto; right: 28px;">Yasuo Matsuo · Long Beach CA</div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline-section">
+  <div class="timeline-track">
+    <div class="tl-node">
+      <div class="tl-year">1991</div>
+      <div class="tl-title">Cloverway Founded</div>
+      <div class="tl-desc">Ghost in the Shell — first independent anime deal in Latin America</div>
+    </div>
+    <div class="tl-node">
+      <div class="tl-year">1992</div>
+      <div class="tl-title">Saint Seiya</div>
+      <div class="tl-desc">First anime on Latin American TV — Mexico and Brazil simultaneously</div>
+    </div>
+    <div class="tl-node">
+      <div class="tl-year">1995</div>
+      <div class="tl-title">Dragon Ball Z</div>
+      <div class="tl-desc">Distributed to Telemundo across the U.S. Hispanic market</div>
+    </div>
+    <div class="tl-node">
+      <div class="tl-year">2000</div>
+      <div class="tl-title">Sailor Moon S &amp; SuperS</div>
+      <div class="tl-desc">English dub produced — more faithful to the original than DiC</div>
+    </div>
+    <div class="tl-node">
+      <div class="tl-year">2007</div>
+      <div class="tl-title">Cloverway Closes</div>
+      <div class="tl-desc">The market outgrows intermediaries. The relationships remain.</div>
+    </div>
+    <div class="tl-node now">
+      <div class="tl-year">2026</div>
+      <div class="tl-title">IP Bay Founded</div>
+      <div class="tl-desc">From distribution to development. Tokyo to Hollywood.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL 3: Jun as a baby with DBZ poster -->
+<div class="photo-panel">
+  <div class="split">
+    <div class="photo-cell" style="min-height: 65vh;">
+      <img src="jun_baby_dbz.jpg" alt="Jun Matsuo as a young child at the Cloverway office — Dragon Ball Z poster on the wall behind him" style="object-position: center 15%; filter: sepia(25%) contrast(1.06) saturate(0.88);">
+      <div class="photo-fade-r"></div>
+      <div class="photo-caption">
+        <div class="photo-caption-year">DBZ</div>
+        <div class="photo-caption-text">Cloverway Era · Long Beach, California</div>
+      </div>
+    </div>
+    <div class="text-cell">
+      <div class="eyebrow">It Runs in the Family</div>
+      <h2 class="panel-headline">Jun Matsuo grew up<br>in this world.<br><em>He was born into it.</em></h2>
+      <div class="panel-body">
+        <p>That Dragon Ball Z poster on the wall wasn't decoration. It was the inventory. <strong>Jun Matsuo</strong> grew up during the Cloverway years — surrounded by the properties his father was actively placing on television networks across two continents.</p>
+        <p>Today, as <strong>CEO of IP Bay</strong>, Jun leads day-to-day publisher engagement in Tokyo. He manages the Kadokawa relationship, leads presentations to rights divisions, and is the primary interface between IP Bay and Japan's major publishers.</p>
+        <p>What his father built through Cloverway, Jun carries forward — with the fluency of someone who never had to learn this world from the outside.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL 4: Jun + Yasuo + Shimada-sensei -->
+<div class="photo-panel">
+  <div class="split flip">
+    <div class="text-cell mid">
+      <div class="eyebrow">A Legacy of Respect</div>
+      <h2 class="panel-headline">Kinnikuman was part of<br>Cloverway's legacy.<br><em>And always will be.</em></h2>
+      <div class="panel-body">
+        <p>This is <strong>Jun Matsuo</strong>, <strong>Yasuo Matsuo</strong>, and <strong>Shimada-sensei</strong> — one of the creators of Kinnikuman, the manga with over 75 million copies in print.</p>
+        <p>At IP Bay, the author's vision comes first — always. We work closely with Japanese creators, week in and week out in Tokyo, because we understand that these stories belong to the people who made them. <strong>Respect for the author is not a courtesy. It is the foundation.</strong></p>
+        <p>Yasuo built his entire career on one principle: the creative integrity of the original work is non-negotiable. That principle is the heart of everything IP Bay does.</p>
+      </div>
+      <div class="persons-row">
+        <div class="person-tag">
+          <div class="person-name">Jun Matsuo</div>
+          <div class="person-role">CEO · IP Bay Inc.</div>
+        </div>
+        <div class="person-div"></div>
+        <div class="person-tag">
+          <div class="person-name">Shimada-sensei</div>
+          <div class="person-role">Co-Creator · Kinnikuman</div>
+        </div>
+        <div class="person-div"></div>
+        <div class="person-tag">
+          <div class="person-name">Yasuo Matsuo</div>
+          <div class="person-role">Chairman · IP Bay Inc.</div>
+        </div>
+      </div>
+    </div>
+    <div class="photo-cell" style="min-height: 65vh;">
+      <img src="jun_yasuo_shimada.jpg" alt="Jun Matsuo, Shimada-sensei (Kinnikuman creator), and Yasuo Matsuo — contemporary photo, all doing a fist pump" style="object-position: center 25%;">
+      <div class="photo-fade-l"></div>
+      <div class="photo-badge">
+        <div class="photo-badge-title">Kinnikuman</div>
+        <div class="photo-badge-sub">75M+ Copies · Cloverway Legacy</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATALOG -->
+<section class="catalog" id="catalog">
+  <div class="section-inner">
+    <div class="section-label">The Cloverway Catalog</div>
+    <div class="catalog-header">
+      <h2 class="catalog-headline">The IP that introduced<br>a generation to Japan.</h2>
+      <p class="catalog-sub">The properties below reached Latin America, North America, and Brazil through Cloverway — building the publisher relationships that IP Bay carries forward today.</p>
+    </div>
+
+    <!-- BIG 4 -->
+    <div class="catalog-grid-big">
+
+      <!-- Dragon Ball Z — featured large -->
+      <div class="catalog-card" data-mal="813" style="--fallback: #7A3B00;">
+        <img class="catalog-card-img" alt="Dragon Ball Z">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-label">Cloverway · Telemundo · U.S. Hispanic</div>
+          <div class="catalog-card-title">Dragon Ball Z</div>
+          <div class="catalog-card-tag">Shueisha · Toei · Distributed Across The Americas</div>
+        </div>
+      </div>
+
+      <!-- Sailor Moon -->
+      <div class="catalog-card" data-mal="532" style="--fallback: #6B1A3A;">
+        <img class="catalog-card-img" alt="Sailor Moon S & SuperS">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Sailor Moon</div>
+          <div class="catalog-card-tag">Toei · English Dub Produced</div>
+        </div>
+      </div>
+
+      <!-- Ghost in the Shell -->
+      <div class="catalog-card" data-mal="43" style="--fallback: #051A2A;">
+        <img class="catalog-card-img" alt="Ghost in the Shell">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Ghost in the Shell</div>
+          <div class="catalog-card-tag">Kodansha · First LatAm Deal</div>
+        </div>
+      </div>
+
+      <!-- Digimon -->
+      <div class="catalog-card" data-mal="421" style="--fallback: #0A2050;">
+        <img class="catalog-card-img" alt="Digimon Adventure">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Digimon</div>
+          <div class="catalog-card-tag">Toei · Spanish &amp; Brazil</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MEDIUM ROW -->
+    <div class="catalog-grid-small">
+
+      <div class="catalog-card" data-mal="2994" style="--fallback: #8B1A0A;">
+        <img class="catalog-card-img" alt="Kinnikuman">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Kinnikuman</div>
+          <div class="catalog-card-tag">Shueisha · 75M+ Copies</div>
+        </div>
+      </div>
+
+      <div class="catalog-card" data-mal="1254" style="--fallback: #0C2A5A;">
+        <img class="catalog-card-img" alt="Saint Seiya">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Saint Seiya</div>
+          <div class="catalog-card-tag">Toei · First Latin America Broadcast</div>
+        </div>
+      </div>
+
+      <div class="catalog-card" data-mal="235" style="--fallback: #0A2240;">
+        <img class="catalog-card-img" alt="Detective Conan">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Detective Conan</div>
+          <div class="catalog-card-tag">Shogakukan</div>
+        </div>
+      </div>
+
+      <div class="catalog-card" data-mal="80" style="--fallback: #0F2B50;">
+        <img class="catalog-card-img" alt="Gundam Wing">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Gundam Wing</div>
+          <div class="catalog-card-tag">Bandai · Spanish &amp; Brazil</div>
+        </div>
+      </div>
+
+      <div class="catalog-card" data-mal="232" style="--fallback: #4A1040;">
+        <img class="catalog-card-img" alt="Cardcaptor Sakura">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Cardcaptor Sakura</div>
+          <div class="catalog-card-tag">Kodansha · Uncut Distribution</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ROW 3 -->
+    <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:4px; margin-bottom:40px;">
+
+      <div class="catalog-card" data-mal="392" style="--fallback: #1A2E0A;">
+        <img class="catalog-card-img" alt="Yu Yu Hakusho">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Yu Yu Hakusho</div>
+          <div class="catalog-card-tag">Shueisha · Producer</div>
+        </div>
+      </div>
+
+      <div class="catalog-card" data-mal="210" style="--fallback: #5C0A00;">
+        <img class="catalog-card-img" alt="Ranma 1/2">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Ranma ½</div>
+          <div class="catalog-card-tag">Shogakukan</div>
+        </div>
+      </div>
+
+      <div class="catalog-card" data-mal="205" style="--fallback: #2A1A08;">
+        <img class="catalog-card-img" alt="Samurai Champloo">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Samurai Champloo</div>
+          <div class="catalog-card-tag">Manglobe · Spanish &amp; Brazil</div>
+        </div>
+      </div>
+
+      <div class="catalog-card" data-mal="6" style="--fallback: #3A2A08;">
+        <img class="catalog-card-img" alt="Trigun">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Trigun</div>
+          <div class="catalog-card-tag">Madhouse · Spanish &amp; Brazil</div>
+        </div>
+      </div>
+
+      <div class="catalog-card" data-mal="287" style="--fallback: #5A2A00;">
+        <img class="catalog-card-img" alt="Dragon Ball GT">
+        <div class="catalog-card-overlay"></div>
+        <div class="catalog-card-content">
+          <div class="catalog-card-title">Dragon Ball GT</div>
+          <div class="catalog-card-tag">Toei · Producer</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="catalog-footer">
+      <div class="catalog-count">50+</div>
+      <div class="catalog-count-label">Properties distributed across<br>North America, Latin America &amp; Brazil</div>
+    </div>
+  </div>
+</section>
+
+<!-- NETWORKS -->
+<section class="networks">
+  <div class="section-inner">
+    <div class="section-label">Publisher &amp; Partner Network</div>
+    <div class="networks-grid">
+      <div>
+        <h2 class="networks-headline">The relationships that<br>took thirty years to build.</h2>
+        <p class="networks-desc">Cloverway acted as trusted intermediary between Japan's most important publishers and the Western companies who wanted their audiences. Those connections are what IP Bay was founded to deploy at the next level.</p>
+        <p class="networks-desc">Where Cloverway placed content on television screens, IP Bay brings it to Hollywood — to studios, streaming platforms, and producers who make films that reach a billion people.</p>
+      </div>
+      <div>
+        <div class="network-group">
+          <div class="network-group-label">Japanese Publishers — Active Today</div>
+          <div class="network-list">
+            <span class="network-tag pub">Shueisha</span>
+            <span class="network-tag pub">Kodansha</span>
+            <span class="network-tag pub">Kadokawa</span>
+            <span class="network-tag pub">Toei Animation</span>
+            <span class="network-tag pub">Bandai</span>
+          </div>
+        </div>
+        <div class="network-group">
+          <div class="network-group-label">Cloverway Era — U.S. Partners</div>
+          <div class="network-list">
+            <span class="network-tag">Viz Communications</span>
+            <span class="network-tag">Tokyopop</span>
+            <span class="network-tag">Pioneer Entertainment</span>
+            <span class="network-tag">ADV Films</span>
+            <span class="network-tag">Bandai Entertainment</span>
+          </div>
+        </div>
+        <div class="network-group">
+          <div class="network-group-label">Cloverway Era — Broadcast Partners</div>
+          <div class="network-list">
+            <span class="network-tag">Televisa</span>
+            <span class="network-tag">TV Azteca</span>
+            <span class="network-tag">Cartoon Network</span>
+            <span class="network-tag">Fox Kids</span>
+            <span class="network-tag">Telemundo</span>
+            <span class="network-tag">Univision</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JAPAN GOVERNMENT ACCESS -->
+<section class="govt" id="japan-access">
+  <div class="section-inner">
+    <div class="section-label">Japan Access</div>
+    <div class="govt-grid">
+      <div>
+        <h2 class="govt-headline">Institutional access to<br>Japan's creative economy.</h2>
+        <p class="govt-desc">IP Bay's Japanese corporate entity and government-connected partner network provide direct access to Japan's most significant production incentive programs — and to the institutional relationships that make co-production possible.</p>
+        <p class="govt-desc">Through a partner who holds a seat within the <strong>Cool Japan Initiative</strong> — Japan's national strategy for promoting its cultural content globally — IP Bay operates with government-level access that most Western companies cannot reach independently.</p>
+        <div class="govt-badge">Cool Japan · METI · JETRO · Tokyo</div>
+      </div>
+      <div class="govt-cards">
+        <div class="govt-card">
+          <div class="govt-card-icon">Production Incentive</div>
+          <div class="govt-card-title">50% Cash Rebate</div>
+          <div class="govt-card-desc">Japan's Content Incentive Program — launched by METI in 2023 and extended through 2026 — offers up to 50% cash back on qualifying production expenditures made in Japan. IP Bay's Japanese corporate entity provides direct gateway access to this rebate.</div>
+        </div>
+        <div class="govt-card">
+          <div class="govt-card-icon">National Initiative</div>
+          <div class="govt-card-title">Cool Japan</div>
+          <div class="govt-card-desc">Led by Japan's Ministry of Economy, Trade and Industry (METI), the Cool Japan Initiative promotes Japanese cultural IP — anime, manga, film, and games — on a global stage. IP Bay's partner holds a formal seat within this initiative, aligning IP Bay with Japan's official content export strategy.</div>
+        </div>
+        <div class="govt-card">
+          <div class="govt-card-icon">Trade Organization</div>
+          <div class="govt-card-title">JETRO</div>
+          <div class="govt-card-desc">Through the Japan External Trade Organization's Tokyo office, IP Bay accesses co-production resources, market intelligence, and official support channels for inbound and outbound content projects between Japan and the United States. JETRO operates 76 offices across 50 countries.</div>
+        </div>
+        <div class="govt-card">
+          <div class="govt-card-icon">Tax Incentives</div>
+          <div class="govt-card-title">Prefectural Support</div>
+          <div class="govt-card-desc">Japan's prefectural governments and the Visual Industry Promotion Organization (VIPO) administer supplemental location and production incentives for qualifying shoots across Japan's 6,800+ islands. IP Bay's in-country relationships provide access to regional programs that compound with national incentives.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-inner">
+    <div class="section-label">Services</div>
+    <h2 class="services-headline">What we bring<br>to the table.</h2>
+    <div class="services-grid">
+      <div class="svc">
+        <div class="svc-num">01</div>
+        <div class="svc-title">IP Licensing &amp; Development</div>
+        <p class="svc-desc">Identifying and securing rights to Japan's most valuable manga and anime properties for Western film, television, and emerging platforms. From initial publisher conversations to signed option agreements.</p>
+        <div class="svc-note">Shueisha · Kodansha · Kadokawa</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">02</div>
+        <div class="svc-title">Hollywood Packaging</div>
+        <p class="svc-desc">Connecting Japanese IP to the producers, studios, and financiers with the creative and commercial capability to get projects made. We package properties for theatrical, streaming, and vertical drama formats.</p>
+        <div class="svc-note">Film · TV · Vertical Drama</div>
+      </div>
+      <div class="svc">
+        <div class="svc-num">03</div>
+        <div class="svc-title">Japan Market Access</div>
+        <p class="svc-desc">Providing Western partners with direct publisher relationships and production infrastructure in Japan — including eligibility for Japan's 50% production cash rebate through our Japanese corporate entity.</p>
+        <div class="svc-note">Japan S-Corp · 50% Cash Rebate Gateway</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="contact-section" id="contact">
+  <div class="section-inner">
+    <div class="section-label">Contact</div>
+    <div class="contact-grid">
+      <div>
+        <h2 class="contact-headline">Let's talk<br>about what's next.</h2>
+        <p class="contact-desc">We work with studios, financiers, producers, and partners who are serious about bringing Japan's most important IP to the world's biggest screens. If that's you, we'd like to hear from you.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-label">Offices</div>
+          <div class="contact-detail-value">Brooklyn · Tokyo · Los Angeles</div>
+        </div>
+      </div>
+      <form class="contact-form" action="mailto:frankieseratch4@gmail.com" method="post" enctype="text/plain">
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="first-name">First Name</label>
+            <input class="form-input" type="text" id="first-name" name="First Name" placeholder="First name" required>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="last-name">Last Name</label>
+            <input class="form-input" type="text" id="last-name" name="Last Name" placeholder="Last name" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="company">Company</label>
+          <input class="form-input" type="text" id="company" name="Company" placeholder="Company name">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-input" type="email" id="email" name="Email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="message">Message</label>
+          <textarea class="form-textarea" id="message" name="Message" placeholder="Tell us about your project or inquiry…" required></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<div class="closing">
+  <div class="closing-bg"></div>
+  <div class="closing-content">
+    <div class="closing-sup">Est. 2026 · Brooklyn · Tokyo · Los Angeles</div>
+    <div class="closing-rule"></div>
+    <div class="closing-wordmark">IP Bay</div>
+    <div class="closing-rule"></div>
+    <p class="closing-bridge">The Bridge Between Japan and Hollywood</p>
+    <h2 class="closing-title">Thirty-five years of access.<br><em>One company.</em></h2>
+    <p class="closing-body">We are not brokers. We are not intermediaries.<br>We are the company with the relationships — and we sit at the table throughout.</p>
+    <div class="closing-cities">
+      <span>Brooklyn</span>
+      <span class="closing-dot">·</span>
+      <span>Tokyo</span>
+      <span class="closing-dot">·</span>
+      <span>Los Angeles</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">IP Bay</div>
+  <div class="footer-cities">Brooklyn · Tokyo · Los Angeles</div>
+  <div class="footer-copy">© 2026 IP Bay Inc.</div>
+</footer>
+
+<script>
+(async function loadCovers() {
+  const cards = document.querySelectorAll('.catalog-card[data-mal]');
+  const arr = [...cards];
+
+  for (let i = 0; i < arr.length; i++) {
+    const card = arr[i];
+    const malId = card.dataset.mal;
+    const imgEl = card.querySelector('.catalog-card-img');
+    if (!imgEl) continue;
+
+    await new Promise(r => setTimeout(r, i * 140));
+
+    try {
+      const res = await fetch('https://api.jikan.moe/v4/anime/' + malId, {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) continue;
+      const json = await res.json();
+      const url = (json && json.data && json.data.images && json.data.images.jpg)
+        ? (json.data.images.jpg.large_image_url || json.data.images.jpg.image_url)
+        : null;
+      if (!url) continue;
+
+      imgEl.onload = function() {
+        imgEl.classList.add('loaded');
+        card.classList.add('img-loaded');
+      };
+      imgEl.src = url;
+    } catch (e) {
+      /* fallback CSS gradient color already applied via --fallback var */
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
