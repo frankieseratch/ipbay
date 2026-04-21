@@ -71,9 +71,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     text-align: center;
-    padding: 9vh 32px 0;
+    padding: 100px 32px 140px;
     pointer-events: none;
     z-index: 3;
   }
@@ -82,28 +82,26 @@
     font-size: 11px;
     letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: rgba(247, 241, 229, 0.78);
+    color: rgba(247, 241, 229, 0.65);
     font-weight: 500;
-    margin-bottom: 22px;
-    text-shadow: 0 2px 18px rgba(15, 42, 61, 0.85);
+    margin-bottom: 32px;
+    text-shadow: 0 2px 24px rgba(15, 42, 61, 0.65);
   }
-  .title-card-sup .dot { color: var(--accent-warm); margin: 0 10px; opacity: 0.9; }
+  .title-card-sup .dot { color: var(--accent-warm); margin: 0 10px; opacity: 0.85; }
   .title-card-rule {
     width: min(560px, 78%);
     height: 1px;
-    background: rgba(247, 241, 229, 0.28);
+    background: rgba(247, 241, 229, 0.22);
   }
   .title-card-mark {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(72px, 13vw, 168px);
-    line-height: 0.92;
+    font-size: clamp(80px, 16vw, 200px);
+    line-height: 0.9;
     letter-spacing: -0.025em;
     color: var(--text-on-dark);
-    margin: 14px 0;
-    text-shadow:
-      0 2px 14px rgba(15, 42, 61, 0.55),
-      0 0 60px rgba(15, 42, 61, 0.45);
+    margin: 18px 0;
+    text-shadow: 0 4px 40px rgba(15, 42, 61, 0.55);
   }
   .title-card-mark em {
     font-style: italic;
@@ -113,23 +111,22 @@
   .title-card-tagline {
     font-family: var(--font-serif);
     font-style: italic;
-    font-size: clamp(16px, 1.7vw, 22px);
+    font-size: clamp(18px, 2vw, 26px);
     line-height: 1.45;
     color: rgba(247, 241, 229, 0.92);
-    max-width: 640px;
-    margin: 22px auto 12px;
+    max-width: 720px;
+    margin: 28px auto 18px;
     text-wrap: balance;
-    text-shadow: 0 2px 18px rgba(15, 42, 61, 0.85);
+    text-shadow: 0 2px 22px rgba(15, 42, 61, 0.7);
   }
   .title-card-sub {
     font-family: var(--font-body);
-    font-size: 11px;
-    letter-spacing: 0.24em;
+    font-size: 12px;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--accent-warm);
     font-weight: 500;
-    opacity: 0.9;
-    text-shadow: 0 2px 16px rgba(15, 42, 61, 0.85);
+    opacity: 0.85;
   }
   .title-card-scrollcue {
     position: absolute;
@@ -673,7 +670,12 @@ const boatG = document.getElementById('boat');
 const splashG = document.getElementById('splashes');
 
 const SVG_W = 1920, SVG_H = 1080, HORIZON = 560;
-const boat = { x: SVG_W/2, y: 880, vx: 0, vy: 0, targetX: SVG_W/2, targetY: 880, rock: 0 };
+// Boat starts off-screen left; sails to center as user scrolls past the title card
+const BOAT_REST_X = SVG_W/2;
+const BOAT_REST_Y = 780;
+const BOAT_START_X = -260;            // off-screen left in scene coords
+const BOAT_SAIL_END = 0.40;           // scroll progress where boat reaches center & rests
+const boat = { x: BOAT_START_X, y: BOAT_REST_Y, vx: 0, vy: 0, targetX: BOAT_START_X, targetY: BOAT_REST_Y, rock: 0 };
 let draggingBoat = false;
 
 // ===== Boat render =====
@@ -877,8 +879,8 @@ function scrollProgress() {
   const max = Math.max(1, document.body.scrollHeight - window.innerHeight);
   return Math.max(0, Math.min(1, window.scrollY / max));
 }
-// Anchor launch: begins after a small initial scroll (so page 1 shows boat sailing)
-const ANCHOR_LAUNCH = 0.06; // when progress exceeds this, anchor detaches
+// Anchor launch: begins after the boat has sailed in and reached the center
+const ANCHOR_LAUNCH = 0.42; // when progress exceeds this, anchor detaches
 function updateAnchorFromScroll() {
   const prog = scrollProgress();
   // seabed Y in document coords
@@ -1083,7 +1085,28 @@ function updateTitleCard() {
   titleCard.style.transform = `translateY(${(-prog * 40).toFixed(1)}px)`;
 }
 updateTitleCard();
-window.addEventListener('scroll', () => { updateSkyFromScroll(); updateAnchorFromScroll(); updateTitleCard(); }, { passive: true });
+
+// Boat sail-in: scroll-linked left-to-center motion. Once the boat arrives at center it rests
+// there (and the anchor takes over via ANCHOR_LAUNCH). User can drag the boat anytime — drag wins.
+function updateBoatFromScroll() {
+  if (draggingBoat) return; // never override an active drag
+  const prog = scrollProgress();
+  if (prog <= BOAT_SAIL_END) {
+    const k = prog / BOAT_SAIL_END;
+    const eased = 1 - Math.pow(1 - k, 2.4);   // gentle ease-out
+    boat.targetX = BOAT_START_X + (BOAT_REST_X - BOAT_START_X) * eased;
+    boat.targetY = BOAT_REST_Y;
+  }
+  // After BOAT_SAIL_END, leave targetX alone — user can drag, otherwise it sits at rest
+}
+updateBoatFromScroll();
+
+window.addEventListener('scroll', () => {
+  updateSkyFromScroll();
+  updateBoatFromScroll();
+  updateAnchorFromScroll();
+  updateTitleCard();
+}, { passive: true });
 updateAnchorFromScroll();
 
 // ===== Tweaks =====
