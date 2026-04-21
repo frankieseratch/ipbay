@@ -1,183 +1,1003 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
 <title>IP Bay, A harbor for Japanese stories</title>
-<meta name="description" content="IP Bay represents Japanese intellectual property to the world. Built on the Cloverway legacy and three decades of publisher relationships.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="IP Bay">
-<meta property="og:description" content="A harbor for Japanese stories on their voyage to the world.">
-<meta property="og:image" content="https://frankieseratch.github.io/og-image.svg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://frankieseratch.github.io">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="IP Bay">
-<meta name="twitter:description" content="A harbor for Japanese stories on their voyage to the world.">
-<meta name="twitter:image" content="https://frankieseratch.github.io/og-image.svg">
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="A harbor for Japanese stories on their voyage to the world. Built on the Cloverway legacy.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<style>
+  :root {
+    --bg-primary: #F7F1E5;
+    --bg-elevated: #FEFAF2;
+    --bg-deep: #0F2A3D;
+    --accent-warm: #C9A66B;
+    --accent-deep: #1B3A4B;
+    --accent-ink: #A0312B;
+    --text-on-dark: #F7F1E5;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5C5C5C;
+    --rule: rgba(26,26,26,0.12);
+    --rule-on-dark: rgba(247, 241, 229, 0.18);
+    --font-display: 'Crimson Pro', Georgia, serif;
+    --font-serif: 'EB Garamond', Georgia, serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg-deep);
+    color: var(--text-on-dark);
+    font-family: var(--font-body);
+    scroll-behavior: smooth;
+  }
+  body { overflow-x: hidden; }
+
+  /* ───── Fixed scene layer (boat + sea) pinned to viewport ───── */
+  .scene {
+    position: fixed; inset: 0;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .scene > * { pointer-events: auto; }
+  #stage {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 90% 55% at 50% 38%, rgba(201, 166, 107, 0.18) 0%, transparent 65%),
+      linear-gradient(to bottom, #14324a 0%, #0F2A3D 48%, #0b2132 58%, #08192a 100%);
+    cursor: grab; user-select: none; touch-action: none;
+  }
+  #stage.dragging { cursor: grabbing; }
+  svg.layer { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* Scene depth tint — as user scrolls, sea deepens */
+  .depth-tint {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, rgba(6,15,26,0) 30%, rgba(3,10,18,0) 100%);
+    pointer-events: none;
+    transition: opacity 300ms ease;
+  }
+
+  /* ───── Page content (scrolls above the scene) ───── */
+  .page { position: relative; z-index: 2; }
+  .spacer { height: 100vh; pointer-events: none; }
+
+  section.chapter {
+    position: relative;
+    padding: 140px 48px;
+    min-height: 80vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  section.chapter .inner {
+    max-width: 720px; width: 100%;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .eyebrow {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent-warm);
+    margin-bottom: 22px;
+  }
+  h2.display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(32px, 4.2vw, 54px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: var(--text-on-dark);
+    margin-bottom: 26px;
+    text-wrap: balance;
+  }
+  h2.display em { color: var(--accent-warm); }
+  p.lede {
+    font-family: var(--font-serif);
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.7;
+    color: rgba(247,241,229,0.82);
+    max-width: 56ch;
+    margin: 0 auto;
+    text-wrap: pretty;
+  }
+  .fig-rule {
+    width: 80px; height: 1px;
+    background: var(--accent-warm);
+    margin: 0 auto 22px;
+    opacity: 0.7;
+  }
+
+  /* background plates for each chapter so text stays legible above the fixed scene */
+  .plate {
+    background: rgba(15,42,61,0.72);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--rule-on-dark);
+    padding: 60px 48px;
+    border-radius: 2px;
+  }
+
+  /* Seabed — final section. Acts as the landing zone for the anchor. */
+  section.seabed {
+    position: relative;
+    min-height: 90vh;
+    padding: 180px 48px 120px;
+    background:
+      linear-gradient(to bottom, rgba(3,10,18,0) 0%, #030912 40%, #020711 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    text-align: center;
+    overflow: hidden;
+  }
+  .seabed-floor {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    height: 180px;
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(201,166,107,0.10) 0%, transparent 70%),
+      linear-gradient(to top, #0a1420 0%, transparent 100%);
+    border-top: 1px solid rgba(201,166,107,0.18);
+  }
+  /* sand ripples */
+  .seabed-floor::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(90deg,
+        rgba(201,166,107,0.08) 0 1px,
+        transparent 1px 40px);
+    opacity: 0.5;
+  }
+  .seabed .inner { max-width: 760px; margin: 0 auto 120px; position: relative; z-index: 2; }
+  .seabed .wordmark {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(64px, 12vw, 140px);
+    line-height: 0.94;
+    letter-spacing: -0.02em;
+    margin: 24px 0;
+  }
+  .seabed .wordmark em {
+    font-style: italic; color: var(--accent-warm);
+  }
+  .seabed .rule {
+    width: min(640px, 80%);
+    height: 1px;
+    background: var(--rule-on-dark);
+    margin: 0 auto;
+  }
+  .seabed .cities-row {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(247,241,229,0.55);
+    margin-top: 40px;
+  }
+  .seabed .cities-row .dot { color: var(--accent-warm); margin: 0 10px; }
+
+  /* ───── Editorial chrome ───── */
+  .chrome-top, .chrome-bottom {
+    position: fixed; left: 0; right: 0;
+    z-index: 20;
+    padding: 26px 40px;
+    pointer-events: none;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .chrome-top { top: 0; }
+  .chrome-bottom { bottom: 0; }
+  .chrome-top .nav-links, .chrome-bottom .side {
+    display: flex; gap: 28px;
+  }
+  .chrome-top .nav-links a {
+    pointer-events: auto;
+    font-size: 12px; letter-spacing: 0.08em;
+    color: rgba(247,241,229,0.65);
+    text-decoration: none;
+    transition: color 200ms;
+  }
+  .chrome-top .nav-links a:hover { color: var(--accent-warm); }
+  .wordmark-nav {
+    font-family: var(--font-display);
+    font-size: 22px; font-weight: 500;
+    color: var(--text-on-dark);
+    letter-spacing: 0.01em;
+    pointer-events: auto;
+    text-decoration: none;
+  }
+  .wordmark-nav em { font-style: italic; color: var(--accent-warm); font-weight: 400; }
+  .sup {
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(247,241,229,0.5);
+    font-weight: 500;
+  }
+  .hint {
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(247,241,229,0.55);
+    font-weight: 500;
+    transition: opacity 600ms ease;
+  }
+  .hint::before {
+    content: ""; display: inline-block;
+    width: 22px; height: 1px; background: var(--accent-warm);
+    vertical-align: middle; margin-right: 12px; opacity: 0.7;
+  }
+  .cities-bottom {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(247,241,229,0.45);
+    font-weight: 500;
+    pointer-events: none;
+  }
+  .cities-bottom .dot { color: var(--accent-warm); margin: 0 8px; }
+
+  /* side vertical rules */
+  .rule-v {
+    position: fixed; top: 80px; bottom: 80px;
+    width: 1px; background: var(--rule-on-dark);
+    z-index: 15;
+    pointer-events: none;
+  }
+  .rule-v.left { left: 40px; }
+  .rule-v.right { right: 40px; }
+
+  /* ───── Anchor system (page-wide overlay) ───── */
+  /* Rope SVG is fixed-position, full viewport, and draws from boat point → anchor */
+  #anchorSystem {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+  #ropeSvg { width: 100%; height: 100%; display: block; }
+  #anchorWrap {
+    position: fixed;
+    left: 0; top: 0;
+    width: 40px; height: 54px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: filter 200ms;
+    z-index: 6;
+  }
+  #anchorWrap.dragging { cursor: grabbing; }
+  #anchorWrap:hover { filter: drop-shadow(0 0 18px rgba(201,166,107,0.6)); }
+  #anchorWrap.settled { filter: drop-shadow(0 8px 18px rgba(0,0,0,0.55)); }
+
+  /* Anchor CTA prompt */
+  .anchor-hint {
+    position: fixed;
+    z-index: 7;
+    pointer-events: none;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 13px;
+    color: rgba(247,241,229,0.85);
+    white-space: nowrap;
+    padding-left: 22px;
+    transition: opacity 400ms ease;
+  }
+  .anchor-hint::before {
+    content: ""; position: absolute; left: 0; top: 50%;
+    width: 14px; height: 1px; background: var(--accent-warm);
+    opacity: 0.8;
+  }
+
+  /* ───── Tweaks ───── */
+  #tweaks {
+    display: none !important;
+  }
+  #tweaks.on { display: block; }
+  #tweaks h3 {
+    font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    font-weight: 500; color: var(--accent-warm);
+    margin-bottom: 12px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule-on-dark);
+  }
+  #tweaks .row {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px;
+    align-items: center; margin: 10px 0;
+  }
+  #tweaks .row span {
+    font-size: 11px; letter-spacing: 0.08em; color: rgba(247,241,229,0.7);
+  }
+  #tweaks input[type=range] { width: 130px; accent-color: var(--accent-warm); }
+  #tweaks select {
+    background: rgba(247,241,229,0.06);
+    color: var(--text-on-dark);
+    border: 1px solid var(--rule-on-dark);
+    padding: 4px 8px;
+    font-family: var(--font-body); font-size: 11px;
+  }
+
+  @media (max-width: 720px) {
+    .chrome-top, .chrome-bottom { padding: 18px 20px; }
+    .rule-v { display: none; }
+    .chrome-top .nav-links { display: none; }
+    section.chapter { padding: 100px 20px; }
+    .plate { padding: 36px 24px; }
+  }
+</style>
 </head>
 <body>
 
-<nav>
-  <a href="/ipbay/" class="nav-logo">IP <span>Bay</span></a>
-  <ul class="nav-links">
-    <li><a href="/ipbay/" class="active">Home</a></li>
-    <li><a href="/ipbay/legacy.html">Legacy</a></li>
-    <li><a href="/ipbay/cloverway.html">The Cloverway Way</a></li>
-    <li><a href="/ipbay/services.html">Services</a></li>
-    <li><a href="/ipbay/japan.html">Japan Access</a></li>
-    <li><a href="/ipbay/team.html">On Board</a></li>
-    <li><a href="/ipbay/contact.html">Contact</a></li>
-  </ul>
-</nav>
+<!-- ─────────────── Fixed scene layer ─────────────── -->
+<div class="scene">
+  <div id="stage">
+    <!-- Sky clouds -->
+    <svg class="layer" id="skyClouds" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs><filter id="soft"><feGaussianBlur stdDeviation="8"/></filter></defs>
+      <g filter="url(#soft)" opacity="0.35">
+        <ellipse cx="300" cy="240" rx="180" ry="18" fill="#C9A66B"/>
+        <ellipse cx="900" cy="200" rx="280" ry="16" fill="#F7F1E5"/>
+        <ellipse cx="1500" cy="300" rx="220" ry="20" fill="#C9A66B"/>
+        <ellipse cx="1750" cy="170" rx="140" ry="12" fill="#F7F1E5"/>
+      </g>
+    </svg>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-sup">Ashiya, Hyogo · Tokyo · Los Angeles · Brooklyn</div>
-  <div class="hero-rule"></div>
-  <h1 class="hero-wordmark">IP <em>Bay</em></h1>
-  <div class="hero-rule"></div>
-  <p class="hero-tagline">A harbor for Japanese stories on their voyage to the world.</p>
-  <p class="hero-subline">Built on the Cloverway legacy of bringing Dragon Ball Z and Sailor Moon across the Pacific. We represent Japanese intellectual property to global film, television, and emerging formats, patiently, faithfully, and in direct partnership with the publishers and authors at the source.</p>
-  <div class="hero-stats-row">
-    <div class="hero-stat">
-      <div class="hero-stat-num">35+</div>
-      <div class="hero-stat-label">Years of Publisher Relationships</div>
-    </div>
-    <div class="hero-stat-div"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">3</div>
-      <div class="hero-stat-label">Legacy Publishers</div>
-    </div>
-    <div class="hero-stat-div"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">20+</div>
-      <div class="hero-stat-label">Japanese Publishers</div>
-    </div>
-  </div>
-</div>
-
-<!-- PAGES INTRO / MISSION -->
-<section class="pages-intro" style="border-bottom: 1px solid var(--rule); padding-bottom: 80px;">
-  <div style="max-width: 840px; margin: 0 auto;">
-    <p class="eyebrow" style="justify-content: center; display: inline-block; margin-bottom: 18px;">Our work is the crossing.</p>
-    <h2>We represent Japanese intellectual property to the world. Our priority is the right partner, the author's trust, and the integrity of the source, <em>not scale, not speed.</em></h2>
-    <p>Built on three decades of publisher relationships and the Cloverway legacy of bringing Japanese animation to the Americas, IP Bay works in close partnership with publishers, authors, and global producers to find each property the partner it deserves.</p>
-  </div>
-</section>
-
-<!-- PAGES GRID -->
-<div class="pages-grid">
-  <a href="/ipbay/legacy.html" class="page-card">
-    <div class="page-card-title">Legacy</div>
-    <div class="page-card-subhead">A thirty-five-year foundation.</div>
-    <p class="page-card-desc">The story of Yasuo Matsuo, Cloverway Inc., and the publisher relationships IP Bay carries forward today.</p>
-    <div class="page-card-cta">Read the legacy</div>
-  </a>
-  <a href="/ipbay/cloverway.html" class="page-card">
-    <div class="page-card-title">The Cloverway Way</div>
-    <div class="page-card-subhead">The operating principles we still run on.</div>
-    <p class="page-card-desc">Toei Americas representative. Shueisha and Viz intermediary. Author-first, with full respect for creative integrity. The public record of the office our work is built on.</p>
-    <div class="page-card-cta">Read the record</div>
-  </a>
-  <a href="/ipbay/services.html" class="page-card">
-    <div class="page-card-title">Services</div>
-    <div class="page-card-subhead">What we do.</div>
-    <p class="page-card-desc">Rights representation, packaging, executive producing, and joint production support. We focus on quality and authenticity over volume.</p>
-    <div class="page-card-cta">See services</div>
-  </a>
-  <a href="/ipbay/japan.html" class="page-card">
-    <div class="page-card-title">Japan Access</div>
-    <div class="page-card-subhead">Inside Japan's media ecosystem.</div>
-    <p class="page-card-desc">Through Shinji Sakamoto, a registered member of Japan's Cool Japan Initiative, IP Bay works alongside Japan's institutional partners with respect for the system that built them.</p>
-    <div class="page-card-cta">See Japan access</div>
-  </a>
-  <a href="/ipbay/team.html" class="page-card">
-    <div class="page-card-title">On Board</div>
-    <div class="page-card-subhead">The crew at IP Bay.</div>
-    <p class="page-card-desc">Yasuo Matsuo (Chairman), Jun Matsuo (CEO), Frankie Seratch (Co-Founder, U.S. Operations), and Shinji Sakamoto (Japan Operations Advisor).</p>
-    <div class="page-card-cta">Meet the crew</div>
-  </a>
-  <a href="/ipbay/contact.html" class="page-card">
-    <div class="page-card-title">Contact</div>
-    <div class="page-card-subhead">Come aboard.</div>
-    <p class="page-card-desc">For producers, studios, financiers, and partners interested in working with great Japanese stories.</p>
-    <div class="page-card-cta">Get in touch</div>
-  </a>
-</div>
-
-<!-- CLOSING -->
-<div class="closing">
-  <div class="closing-bg"></div>
-  <div class="closing-content">
-    <div class="closing-sup">IP Bay Inc. · Ashiya, Hyogo · Tokyo · Los Angeles · Brooklyn</div>
-    <div class="closing-rule"></div>
-    <div class="closing-wordmark">IP <em>Bay</em></div>
-    <div class="closing-rule"></div>
-    <p class="closing-bridge">A harbor for Japanese stories</p>
-    <h2 class="closing-title">Quality of work.<br>Trust of our partners.<br><em>Respect for every author.</em></h2>
-    <p class="closing-body">Anchored in three decades of publisher relationships. Committed to the patience the work deserves.</p>
-    <a href="/ipbay/contact.html" class="closing-cta">Get in touch</a>
-    <div class="closing-cities">
-      <span>Ashiya</span>
-      <span class="closing-dot">·</span>
-      <span>Tokyo</span>
-      <span class="closing-dot">·</span>
-      <span>Los Angeles</span>
-      <span class="closing-dot">·</span>
-      <span>Brooklyn</span>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="footer-wordmark">IP <em>Bay</em> Inc.</div>
-  <div class="footer-tagline">A harbor for Japanese stories.</div>
-
-  <div class="harbor-coordinates">
-    <div class="harbor-port">
-      <div class="port-name">Ashiya</div>
-      <div class="port-coord">34.7278°N</div>
-      <div class="port-coord">135.3031°E</div>
-    </div>
-    <div class="harbor-port">
-      <div class="port-name">Tokyo</div>
-      <div class="port-coord">35.6762°N</div>
-      <div class="port-coord">139.6503°E</div>
-    </div>
-    <div class="harbor-port">
-      <div class="port-name">Los Angeles</div>
-      <div class="port-coord">34.0522°N</div>
-      <div class="port-coord">118.2437°W</div>
-    </div>
-    <div class="harbor-port">
-      <div class="port-name">Brooklyn</div>
-      <div class="port-coord">40.6782°N</div>
-      <div class="port-coord">73.9442°W</div>
-    </div>
+    <!-- Sea -->
+    <svg class="layer" id="sea" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1B3A4B"/>
+          <stop offset="0.45" stop-color="#0F2A3D"/>
+          <stop offset="1" stop-color="#060f1a"/>
+        </linearGradient>
+        <radialGradient id="sunTrail" cx="0.5" cy="0" r="0.6">
+          <stop offset="0" stop-color="#C9A66B" stop-opacity="0.42"/>
+          <stop offset="1" stop-color="#C9A66B" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="foamBlur"><feGaussianBlur stdDeviation="1.4"/></filter>
+        <clipPath id="seaClip"><rect x="0" y="560" width="1920" height="520"/></clipPath>
+        <radialGradient id="sunGrad" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#F7F1E5" stop-opacity="0.95"/>
+          <stop offset="0.4" stop-color="#C9A66B" stop-opacity="0.75"/>
+          <stop offset="1" stop-color="#C9A66B" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="sailShade" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="rgba(0,0,0,0)"/>
+          <stop offset="1" stop-color="rgba(15,42,61,0.28)"/>
+        </linearGradient>
+      </defs>
+      <circle cx="960" cy="430" r="140" fill="url(#sunGrad)"/>
+      <circle cx="960" cy="430" r="58" fill="#F7F1E5" opacity="0.9"/>
+      <rect x="0" y="560" width="1920" height="520" fill="url(#seaGrad)"/>
+      <rect x="0" y="560" width="1920" height="520" fill="url(#sunTrail)"/>
+      <line x1="80" y1="560" x2="1840" y2="560" stroke="rgba(247,241,229,0.12)" stroke-width="1"/>
+      <g clip-path="url(#seaClip)">
+        <g id="wavesFar" opacity="0.5" stroke="rgba(201,166,107,0.4)" stroke-width="1" fill="none"></g>
+        <g id="wavesMid" opacity="0.7" stroke="rgba(247,241,229,0.32)" stroke-width="1.2" fill="none"></g>
+        <g id="wavesNear" stroke="rgba(247,241,229,0.55)" stroke-width="1.6" fill="none"></g>
+        <g id="wake"></g>
+        <g id="boat" style="transform-box: fill-box; transform-origin: center;"></g>
+        <g id="splashes"></g>
+      </g>
+    </svg>
+    <div class="depth-tint"></div>
   </div>
 
-  <div class="footer-bottom">
-    <div class="footer-bottom-left">
-      <div class="footer-copy">© 2026 IP Bay Inc.</div>
-    </div>
-    <svg class="hanko-seal hanko-footer-seal" viewBox="0 0 104 104" role="img" aria-label="IP Bay seal">
-      <circle cx="52" cy="52" r="48" fill="none" stroke="#C0392B" stroke-width="3"/>
-      <circle cx="52" cy="52" r="40" fill="none" stroke="#C0392B" stroke-width="0.75"/>
-      <text x="52" y="33" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-size="11" letter-spacing="2">IP BAY</text>
-      <line x1="24" y1="42" x2="80" y2="42" stroke="#C0392B" stroke-width="0.5"/>
-      <text x="52" y="60" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-style="italic" font-size="14">est.</text>
-      <line x1="24" y1="68" x2="80" y2="68" stroke="#C0392B" stroke-width="0.5"/>
-      <text x="52" y="82" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-size="11" letter-spacing="2">MMXXVI</text>
+  <!-- Rope and anchor overlay (sits above scene, below content text) -->
+  <div id="anchorSystem">
+    <svg id="ropeSvg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path id="ropePath" d="" fill="none" stroke="#C9A66B" stroke-width="0" stroke-linecap="round"/>
     </svg>
   </div>
-</footer>
+  <!-- Anchor itself (HTML, positioned in viewport coords) -->
+  <div id="anchorWrap" aria-label="Anchor — drag down the page">
+    <svg viewBox="0 0 72 96" width="40" height="54" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ironG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3a4652"/>
+          <stop offset="1" stop-color="#141a22"/>
+        </linearGradient>
+        <linearGradient id="ironShine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="rgba(255,255,255,0.22)"/>
+          <stop offset="0.5" stop-color="rgba(255,255,255,0)"/>
+        </linearGradient>
+      </defs>
+      <!-- Ring at top (蛇目 style) -->
+      <circle cx="36" cy="9" r="6.5" fill="none" stroke="url(#ironG)" stroke-width="3"/>
+      <!-- Red sail-canvas tassel wrap around shank top -->
+      <rect x="30" y="14" width="12" height="10" fill="#A0312B"/>
+      <rect x="30" y="18" width="12" height="1.5" fill="#6e1f1b"/>
+      <!-- Shank -->
+      <rect x="33.5" y="14" width="5" height="54" fill="url(#ironG)"/>
+      <rect x="33.5" y="14" width="2" height="54" fill="url(#ironShine)"/>
+      <!-- Stock (crossbar) — wooden, sand-colored -->
+      <rect x="14" y="22" width="44" height="5" rx="1" fill="#C9A66B"/>
+      <rect x="14" y="22" width="44" height="1.5" fill="#e6c89a"/>
+      <line x1="20" y1="22" x2="20" y2="27" stroke="#1B3A4B" stroke-width="0.6"/>
+      <line x1="52" y1="22" x2="52" y2="27" stroke="#1B3A4B" stroke-width="0.6"/>
+      <!-- Arms curving outward -->
+      <path d="M 36 68
+               C 36 74, 16 80, 8 72
+               L 12 68
+               C 18 74, 30 70, 33 64 Z"
+            fill="url(#ironG)"/>
+      <path d="M 36 68
+               C 36 74, 56 80, 64 72
+               L 60 68
+               C 54 74, 42 70, 39 64 Z"
+            fill="url(#ironG)"/>
+      <!-- Flukes (arrowhead tips) -->
+      <path d="M 4 74 L 14 62 L 16 72 Z" fill="#141a22"/>
+      <path d="M 68 74 L 58 62 L 56 72 Z" fill="#141a22"/>
+      <!-- Crown detail -->
+      <circle cx="36" cy="68" r="3.5" fill="#1B3A4B" stroke="#C9A66B" stroke-width="0.8"/>
+      <!-- Tassel streamers -->
+      <path d="M 31 24 L 28 34 L 31 30 L 30 38" stroke="#A0312B" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <path d="M 41 24 L 44 34 L 41 30 L 42 38" stroke="#A0312B" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="anchor-hint" id="anchorHint">drag the anchor · sail it to the seabed</div>
+</div>
 
+<!-- ─────────────── Chrome ─────────────── -->
+<a class="wordmark-nav" href="/ipbay/" style="position:fixed;top:26px;left:40px;z-index:25;">IP <em>Bay</em></a>
+<div class="chrome-top">
+  <span></span>
+  <nav class="nav-links">
+    <a href="/ipbay/legacy.html">Legacy</a>
+    <a href="/ipbay/cloverway.html">Cloverway</a>
+    <a href="/ipbay/services.html">Services</a>
+    <a href="/ipbay/japan.html">Japan Access</a>
+    <a href="/ipbay/team.html">On Board</a>
+    <a href="/ipbay/contact.html">Contact</a>
+  </nav>
+</div>
+<div class="chrome-bottom">
+  <div class="cities-bottom">
+    Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> Brooklyn
+  </div>
+  <div class="hint" id="hint">drag the vessel · click the sea</div>
+</div>
+<div class="rule-v left"></div>
+<div class="rule-v right"></div>
+
+<!-- ─────────────── Scrollable page ─────────────── -->
+<main class="page">
+  <!-- Hero spacer — the scene occupies this viewport -->
+  <div class="spacer" aria-hidden="true"></div>
+
+  <section class="chapter" id="legacy">
+    <div class="inner plate">
+      <div class="eyebrow">Fig. 01 · The Vessel</div>
+      <div class="fig-rule"></div>
+      <h2 class="display">A harbor for Japanese stories on their <em>voyage</em> to the world.</h2>
+      <p class="lede">Thirty-five years of publisher relationships. One company that sits at the table from the first Tokyo meeting to the last note on the mix stage — patiently, faithfully, and in direct partnership with the authors at the source.</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="crossing">
+    <div class="inner plate">
+      <div class="eyebrow">Fig. 02 · The Crossing</div>
+      <div class="fig-rule"></div>
+      <h2 class="display">Built on the Cloverway legacy of bringing Dragon Ball Z and Sailor Moon <em>across the Pacific.</em></h2>
+      <p class="lede">Before there was a market for anime in the Americas, Yasuo Matsuo was building one. From Toei Animation's sole Americas representative to the trusted intermediary for Shueisha, Kodansha, and Nippon Animation — the relationships that took thirty years to build are the ones IP Bay carries forward.</p>
+    </div>
+  </section>
+
+  <section class="chapter" id="harbor">
+    <div class="inner plate">
+      <div class="eyebrow">Fig. 03 · The Harbor</div>
+      <div class="fig-rule"></div>
+      <h2 class="display">Quality of work. Trust of our partners. <em>Respect for every author.</em></h2>
+      <p class="lede">We are not brokers. We are not intermediaries. We are the company with the relationships — and we sit at the table throughout. Anchored in three decades of publisher trust, and committed to the patience the work deserves.</p>
+    </div>
+  </section>
+
+  <section class="seabed" id="seabed">
+    <div class="inner">
+      <div class="eyebrow" style="color:var(--accent-warm)">Fig. 04 · Anchored</div>
+      <div class="rule"></div>
+      <h1 class="wordmark">IP <em>Bay</em></h1>
+      <div class="rule"></div>
+      <p class="lede" style="margin-top:28px;">A harbor for Japanese stories. Est. 2026.</p>
+      <div class="cities-row">
+        Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> Brooklyn
+      </div>
+      <div style="margin-top: 56px; display: flex; justify-content: center;">
+        <svg width="96" height="96" viewBox="0 0 104 104" role="img" aria-label="IP Bay seal, authorized">
+          <circle cx="52" cy="52" r="48" fill="none" stroke="#C0392B" stroke-width="3"/>
+          <circle cx="52" cy="52" r="40" fill="none" stroke="#C0392B" stroke-width="0.75"/>
+          <text x="52" y="33" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-size="11" letter-spacing="2">IP BAY</text>
+          <line x1="24" y1="42" x2="80" y2="42" stroke="#C0392B" stroke-width="0.5"/>
+          <text x="52" y="60" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-style="italic" font-size="14">認可</text>
+          <line x1="24" y1="68" x2="80" y2="68" stroke="#C0392B" stroke-width="0.5"/>
+          <text x="52" y="82" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-size="11" letter-spacing="2">MMXXVI</text>
+        </svg>
+      </div>
+    </div>
+    <div class="seabed-floor" id="seabedFloor"></div>
+  </section>
+</main>
+
+<!-- ─────────────── Tweaks ─────────────── -->
+<div id="tweaks">
+  <h3>Tweaks</h3>
+  <div class="row"><span>Wave scale</span><input id="tk-wave" type="range" min="0.3" max="2" step="0.05"></div>
+  <div class="row"><span>Wind speed</span><input id="tk-wind" type="range" min="0.2" max="2.5" step="0.05"></div>
+  <div class="row"><span>Wake spread</span><input id="tk-wake" type="range" min="0.5" max="2.5" step="0.05"></div>
+  <div class="row"><span>Hour</span>
+    <select id="tk-time">
+      <option value="dusk">Golden hour</option>
+      <option value="dawn">Dawn</option>
+      <option value="night">Night harbor</option>
+      <option value="storm">Grey crossing</option>
+    </select>
+  </div>
+  <div class="row"><span>Vessel</span>
+    <select id="tk-boat">
+      <option value="sail">Sailboat</option>
+      <option value="junk">Japanese junk</option>
+      <option value="steam">Steamer</option>
+    </select>
+  </div>
+  <div class="row"><span>Anchor</span>
+    <button id="tk-reset" style="background:transparent;border:1px solid var(--rule-on-dark);color:var(--accent-warm);padding:4px 10px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:var(--font-body);">Weigh anchor</button>
+  </div>
+</div>
+
+<script>
+/*EDITMODE-BEGIN*/const TWEAKS = {
+  "waveScale": 1.0,
+  "windSpeed": 1.0,
+  "wakeSpread": 1.0,
+  "timeOfDay": "dusk",
+  "boatStyle": "sail"
+}/*EDITMODE-END*/;
+
+// ===== Scene refs =====
+const stage = document.getElementById('stage');
+const wavesFar = document.getElementById('wavesFar');
+const wavesMid = document.getElementById('wavesMid');
+const wavesNear = document.getElementById('wavesNear');
+const wakeG = document.getElementById('wake');
+const boatG = document.getElementById('boat');
+const splashG = document.getElementById('splashes');
+const hint = document.getElementById('hint');
+
+const SVG_W = 1920, SVG_H = 1080, HORIZON = 560;
+const boat = { x: SVG_W/2, y: 780, vx: 0, vy: 0, targetX: SVG_W/2, targetY: 780, rock: 0 };
+let draggingBoat = false;
+
+// ===== Boat render =====
+function renderBoat(style) {
+  const s = style || TWEAKS.boatStyle;
+  let hull = '';
+  if (s === 'sail') {
+    hull = `
+      <g id="boatShape" transform="scale(1.6)">
+        <g opacity="0.3" transform="translate(0,78) scale(1,-0.5)">
+          <path d="M -90 0 Q -70 22 0 24 Q 70 22 90 0 Z" fill="#000"/>
+          <rect x="-2" y="-120" width="4" height="120" fill="#000"/>
+          <path d="M 0 -110 L 0 -10 L 70 -10 Z" fill="#000"/>
+        </g>
+        <path d="M -96 0 Q -80 24 0 26 Q 80 24 96 0 L 82 -10 L -82 -10 Z" fill="#0F2A3D"/>
+        <path d="M -82 -10 L 82 -10 L 76 -18 L -76 -18 Z" fill="#C9A66B"/>
+        <line x1="-76" y1="-18" x2="76" y2="-18" stroke="#1B3A4B" stroke-width="1.2"/>
+        <line x1="-82" y1="-4" x2="82" y2="-4" stroke="rgba(247,241,229,0.25)" stroke-width="0.8"/>
+        <rect x="-1.5" y="-130" width="3" height="112" fill="#1B3A4B"/>
+        <path d="M 2 -128 L 2 -22 L 72 -22 Z" fill="#F7F1E5"/>
+        <path d="M 2 -128 L 2 -22 L 72 -22 Z" fill="url(#sailShade)"/>
+        <path d="M -2 -120 L -2 -22 L -58 -22 Z" fill="#FEFAF2"/>
+        <!-- Japanese flag (Hinomaru) planted on left bow, on angled flagpole -->
+        <line x1="-78" y1="-12" x2="-108" y2="-82" stroke="#1B3A4B" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="-78" cy="-12" r="2.2" fill="#C9A66B"/>
+        <g transform="translate(-108 -82) rotate(-24)">
+          <rect x="0" y="0" width="58" height="38" fill="#FEFAF2" stroke="#1B3A4B" stroke-width="0.4"/>
+          <circle cx="29" cy="19" r="11.5" fill="#BC002D"/>
+        </g>
+      </g>`;
+  } else if (s === 'junk') {
+    hull = `
+      <g id="boatShape">
+        <g opacity="0.3" transform="translate(0,70) scale(1,-0.5)">
+          <path d="M -100 0 Q -80 24 0 26 Q 80 24 100 0 Z" fill="#000"/>
+          <rect x="-2" y="-120" width="4" height="120" fill="#000"/>
+        </g>
+        <path d="M -108 -2 Q -100 22 -40 26 L 40 26 Q 100 22 108 -2 L 96 -14 Q 60 -22 0 -22 Q -60 -22 -96 -14 Z" fill="#1B3A4B"/>
+        <path d="M -96 -14 Q -60 -22 0 -22 Q 60 -22 96 -14 L 90 -22 Q 50 -30 0 -30 Q -50 -30 -90 -22 Z" fill="#C9A66B"/>
+        <path d="M -108 -2 Q -118 -18 -110 -28" stroke="#1B3A4B" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M 108 -2 Q 118 -18 110 -28" stroke="#1B3A4B" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <rect x="-1.5" y="-138" width="3" height="108" fill="#1B3A4B"/>
+        <rect x="-44" y="-132" width="88" height="22" fill="#A0312B"/>
+        <rect x="-44" y="-104" width="88" height="22" fill="#A0312B"/>
+        <rect x="-44" y="-76" width="88" height="22" fill="#A0312B"/>
+        <rect x="-44" y="-48" width="88" height="22" fill="#A0312B"/>
+        <g stroke="#0F2A3D" stroke-width="1" opacity="0.6">
+          <line x1="-44" y1="-110" x2="44" y2="-110"/>
+          <line x1="-44" y1="-82"  x2="44" y2="-82"/>
+          <line x1="-44" y1="-54"  x2="44" y2="-54"/>
+        </g>
+        <path d="M 0 -138 L 18 -134 L 0 -130 Z" fill="#F7F1E5"/>
+      </g>`;
+  } else {
+    hull = `
+      <g id="boatShape">
+        <g opacity="0.3" transform="translate(0,72) scale(1,-0.5)">
+          <path d="M -100 0 Q -80 20 0 22 Q 80 20 100 0 Z" fill="#000"/>
+        </g>
+        <path d="M -104 0 Q -86 22 0 24 Q 86 22 104 0 L 88 -10 L -88 -10 Z" fill="#0F2A3D"/>
+        <rect x="-88" y="-12" width="176" height="4" fill="#C9A66B"/>
+        <rect x="-40" y="-42" width="80" height="32" fill="#F7F1E5"/>
+        <rect x="-36" y="-38" width="18" height="12" fill="#1B3A4B"/>
+        <rect x="-10" y="-38" width="18" height="12" fill="#1B3A4B"/>
+        <rect x="18" y="-38"  width="18" height="12" fill="#1B3A4B"/>
+        <rect x="10" y="-70" width="14" height="30" fill="#1A1A1A"/>
+        <rect x="8"  y="-72" width="18" height="4"  fill="#A0312B"/>
+        <g opacity="0.6">
+          <circle cx="17" cy="-82"  r="6"  fill="rgba(247,241,229,0.6)"/>
+          <circle cx="22" cy="-92"  r="8"  fill="rgba(247,241,229,0.45)"/>
+          <circle cx="14" cy="-104" r="10" fill="rgba(247,241,229,0.3)"/>
+        </g>
+      </g>`;
+  }
+  boatG.innerHTML = hull;
+}
+renderBoat();
+
+// ===== Waves =====
+function makeWaveLine(y, amp, freq, segs=80, speed=0.6) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  p.dataset.y = y; p.dataset.amp = amp; p.dataset.freq = freq; p.dataset.speed = speed; p.dataset.segs = segs;
+  return p;
+}
+const waves = [];
+function buildWaves() {
+  wavesFar.innerHTML=''; wavesMid.innerHTML=''; wavesNear.innerHTML=''; waves.length=0;
+  for (let i=0;i<5;i++){ const y=580+i*12; const p=makeWaveLine(y,1.2+i*0.3,0.012+i*0.002,60,0.2+i*0.05); wavesFar.appendChild(p); waves.push({path:p}); }
+  for (let i=0;i<7;i++){ const y=660+i*18; const p=makeWaveLine(y,2+i*0.8,0.010+i*0.0015,90,0.35+i*0.04); wavesMid.appendChild(p); waves.push({path:p}); }
+  for (let i=0;i<8;i++){ const y=800+i*28; const p=makeWaveLine(y,4+i*1.6,0.008+i*0.0012,140,0.55+i*0.05); wavesNear.appendChild(p); waves.push({path:p}); }
+}
+buildWaves();
+
+function partingOffset(x, y) {
+  const dx = x - boat.x, dy = y - boat.y;
+  const depthFactor = Math.max(0, Math.min(1, (y - HORIZON) / (SVG_H - HORIZON)));
+  const spread = 120 * TWEAKS.wakeSpread * (0.4 + 0.9*depthFactor);
+  const d2 = dx*dx/(spread*spread*2.2) + dy*dy/(spread*spread*0.6);
+  const mag = Math.exp(-d2) * (10 + 22*depthFactor) * TWEAKS.wakeSpread;
+  return (dy >= 0 ? 1 : -1) * mag;
+}
+
+const wakeTrail = [];
+function emitWake() {
+  if (!draggingBoat && Math.hypot(boat.vx, boat.vy) < 0.4) return;
+  wakeTrail.push({ x: boat.x - 30, y: boat.y + 6, t: 0, life: 1.3 });
+  wakeTrail.push({ x: boat.x + 30, y: boat.y + 6, t: 0, life: 1.3 });
+}
+
+const splashes = [];
+function addSplash(x, y) {
+  for (let i=0;i<14;i++){
+    const a=(i/14)*Math.PI+(Math.random()-0.5)*0.3;
+    const sp=2+Math.random()*3;
+    splashes.push({x,y,vx:Math.cos(a)*sp*(Math.random()>0.5?1:-1),vy:-Math.abs(Math.sin(a))*sp-1.5,t:0,life:0.9+Math.random()*0.4,r:1.5+Math.random()*2.2});
+  }
+  boat.rock=1;
+}
+
+// ===== Anchor system =====
+// The anchor lives in VIEWPORT coords but tracks a world (document) y-position when settled.
+// Model: anchor has (docX, docY). While scrolling, viewportY = docY - window.scrollY.
+// During active drag, we update docY from pointer+scrollY.
+// Drop: physics — gravity-like sink, dampened sway, until it reaches the seabed target.
+const anchorWrap = document.getElementById('anchorWrap');
+const anchorHint = document.getElementById('anchorHint');
+const ropeSvg = document.getElementById('ropeSvg');
+const ropePath = document.getElementById('ropePath');
+
+const anchor = {
+  docX: 0, docY: 0,      // absolute position in document
+  vy: 0, vx: 0,
+  state: 'stowed',       // stowed | dragging | sinking | settled
+  settledY: 0,           // final target doc y (seabed)
+  sway: 0, swayT: 0,
+};
+let draggingAnchor = false;
+let dragOffsetY = 0;
+
+function computeSeabedY() {
+  const seabed = document.getElementById('seabed');
+  if (!seabed) return document.body.scrollHeight - 120;
+  const r = seabed.getBoundingClientRect();
+  return r.bottom + window.scrollY - 160; // land just above the sand floor
+}
+
+function boatDocAnchorPoint() {
+  // Boat's hull point in viewport coords — hull sits around y=780/1080 of scene svg
+  // Scene is pinned to viewport. We want the attachment point on the hull.
+  const vw = window.innerWidth, vh = window.innerHeight;
+  // The sea SVG uses preserveAspectRatio xMidYMid slice → map (boat.x, boat.y-4) using aspect
+  const sceneAspect = SVG_W / SVG_H;
+  const vpAspect = vw / vh;
+  let scale, ox, oy;
+  if (vpAspect > sceneAspect) { scale = vw / SVG_W; ox = 0; oy = (vh - SVG_H*scale)/2; }
+  else { scale = vh / SVG_H; oy = 0; ox = (vw - SVG_W*scale)/2; }
+  const px = ox + boat.x * scale;
+  const py = oy + (boat.y - 4) * scale;
+  return { vx: px, vy: py };
+}
+
+function initAnchor() {
+  anchor.settledY = computeSeabedY();
+  // Start the anchor perched on the boat's deck
+  const p = boatDocAnchorPoint();
+  anchor.docX = p.vx;
+  anchor.docY = p.vy + window.scrollY - 10;
+  updateAnchorHint();
+}
+
+function updateAnchorHint() {
+  if (anchor.state !== 'stowed') { anchorHint.style.opacity = 0; return; }
+  anchorHint.style.opacity = 0.9;
+  const vy = anchor.docY - window.scrollY;
+  anchorHint.style.left = (anchor.docX + 42) + 'px';
+  anchorHint.style.top  = (vy - 6) + 'px';
+}
+
+function renderAnchor() {
+  const vy = anchor.docY - window.scrollY;
+  anchorWrap.style.left = anchor.docX + 'px';
+  anchorWrap.style.top  = vy + 'px';
+  const swayDeg = Math.sin(anchor.swayT) * anchor.sway;
+  anchorWrap.style.transform = `translate(-50%, -50%) rotate(${swayDeg.toFixed(2)}deg)`;
+  updateAnchorHint();
+  drawRope();
+}
+
+function drawRope() {
+  // Rope from boat attachment point (viewport) → anchor (viewport). Catenary-ish sag.
+  const vw = window.innerWidth, vh = window.innerHeight;
+  ropeSvg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
+  const a = boatDocAnchorPoint();
+  const bx = anchor.docX, by = anchor.docY - window.scrollY - 44; // top of anchor
+  // If anchor is nearly at boat, hide rope
+  const dist = Math.hypot(bx - a.vx, by - a.vy);
+  if (anchor.state === 'stowed' || dist < 14) {
+    ropePath.setAttribute('stroke-width', 0);
+    return;
+  }
+  ropePath.setAttribute('stroke-width', 2.2);
+  // Sag proportional to distance; less when taut / dragging quickly
+  const sag = Math.min(60, dist * 0.08) + Math.sin(performance.now()*0.002) * 3;
+  const midx = (a.vx + bx) / 2 + Math.sin(performance.now()*0.0015) * 4;
+  const midy = Math.max(a.vy, by) + sag;
+  const d = `M ${a.vx} ${a.vy} Q ${midx} ${midy} ${bx} ${by}`;
+  ropePath.setAttribute('d', d);
+}
+
+// Scroll-driven fall: we compute progress 0..1 based on scrollY, and map to anchor fall
+function scrollProgress() {
+  const max = Math.max(1, document.body.scrollHeight - window.innerHeight);
+  return Math.max(0, Math.min(1, window.scrollY / max));
+}
+// Anchor launch: begins after a small initial scroll (so page 1 shows boat sailing)
+const ANCHOR_LAUNCH = 0.06; // when progress exceeds this, anchor detaches
+function updateAnchorFromScroll() {
+  const prog = scrollProgress();
+  // seabed Y in document coords
+  const seabedDocY = computeSeabedY();
+  const boatPoint = boatDocAnchorPoint();
+  const boatDocY = boatPoint.vy + window.scrollY - 10;
+  if (prog < ANCHOR_LAUNCH) {
+    anchor.state = 'stowed';
+    anchor.docX = boatPoint.vx;
+    anchor.docY = boatDocY;
+    anchorWrap.classList.remove('settled');
+  } else {
+    // map prog [LAUNCH..1] -> [0..1]
+    const k = (prog - ANCHOR_LAUNCH) / (1 - ANCHOR_LAUNCH);
+    // ease out so it sinks quickly then slows as approaches seabed
+    const eased = 1 - Math.pow(1 - k, 1.8);
+    anchor.docY = boatDocY + (seabedDocY - boatDocY) * eased;
+    // keep x near boat x with gentle sway
+    anchor.docX = boatPoint.vx + Math.sin(performance.now()*0.0012) * 14 * (1 - eased);
+    if (eased >= 0.985) {
+      anchor.state = 'settled';
+      anchorWrap.classList.add('settled');
+    } else {
+      anchor.state = 'falling';
+      anchorWrap.classList.remove('settled');
+    }
+  }
+}
+
+// ===== Loop =====
+let t = 0, lastTime = performance.now();
+function tick(now) {
+  const dt = Math.min(0.05, (now - lastTime)/1000);
+  lastTime = now;
+  t += dt * TWEAKS.windSpeed;
+
+  // Boat motion
+  const ax = (boat.targetX - boat.x) * 4.5 - boat.vx * 2.2;
+  const ay = (boat.targetY - boat.y) * 4.5 - boat.vy * 2.2;
+  boat.vx += ax * dt; boat.vy += ay * dt;
+  boat.x += boat.vx * dt; boat.y += boat.vy * dt;
+  const bob = Math.sin(t*1.3) * 2.4;
+  const tilt = Math.sin(t*1.1) * 1.4 + boat.vx * 0.4;
+  boat.rock = Math.max(0, boat.rock - dt*1.2);
+  const rockTilt = Math.sin(t*7) * boat.rock * 8;
+
+  // Waves
+  for (const w of waves) {
+    const p = w.path;
+    const y0=+p.dataset.y, amp=+p.dataset.amp*TWEAKS.waveScale, freq=+p.dataset.freq, speed=+p.dataset.speed, segs=+p.dataset.segs;
+    let d='';
+    for (let i=0;i<=segs;i++){
+      const x=i/segs*SVG_W;
+      const phase=t*speed*60;
+      const base=Math.sin(x*freq+phase*0.02)*amp + Math.sin(x*freq*2.3+phase*0.035)*amp*0.35;
+      const off=partingOffset(x,y0+base);
+      const y=y0+base+off;
+      d += (i===0?'M':'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+    }
+    p.setAttribute('d', d);
+  }
+
+  // Wake
+  emitWake();
+  for (let i=wakeTrail.length-1;i>=0;i--){ wakeTrail[i].t+=dt; if (wakeTrail[i].t>wakeTrail[i].life) wakeTrail.splice(i,1); }
+  let wakeSVG='';
+  for (const w of wakeTrail){
+    const k=w.t/w.life, alpha=(1-k)*0.65, r=6+k*60*TWEAKS.wakeSpread, yoff=k*20;
+    wakeSVG += `<ellipse cx="${w.x.toFixed(1)}" cy="${(w.y+yoff).toFixed(1)}" rx="${r.toFixed(1)}" ry="${(r*0.25).toFixed(1)}" fill="rgba(247,241,229,${alpha.toFixed(3)})"/>`;
+  }
+  wakeSVG += `<path d="M ${boat.x-110} ${boat.y+8} Q ${boat.x-60} ${boat.y-6} ${boat.x} ${boat.y+6} Q ${boat.x+60} ${boat.y-6} ${boat.x+110} ${boat.y+8} Q ${boat.x+60} ${boat.y+18} ${boat.x} ${boat.y+14} Q ${boat.x-60} ${boat.y+18} ${boat.x-110} ${boat.y+8} Z" fill="rgba(247,241,229,0.85)" filter="url(#foamBlur)"/>`;
+  const sp=Math.hypot(boat.vx, boat.vy);
+  if (sp>20){ for (let i=0;i<6;i++){ wakeSVG += `<circle cx="${boat.x+(Math.random()-0.5)*140}" cy="${boat.y-Math.random()*12}" r="${1+Math.random()*2}" fill="rgba(247,241,229,0.9)"/>`; } }
+  wakeG.innerHTML = wakeSVG;
+
+  // Splashes
+  for (let i=splashes.length-1;i>=0;i--){ const s=splashes[i]; s.t+=dt; s.x+=s.vx; s.y+=s.vy; s.vy+=0.22; if (s.t>s.life) splashes.splice(i,1); }
+  let splashSVG='';
+  for (const s of splashes){ const a=Math.max(0,1-s.t/s.life); splashSVG += `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${s.r.toFixed(2)}" fill="rgba(247,241,229,${(0.9*a).toFixed(3)})"/>`; }
+  splashG.innerHTML = splashSVG;
+
+  boatG.setAttribute('transform', `translate(${boat.x.toFixed(1)}, ${(boat.y+bob).toFixed(1)}) rotate(${(tilt+rockTilt).toFixed(2)})`);
+
+  // Anchor physics
+  anchor.swayT += dt * 2.2;
+  if (anchor.state === 'stowed') {
+    const p = boatDocAnchorPoint();
+    anchor.docX = p.vx;
+    anchor.docY = p.vy + window.scrollY - 10;
+    anchor.sway = 2 + Math.sin(t*0.9)*0.5;
+  } else if (anchor.state === 'dragging') {
+    anchor.sway = 6;
+  } else if (anchor.state === 'sinking') {
+    // gravity downward toward settledY
+    anchor.vy += 12 * dt;           // accel
+    anchor.vy = Math.min(anchor.vy, 260); // terminal
+    anchor.docY += anchor.vy * dt * 60 * 0.016; // scale
+    // lateral damped wobble
+    anchor.vx *= 0.92;
+    anchor.docX += anchor.vx * dt * 60 * 0.016;
+    anchor.sway = 8 - Math.min(8, Math.abs(anchor.vy)*0.05);
+    if (anchor.docY >= anchor.settledY) {
+      anchor.docY = anchor.settledY;
+      anchor.vy = 0;
+      anchor.state = 'settled';
+      anchorWrap.classList.add('settled');
+      anchor.sway = 0;
+      // small dust puff by briefly pulsing the seabed gradient
+      const floor = document.getElementById('seabedFloor');
+      floor.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(1.6)' }, { filter: 'brightness(1)' }], { duration: 600, easing: 'ease-out' });
+    }
+  } else if (anchor.state === 'settled') {
+    anchor.sway = 0;
+  }
+  renderAnchor();
+
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+// ===== Pointer on stage (boat interactions) =====
+function pointerToSVG(e) {
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const sceneAspect = SVG_W / SVG_H, vpAspect = vw / vh;
+  let scale, ox, oy;
+  if (vpAspect > sceneAspect) { scale = vw / SVG_W; ox = 0; oy = (vh - SVG_H*scale)/2; }
+  else { scale = vh / SVG_H; oy = 0; ox = (vw - SVG_W*scale)/2; }
+  return { x: (e.clientX - ox) / scale, y: (e.clientY - oy) / scale };
+}
+function clampBoat(p) {
+  return { x: Math.max(120, Math.min(SVG_W-120, p.x)), y: Math.max(HORIZON+60, Math.min(SVG_H-40, p.y)) };
+}
+stage.addEventListener('pointerdown', (e) => {
+  // Let anchor handle its own events
+  if (e.target.closest('#anchorWrap')) return;
+  draggingBoat = true;
+  stage.classList.add('dragging');
+  stage.setPointerCapture(e.pointerId);
+  const p = pointerToSVG(e);
+  const dist = Math.hypot(p.x - boat.x, p.y - boat.y);
+  if (dist > 140) addSplash(p.x, p.y); else boat.rock = Math.max(boat.rock, 0.6);
+  const c = clampBoat(p);
+  boat.targetX = c.x; boat.targetY = c.y;
+  hint.style.opacity = 0;
+});
+stage.addEventListener('pointermove', (e) => {
+  if (!draggingBoat) return;
+  const c = clampBoat(pointerToSVG(e));
+  boat.targetX = c.x; boat.targetY = c.y;
+});
+function endBoatDrag(){ draggingBoat = false; stage.classList.remove('dragging'); }
+stage.addEventListener('pointerup', endBoatDrag);
+stage.addEventListener('pointercancel', endBoatDrag);
+
+// ===== Scroll-driven sky: sunset → night → sunrise =====
+const skyStops = [
+  { sky:['#F7D9A8','#E6A88A','#8A6E8F','#2d3a55','#0F2A3D'], sea:['#2a5d78','#1B3A4B','#0a1a2a'], sunX:960, sunY:430, sunOp:0.60, disc:'#F7F1E5', ambient:0.18 },
+  { sky:['#6d4a63','#3e3450','#1f2842','#102034','#08192a'], sea:['#1B3A4B','#0F2A3D','#060f1a'], sunX:960, sunY:570, sunOp:0.30, disc:'#C9A66B', ambient:0.10 },
+  { sky:['#081626','#050f1c','#030a14','#01060d','#000408'], sea:['#081b2a','#050f1c','#010610'], sunX:960, sunY:800, sunOp:0.05, disc:'#C9A66B', ambient:0.04 },
+  { sky:['#2a3a5a','#1a2646','#0f1a30','#08121f','#040a14'], sea:['#14334a','#0b2132','#050f1a'], sunX:960, sunY:640, sunOp:0.18, disc:'#F4D7A0', ambient:0.08 },
+  { sky:['#F5CDA2','#E88F6C','#A26A86','#3a4566','#0F2A3D'], sea:['#3a6b7c','#1B3A4B','#0a1a2a'], sunX:960, sunY:455, sunOp:0.60, disc:'#FFF0D4', ambient:0.20 },
+];
+function lerp(a,b,t){ return a+(b-a)*t; }
+function hexToRgb(h){ h=h.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+function rgbToHex(r,g,b){ const x=v=>('0'+Math.round(v).toString(16)).slice(-2); return '#'+x(r)+x(g)+x(b); }
+function lerpHex(a,b,t){ const A=hexToRgb(a),B=hexToRgb(b); return rgbToHex(lerp(A[0],B[0],t),lerp(A[1],B[1],t),lerp(A[2],B[2],t)); }
+function interpStops(prog){
+  const n=skyStops.length-1, f=prog*n, i=Math.min(n-1,Math.floor(f)), k=f-i;
+  const A=skyStops[i], B=skyStops[i+1];
+  return {
+    sky:A.sky.map((h,idx)=>lerpHex(h,B.sky[idx],k)),
+    sea:A.sea.map((h,idx)=>lerpHex(h,B.sea[idx],k)),
+    sunX:lerp(A.sunX,B.sunX,k), sunY:lerp(A.sunY,B.sunY,k),
+    sunOp:lerp(A.sunOp,B.sunOp,k), disc:lerpHex(A.disc,B.disc,k),
+    ambient:lerp(A.ambient,B.ambient,k),
+  };
+}
+const sunDiscs = document.querySelectorAll('#sea > circle');
+function updateSkyFromScroll(){
+  const p = interpStops(scrollProgress());
+  stage.style.background =
+    `radial-gradient(ellipse 90% 55% at 50% 38%, rgba(201,166,107,${p.ambient.toFixed(3)}) 0%, transparent 65%),
+     linear-gradient(to bottom, ${p.sky[0]} 0%, ${p.sky[1]} 38%, ${p.sky[2]} 56%, ${p.sky[3]} 78%, ${p.sky[4]} 100%)`;
+  const grad = document.getElementById('seaGrad');
+  grad.children[0].setAttribute('stop-color', p.sea[0]);
+  grad.children[1].setAttribute('stop-color', p.sea[1]);
+  grad.children[2].setAttribute('stop-color', p.sea[2]);
+  const trail = document.getElementById('sunTrail');
+  trail.children[0].setAttribute('stop-color', p.disc);
+  trail.children[0].setAttribute('stop-opacity', p.sunOp.toFixed(3));
+  if (sunDiscs[0]) { sunDiscs[0].setAttribute('cx',p.sunX); sunDiscs[0].setAttribute('cy',p.sunY); sunDiscs[0].setAttribute('opacity',Math.min(1,p.sunOp*1.6).toFixed(3)); }
+  if (sunDiscs[1]) { sunDiscs[1].setAttribute('cx',p.sunX); sunDiscs[1].setAttribute('cy',p.sunY); sunDiscs[1].setAttribute('fill',p.disc); sunDiscs[1].setAttribute('opacity',Math.min(1,p.sunOp*1.5).toFixed(3)); }
+}
+updateSkyFromScroll();
+window.addEventListener('scroll', () => { updateSkyFromScroll(); updateAnchorFromScroll(); }, { passive: true });
+updateAnchorFromScroll();
+
+// ===== Tweaks =====
+const tk = document.getElementById('tweaks');
+const tkWave = document.getElementById('tk-wave');
+const tkWind = document.getElementById('tk-wind');
+const tkWake = document.getElementById('tk-wake');
+const tkBoat = document.getElementById('tk-boat');
+function syncUI(){ tkWave.value=TWEAKS.waveScale; tkWind.value=TWEAKS.windSpeed; tkWake.value=TWEAKS.wakeSpread; tkBoat.value=TWEAKS.boatStyle; }
+syncUI();
+function pushEdit(o){ window.parent.postMessage({type:'__edit_mode_set_keys', edits:o}, '*'); }
+tkWave.addEventListener('input', e=>{ TWEAKS.waveScale=+e.target.value; pushEdit({waveScale:TWEAKS.waveScale}); });
+tkWind.addEventListener('input', e=>{ TWEAKS.windSpeed=+e.target.value; pushEdit({windSpeed:TWEAKS.windSpeed}); });
+tkWake.addEventListener('input', e=>{ TWEAKS.wakeSpread=+e.target.value; pushEdit({wakeSpread:TWEAKS.wakeSpread}); });
+tkBoat.addEventListener('change', e=>{ TWEAKS.boatStyle=e.target.value; renderBoat(); pushEdit({boatStyle:e.target.value}); });
+window.addEventListener('message', (e)=>{ const d=e.data||{}; if (d.type==='__activate_edit_mode') tk.classList.add('on'); if (d.type==='__deactivate_edit_mode') tk.classList.remove('on'); });
+window.parent.postMessage({type:'__edit_mode_available'}, '*');
+
+setTimeout(()=>{ hint.style.opacity = 0.25; }, 5500);
+
+// Init & resize
+window.addEventListener('resize', () => { anchor.settledY = computeSeabedY(); updateAnchorFromScroll(); });
+
+initAnchor();
+updateAnchorFromScroll();
+</script>
 </body>
 </html>
