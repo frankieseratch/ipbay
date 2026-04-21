@@ -24,6 +24,7 @@
 
   /* Type */
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -43,6 +44,7 @@ h1, h2, h3, .display {
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--text-primary);
+  font-variation-settings: 'opsz' 96, 'SOFT' 0, 'WONK' 0;
 }
 h1 { font-size: clamp(3rem, 7vw, 6rem); line-height: 1.05; }
 h2 { font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.1; }
@@ -200,11 +202,11 @@ nav {
 }
 .page-header-title em { font-style: italic; color: var(--accent-deep); }
 .page-header-lede {
-  font-family: var(--font-display);
+  font-family: var(--font-serif);
   font-size: clamp(18px, 1.8vw, 24px);
   font-weight: 400; font-style: italic;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.55;
   max-width: 720px; margin: 0 auto;
 }
 
@@ -285,9 +287,9 @@ nav {
   background: rgba(160, 49, 43, 0.04);
 }
 .pull-quote p {
-  font-family: var(--font-display);
-  font-size: 20px; font-weight: 400;
-  font-style: italic; line-height: 1.5;
+  font-family: var(--font-serif);
+  font-size: 21px; font-weight: 400;
+  font-style: italic; line-height: 1.55;
   color: var(--text-primary) !important;
   margin: 0 !important;
 }
@@ -614,11 +616,11 @@ section {
 }
 .cwway-mark em { font-style: italic; color: var(--accent-deep); }
 .cwway-lede {
-  font-family: var(--font-display);
+  font-family: var(--font-serif);
   font-size: clamp(20px, 2vw, 26px);
   font-weight: 400; font-style: italic;
   color: var(--text-secondary);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .cwway-meta {
   display: flex; flex-direction: column; gap: 16px;
@@ -703,11 +705,11 @@ section {
   font-style: italic;
 }
 .cwway-quote-text {
-  font-family: var(--font-display);
+  font-family: var(--font-serif);
   font-size: clamp(22px, 2.4vw, 32px);
   font-weight: 400; font-style: italic;
   color: var(--text-primary);
-  line-height: 1.45; margin-bottom: 20px;
+  line-height: 1.5; margin-bottom: 20px;
 }
 .cwway-quote-attr {
   font-family: var(--font-body);
