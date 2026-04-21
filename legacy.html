@@ -7,7 +7,7 @@
 <meta name="description" content="Yasuo Matsuo founded Cloverway Inc. in 1991. IP Bay carries forward the relationships and author-first philosophy he built.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Crimson+Pro:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
   .legacy-h1 { font-size: clamp(3rem, 8vw, 7rem); white-space: nowrap; line-height: 1; }
@@ -311,146 +311,425 @@
   </div>
 </section>
 
-<!-- RELATIONSHIPS (§3.7) -->
+<!-- RELATIONSHIPS (§3.7) — Publisher & Partner Network (interactive) -->
 <section class="networks">
-  <div class="section-inner">
-    <div class="section-label">Publisher &amp; Partner Network</div>
-    <h2 class="networks-headline" style="text-align: center; max-width: 780px; margin: 0 auto 24px;">Relationships built<br>over thirty years.</h2>
-    <p class="networks-desc" style="text-align: center; max-width: 620px; margin: 0 auto 56px;">The crossings that formed during the Cloverway years are the foundation of what IP Bay is honored to carry forward today.</p>
+  <div class="section-inner" style="display:flex;flex-direction:column;align-items:center;">
 
-    <!-- PARTING SEAS: interactive boat scene (replaces static node-graph) -->
     <style>
-      .parting-scene {
-        position: relative;
-        width: 100%;
-        max-width: 1000px;
-        margin: 0 auto;
-        aspect-ratio: 1920 / 1080;
-        border-radius: 2px;
-        overflow: hidden;
-        touch-action: none;
-        user-select: none;
-        cursor: grab;
-        border: 1px solid rgba(26,26,26,0.12);
-        box-shadow: 0 24px 48px -28px rgba(15, 42, 61, 0.22);
+      /* ── Publisher & Partner Network component (embedded from PublisherNetwork.html) ── */
+      :root {
+        --cream:#F7F1E5; --cream-soft:#FEFAF2;
+        --ink:#1A1A1A; --ink-soft:#5C5C5C;
+        --dock:#C9A66B; --dock-dark:#8E7238;
+        --red:#A0312B; --red-deep:#7A241F;
+        --deep:#1B3A4B;
+        --lantern:#E9B75C; --lantern-hot:#F4D06F;
+        --serif:'Cormorant Garamond', Georgia, serif;
+        --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
       }
-      .parting-scene.dragging { cursor: grabbing; }
-      .parting-scene-svg {
-        position: absolute; inset: 0;
-        width: 100%; height: 100%;
-        display: block;
-      }
-      .parting-scene-hint {
-        position: absolute;
-        bottom: 14px; right: 20px;
-        font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 10px;
-        letter-spacing: 0.24em;
-        text-transform: uppercase;
-        color: rgba(26,26,26,0.55);
-        font-weight: 500;
-        pointer-events: none;
-        transition: opacity 600ms ease;
-      }
-      .parting-scene-hint::before {
-        content: ""; display: inline-block;
-        width: 18px; height: 1px;
-        background: #C9A66B;
-        vertical-align: middle; margin-right: 10px; opacity: 0.8;
-      }
-      @media (max-width: 720px) {
-        .parting-scene-hint { font-size: 9px; bottom: 10px; right: 14px; letter-spacing: 0.18em; }
-      }
+      .kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);opacity:.75;margin-bottom:20px}
+      .pnet-h1{font-family:var(--serif);font-weight:500;font-size:clamp(32px,4.2vw,52px);letter-spacing:-.01em;line-height:1.1;text-align:center;max-width:900px;margin:0 0 8px}
+      .pnet-h1 em{font-style:italic;color:var(--red-deep)}
+      .sub{font-size:15px;color:var(--ink-soft);max-width:560px;text-align:center;line-height:1.55;margin:0 0 28px}
+      .tabs{display:flex;gap:8px;background:rgba(183,165,120,.14);padding:6px;border-radius:999px;margin-bottom:28px;border:1px solid rgba(120,95,50,.15)}
+      .tabs button{font-family:var(--sans);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:10px 20px;border-radius:999px;border:none;background:transparent;color:var(--ink-soft);cursor:pointer;transition:all .4s cubic-bezier(.2,.8,.2,1);font-weight:500;white-space:nowrap}
+      .tabs button:hover{color:var(--ink)}
+      .tabs button.active{background:var(--red);color:#FBF6EA;box-shadow:0 4px 14px -4px rgba(94,20,32,.45)}
+      @media (max-width:640px){.tabs{flex-direction:column;border-radius:14px}.tabs button{border-radius:10px}}
+      .stage-wrap{width:min(1100px,100%);position:relative}
+      .stage{position:relative;width:100%;aspect-ratio:1100/640;border-radius:24px;overflow:hidden;touch-action:none;cursor:grab;user-select:none;background:var(--cream);box-shadow:inset 0 0 0 1px rgba(120,95,50,.12),0 1px 0 rgba(255,255,255,.6),0 30px 60px -30px rgba(94,60,10,.22)}
+      .stage.dragging{cursor:grabbing}
+      .stage svg.net{position:absolute;inset:0;width:100%;height:100%;display:block}
+      .hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);opacity:.6;pointer-events:none;background:rgba(242,235,221,.7);padding:6px 12px;border-radius:999px;backdrop-filter:blur(4px);transition:opacity .6s ease}
+      .stage.touched .hint{opacity:0}
+      .card{position:absolute;top:20px;right:20px;width:min(310px,42%);background:rgba(251,246,234,.96);border:1px solid rgba(120,95,50,.18);border-radius:14px;padding:18px 20px;box-shadow:0 12px 40px -12px rgba(60,40,10,.25);transform:translateX(calc(100% + 40px));opacity:0;transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s ease;pointer-events:none}
+      .card.open{transform:translateX(0);opacity:1;pointer-events:auto}
+      .card .eyebrow{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dock-dark);margin-bottom:6px}
+      .card h4{font-family:var(--serif);font-weight:500;font-size:26px;line-height:1.1;letter-spacing:-.01em;margin:0 0 10px;color:var(--ink)}
+      .card p{margin:0;font-size:14px;line-height:1.55;color:var(--ink-soft);text-wrap:pretty}
+      .card .meta{margin-top:12px;padding-top:10px;border-top:1px solid rgba(120,95,50,.18);display:flex;justify-content:space-between;gap:10px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dock-dark)}
+      .card .close{position:absolute;top:8px;right:12px;width:22px;height:22px;border:none;background:transparent;cursor:pointer;color:var(--ink-soft);opacity:.6;font-size:20px;line-height:1}
+      .card .close:hover{opacity:1}
+      @media (max-width:720px){.card{width:calc(100% - 32px);right:16px;top:12px}}
+      text.node-label{font-family:var(--sans);font-size:13px;font-weight:500;fill:var(--ink);pointer-events:none;dominant-baseline:middle;text-anchor:middle;letter-spacing:.01em}
+      text.center-label-top{font-family:var(--sans);font-weight:600;font-size:20px;fill:#FBF6EA;letter-spacing:.06em}
+      text.center-label-bot{font-family:var(--serif);font-style:italic;font-size:19px;fill:#FBF6EA}
+      circle.node{stroke:var(--ink);stroke-width:1.4;cursor:pointer;transition:stroke .4s ease}
+      circle.node-halo{pointer-events:none;opacity:0;transition:opacity .4s ease}
+      circle.center{cursor:grab}
+      .stage.dragging circle.center{cursor:grabbing}
+      path.link{stroke:var(--dock);stroke-width:1.3;fill:none;stroke-linecap:round;stroke-dasharray:2 4;opacity:.85;transition:stroke .4s ease,stroke-width .4s ease,opacity .4s ease}
+      path.link.lit{stroke:var(--lantern);stroke-width:1.8;stroke-dasharray:none;opacity:1}
+      circle.ripple{fill:none;stroke:var(--lantern-hot);stroke-width:1.5;pointer-events:none}
+      circle.beacon{fill:none;stroke:rgba(233,183,92,.45);stroke-width:1;pointer-events:none}
+      .node-grp,path.link{transition:opacity .45s ease}
     </style>
 
-    <div class="parting-scene" id="ps-stage" role="img" aria-label="An interactive boat sailing on the harbor. Drag the vessel to move it.">
-      <svg class="parting-scene-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <defs>
-          <linearGradient id="ps-skyGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#FEFAF2"/>
-            <stop offset="0.55" stop-color="#F7E4C4"/>
-            <stop offset="1" stop-color="#E8CAA0"/>
-          </linearGradient>
-          <linearGradient id="ps-seaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#A8C4D0"/>
-            <stop offset="0.5" stop-color="#7FA6B8"/>
-            <stop offset="1" stop-color="#5A8499"/>
-          </linearGradient>
-          <radialGradient id="ps-sunTrail" cx="0.5" cy="0" r="0.6">
-            <stop offset="0" stop-color="#C9A66B" stop-opacity="0.35"/>
-            <stop offset="1" stop-color="#C9A66B" stop-opacity="0"/>
-          </radialGradient>
-          <filter id="ps-foamBlur"><feGaussianBlur stdDeviation="1.4"/></filter>
-          <clipPath id="ps-seaClip"><rect x="0" y="560" width="1920" height="520"/></clipPath>
-          <linearGradient id="ps-sailShade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="rgba(0,0,0,0)"/>
-            <stop offset="1" stop-color="rgba(15,42,61,0.22)"/>
-          </linearGradient>
-        </defs>
+    <div class="kicker">Publisher &amp; Partner Network</div>
+    <h1 class="pnet-h1">Relationships built over <em>thirty years.</em></h1>
+    <p class="sub">The crossings that formed during the Cloverway years are the foundation of what IP Bay is honored to carry forward today.</p>
 
-        <rect x="0" y="0" width="1920" height="580" fill="url(#ps-skyGrad)"/>
-
-        <g opacity="0.35">
-          <ellipse cx="300" cy="240" rx="180" ry="14" fill="#FEFAF2"/>
-          <ellipse cx="900" cy="200" rx="280" ry="12" fill="#FEFAF2"/>
-          <ellipse cx="1500" cy="280" rx="220" ry="16" fill="#FEFAF2"/>
-          <ellipse cx="1750" cy="170" rx="140" ry="10" fill="#F7E4C4"/>
-        </g>
-
-        <line x1="80" y1="560" x2="1840" y2="560" stroke="rgba(26,26,26,0.12)" stroke-width="1"/>
-
-        <rect x="0" y="560" width="1920" height="520" fill="url(#ps-seaGrad)"/>
-        <rect x="0" y="560" width="1920" height="520" fill="url(#ps-sunTrail)"/>
-
-        <g clip-path="url(#ps-seaClip)">
-          <g id="ps-wavesFar" opacity="0.6" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="none"></g>
-          <g id="ps-wavesMid" opacity="0.75" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" fill="none"></g>
-          <g id="ps-wavesNear" stroke="rgba(255,255,255,0.75)" stroke-width="1.6" fill="none"></g>
-          <g id="ps-wake"></g>
-          <g id="ps-boat" style="transform-box: fill-box; transform-origin: center;"></g>
-          <g id="ps-splashes"></g>
-        </g>
-      </svg>
-      <div class="parting-scene-hint" id="ps-hint">drag the vessel <span style="color:#C9A66B;margin:0 6px;">·</span> click the sea</div>
+    <div class="tabs" role="tablist">
+      <button class="active" data-group="publishers" role="tab">Japanese Publishers</button>
+      <button data-group="us" role="tab">U.S. Partners</button>
+      <button data-group="broadcast" role="tab">Broadcast Partners</button>
     </div>
 
-    <div class="networks-grid" style="margin-top: 80px;">
-      <div>
-        <div class="network-group">
-          <div class="network-group-label">Japanese Publishers, Active Today</div>
-          <div class="network-list">
-            <span class="network-tag pub">Shueisha</span>
-            <span class="network-tag pub">Kodansha</span>
-            <span class="network-tag pub">Kadokawa</span>
-            <span class="network-tag pub">Toei Animation</span>
-            <span class="network-tag pub">Bandai</span>
-          </div>
+    <div class="stage-wrap">
+      <div class="stage" id="stage">
+        <svg class="net" id="net" viewBox="0 0 1100 640" preserveAspectRatio="xMidYMid slice"></svg>
+        <div class="card" id="card" role="dialog" aria-live="polite">
+          <button class="close" id="cardClose" aria-label="Close">×</button>
+          <div class="eyebrow" id="cardEyebrow">Partner</div>
+          <h4 id="cardTitle">—</h4>
+          <p id="cardBody">—</p>
+          <div class="meta"><span id="cardFounded">—</span><span id="cardHQ">—</span></div>
         </div>
-        <div class="network-group">
-          <div class="network-group-label">Cloverway Era, U.S. Partners</div>
-          <div class="network-list">
-            <span class="network-tag">Viz Communications</span>
-            <span class="network-tag">Tokyopop</span>
-            <span class="network-tag">Pioneer Entertainment</span>
-            <span class="network-tag">ADV Films</span>
-            <span class="network-tag">Bandai Entertainment</span>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="network-group">
-          <div class="network-group-label">Cloverway Era, Broadcast Partners</div>
-          <div class="network-list">
-            <span class="network-tag">Televisa</span>
-            <span class="network-tag">TV Azteca</span>
-            <span class="network-tag">Cartoon Network</span>
-            <span class="network-tag">Fox Kids</span>
-            <span class="network-tag">Telemundo</span>
-            <span class="network-tag">Univision</span>
-          </div>
-        </div>
+        <div class="hint">Drag the harbor · tap a buoy</div>
       </div>
     </div>
+
+    <script>
+    (() => {
+      const NS='http://www.w3.org/2000/svg';
+      const svg=document.getElementById('net');
+      const stage=document.getElementById('stage');
+      const W=1100,H=640,CX=W/2,CY=330,WATERLINE=300;
+
+      const defs=document.createElementNS(NS,'defs');
+      defs.innerHTML=`
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FEFAF2"/><stop offset="100%" stop-color="#EADFC5"/></linearGradient>
+        <linearGradient id="shimmer" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(255,252,235,0.8)"/><stop offset="100%" stop-color="rgba(255,252,235,0)"/></linearGradient>
+        <radialGradient id="nodeFill" cx="35%" cy="28%" r="80%"><stop offset="0%" stop-color="#FFFDF5"/><stop offset="70%" stop-color="#FBF6EA"/><stop offset="100%" stop-color="#E7D9B8"/></radialGradient>
+        <radialGradient id="litFill" cx="35%" cy="28%" r="80%"><stop offset="0%" stop-color="#FFF4C8"/><stop offset="60%" stop-color="#F4D06F"/><stop offset="100%" stop-color="#B37626"/></radialGradient>
+        <radialGradient id="centerFill" cx="35%" cy="28%" r="85%"><stop offset="0%" stop-color="#C24640"/><stop offset="55%" stop-color="#A0312B"/><stop offset="100%" stop-color="#54130F"/></radialGradient>
+        <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="hotGlow" x="-90%" y="-90%" width="280%" height="280%"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      `;
+      svg.appendChild(defs);
+
+      const gBack=document.createElementNS(NS,'g');svg.appendChild(gBack);
+      const sky=document.createElementNS(NS,'rect');sky.setAttribute('x',0);sky.setAttribute('y',0);sky.setAttribute('width',W);sky.setAttribute('height',WATERLINE);sky.setAttribute('fill','url(#skyGrad)');gBack.appendChild(sky);
+      const water=document.createElementNS(NS,'rect');water.setAttribute('x',0);water.setAttribute('y',WATERLINE);water.setAttribute('width',W);water.setAttribute('height',H-WATERLINE);water.setAttribute('fill','#BFC5AE');gBack.appendChild(water);
+
+      [{x:150,y:WATERLINE-8},{x:820,y:WATERLINE-10},{x:980,y:WATERLINE-6}].forEach(b=>{
+        const hull=document.createElementNS(NS,'path');hull.setAttribute('d',`M ${b.x} ${b.y} l 14 0 l -2 4 l -10 0 z`);hull.setAttribute('fill','#3f4d4a');hull.setAttribute('opacity','0.4');gBack.appendChild(hull);
+        const mast=document.createElementNS(NS,'line');mast.setAttribute('x1',b.x+7);mast.setAttribute('y1',b.y);mast.setAttribute('x2',b.x+7);mast.setAttribute('y2',b.y-9);mast.setAttribute('stroke','#3f4d4a');mast.setAttribute('stroke-width','0.8');mast.setAttribute('opacity','0.4');gBack.appendChild(mast);
+      });
+
+      const horizon=document.createElementNS(NS,'line');horizon.setAttribute('x1',0);horizon.setAttribute('y1',WATERLINE);horizon.setAttribute('x2',W);horizon.setAttribute('y2',WATERLINE);horizon.setAttribute('stroke','rgba(90,70,40,0.25)');horizon.setAttribute('stroke-width','0.8');gBack.appendChild(horizon);
+
+      const waveConfigs=[
+        {y:WATERLINE+22,amp:6,len:170,speed:.18,fill:'rgba(255,252,235,0.25)'},
+        {y:WATERLINE+80,amp:10,len:220,speed:.14,fill:'rgba(255,252,235,0.14)'},
+        {y:WATERLINE+170,amp:14,len:300,speed:.10,fill:'rgba(58,90,104,0.38)'},
+        {y:WATERLINE+275,amp:18,len:360,speed:.08,fill:'rgba(27,58,75,0.48)'},
+      ];
+      const waveLayers=waveConfigs.map(cfg=>{const p=document.createElementNS(NS,'path');p.setAttribute('fill',cfg.fill);gBack.appendChild(p);return{el:p,cfg}});
+
+      const shimmerRect=document.createElementNS(NS,'rect');shimmerRect.setAttribute('x',0);shimmerRect.setAttribute('y',WATERLINE);shimmerRect.setAttribute('width',W);shimmerRect.setAttribute('height',50);shimmerRect.setAttribute('fill','url(#shimmer)');shimmerRect.setAttribute('opacity','0.7');gBack.appendChild(shimmerRect);
+
+      const gLinks=document.createElementNS(NS,'g');svg.appendChild(gLinks);
+      const gRipples=document.createElementNS(NS,'g');svg.appendChild(gRipples);
+      const gNodes=document.createElementNS(NS,'g');svg.appendChild(gNodes);
+      const gCenter=document.createElementNS(NS,'g');svg.appendChild(gCenter);
+
+      const GROUPS={
+        publishers:[
+          {id:'shueisha',label:'Shueisha',angle:215,dist:340,eyebrow:'Japanese Publisher · Tokyo',title:'Shueisha',body:'Founded in 1926, Shueisha is one of Japan\u2019s largest publishers and home to Weekly Shōnen Jump, publishers of One Piece, Dragon Ball, and much of the manga that reached the world through Cloverway.',founded:'Est. 1926',hq:'Chiyoda, Tokyo'},
+          {id:'kodansha',label:'Kodansha',angle:260,dist:255,eyebrow:'Japanese Publisher · Tokyo',title:'Kodansha',body:'Founded by Seiji Noma in 1909, Kodansha is among Japan\u2019s largest publishers, the home of Sailor Moon, Attack on Titan, Ghost in the Shell, and Cardcaptor Sakura.',founded:'Est. 1909',hq:'Bunkyō, Tokyo'},
+          {id:'kadokawa',label:'Kadokawa',angle:305,dist:335,eyebrow:'Japanese Publisher · Tokyo',title:'Kadokawa',body:'Founded in 1945 to "revitalize Japanese culture through publishing," Kadokawa is today a major entertainment conglomerate spanning books, anime, film, and games.',founded:'Est. 1945',hq:'Chiyoda, Tokyo'},
+          {id:'bandai',label:'Bandai',angle:355,dist:360,eyebrow:'Toy & IP Holder · Tokyo',title:'Bandai',body:'Japan\u2019s leading toy company and a global entertainment IP owner, home to Gundam, Digimon, and Tamagotchi, now part of Bandai Namco.',founded:'Est. 1950',hq:'Taitō, Tokyo'},
+          {id:'nippon',label:['Nippon','Animation'],angle:35,dist:355,eyebrow:'Animation Studio · Tokyo',title:'Nippon Animation',body:'Longtime producer of the World Masterpiece Theater series and classic adaptations, and a key Cloverway partner for Latin-American broadcast distribution.',founded:'Est. 1975',hq:'Tama, Tokyo'},
+          {id:'shogak',label:['Shogaku-','kan'],angle:85,dist:260,eyebrow:'Japanese Publisher · Tokyo',title:'Shogakukan',body:'Founded in 1922, Shogakukan is one of Japan\u2019s largest publishers and co-owner of Viz Media, publishers of Doraemon, Detective Conan, and Ranma \u00bd.',founded:'Est. 1922',hq:'Chiyoda, Tokyo'},
+          {id:'toei',label:'Toei',angle:175,dist:355,eyebrow:'Animation Studio · Tokyo',title:'Toei Animation',body:'One of the oldest animation studios in Japan, behind Dragon Ball, Sailor Moon, Saint Seiya, Digimon, and One Piece. Cloverway served as its official representative for the Americas.',founded:'Est. 1948',hq:'Nerima, Tokyo'},
+        ],
+        us:[
+          {id:'viz',label:['Viz','Media'],angle:200,dist:330,eyebrow:'North American Publisher · San Francisco',title:'Viz Media',body:'The dominant English-language manga and anime publisher in North America, jointly owned by Shueisha and Shogakukan, and a partner to Cloverway since the 1990s.',founded:'Est. 1986',hq:'San Francisco, CA'},
+          {id:'tokyopop',label:'Tokyopop',angle:255,dist:260,eyebrow:'North American Publisher · Los Angeles',title:'Tokyopop',body:'Pioneering U.S. manga publisher that helped introduce unflipped right-to-left reading to American audiences, expanding the market for translated Japanese comics in the early 2000s.',founded:'Est. 1997',hq:'Los Angeles, CA'},
+          {id:'pioneer',label:'Pioneer',angle:305,dist:340,eyebrow:'North American Distributor · Long Beach',title:'Pioneer Entertainment',body:'U.S. home video arm of Pioneer Corporation, an early anime distributor that brought titles such as Tenchi Muyo! and Serial Experiments Lain to North American viewers.',founded:'Est. 1989',hq:'Long Beach, CA'},
+          {id:'adv',label:'ADV Films',angle:35,dist:340,eyebrow:'North American Distributor · Houston',title:'ADV Films',body:'One of the largest independent U.S. anime distributors of its era, licensing and dubbing hundreds of titles, including Neon Genesis Evangelion, for the American market.',founded:'Est. 1992',hq:'Houston, TX'},
+          {id:'bandai-us',label:['Bandai','Entertainment'],angle:85,dist:260,eyebrow:'North American Distributor · Cypress, CA',title:'Bandai Entertainment',body:'The North American anime distribution arm of Bandai, releasing Gundam, Cowboy Bebop, and Lucky Star in the U.S. until its retirement from new releases in 2012.',founded:'Est. 1998',hq:'Cypress, CA'},
+          {id:'viz-comm',label:['Viz','Comm.'],angle:140,dist:340,eyebrow:'North American Publisher · San Francisco',title:'Viz Communications',body:'The predecessor to today\u2019s Viz Media, a crucial Cloverway-era partner for English manga publishing and one of the earliest companies bringing Shueisha and Shogakukan titles to the U.S.',founded:'Est. 1986',hq:'San Francisco, CA'},
+        ],
+        broadcast:[
+          {id:'televisa',label:'Televisa',angle:210,dist:340,eyebrow:'Broadcaster · Mexico City',title:'Televisa',body:'The largest Spanish-language broadcaster in the world, and a key Cloverway partner for bringing Saint Seiya, Dragon Ball Z, and Sailor Moon to audiences across Latin America.',founded:'Est. 1973',hq:'Mexico City, MX'},
+          {id:'azteca',label:['TV','Azteca'],angle:270,dist:270,eyebrow:'Broadcaster · Mexico City',title:'TV Azteca',body:'Mexico\u2019s second-largest broadcaster. Alongside Televisa, TV Azteca aired many of the anime properties that defined a generation of Mexican and Latin-American viewers.',founded:'Est. 1993',hq:'Mexico City, MX'},
+          {id:'cn',label:['Cartoon','Network'],angle:325,dist:340,eyebrow:'Broadcaster · Atlanta',title:'Cartoon Network',body:'The U.S. cable channel whose Toonami block made anime a mainstream phenomenon, airing Dragon Ball Z, Sailor Moon, and Gundam to millions of American viewers.',founded:'Est. 1992',hq:'Atlanta, GA'},
+          {id:'foxkids',label:'Fox Kids',angle:35,dist:340,eyebrow:'Broadcaster · United States',title:'Fox Kids',body:'Saturday-morning children\u2019s block on the Fox network, an early U.S. broadcaster of Japanese animation alongside its Mighty Morphin Power Rangers franchise.',founded:'Est. 1990',hq:'Los Angeles, CA'},
+          {id:'telemundo',label:'Telemundo',angle:90,dist:260,eyebrow:'Broadcaster · Miami',title:'Telemundo',body:'The second-largest Spanish-language broadcaster in the United States, and a Cloverway-era distribution partner that carried Dragon Ball Z to the U.S. Hispanic market in 1995.',founded:'Est. 1984',hq:'Miami, FL'},
+          {id:'univision',label:'Univision',angle:150,dist:340,eyebrow:'Broadcaster · Miami',title:'Univision',body:'The largest Spanish-language broadcaster in the United States, and a key network in Cloverway\u2019s distribution reach across the U.S. Hispanic audience.',founded:'Est. 1962',hq:'Miami, FL'},
+        ],
+      };
+
+      const RADIUS=42,CRADIUS=58;
+      Object.values(GROUPS).forEach(list=>list.forEach(n=>{
+        const a=n.angle*Math.PI/180;
+        n.rx=CX+Math.cos(a)*n.dist;
+        n.ry=CY+Math.sin(a)*n.dist*0.82;
+        n.x=n.rx;n.y=n.ry;n.vx=0;n.vy=0;
+        n.phase=Math.random()*Math.PI*2;
+        n.bobAmp=5+Math.random()*4;
+        n.bobSpd=0.5+Math.random()*0.35;
+        n.swayAmp=3+Math.random()*2;
+        n.lit=false;
+      }));
+
+      const C={x:CX,y:CY,vx:0,vy:0,rx:CX,ry:CY,dragged:false,tx:null,ty:null,pulse:0};
+
+      function buildNodeSVG(n){
+        const p=document.createElementNS(NS,'path');p.setAttribute('class','link');gLinks.appendChild(p);n.pathEl=p;
+        const g=document.createElementNS(NS,'g');g.setAttribute('class','node-grp');
+        const sh=document.createElementNS(NS,'ellipse');sh.setAttribute('cx','0');sh.setAttribute('cy',RADIUS+10);sh.setAttribute('rx',RADIUS*0.65);sh.setAttribute('ry','4');sh.setAttribute('fill','rgba(40,60,60,0.25)');sh.setAttribute('filter','url(#softGlow)');g.appendChild(sh);
+        const halo=document.createElementNS(NS,'circle');halo.setAttribute('class','node-halo');halo.setAttribute('r',RADIUS*1.9);halo.setAttribute('fill','url(#litFill)');halo.setAttribute('filter','url(#hotGlow)');halo.setAttribute('opacity','0');g.appendChild(halo);n.haloEl=halo;
+        const c=document.createElementNS(NS,'circle');c.setAttribute('class','node');c.setAttribute('r',RADIUS);c.setAttribute('fill','url(#nodeFill)');c.setAttribute('filter','url(#softGlow)');g.appendChild(c);n.circleEl=c;
+        if(Array.isArray(n.label)){
+          const t=document.createElementNS(NS,'text');t.setAttribute('class','node-label');
+          const l1=document.createElementNS(NS,'tspan');l1.setAttribute('x','0');l1.setAttribute('dy','-7');l1.textContent=n.label[0];
+          const l2=document.createElementNS(NS,'tspan');l2.setAttribute('x','0');l2.setAttribute('dy','16');l2.textContent=n.label[1];
+          t.appendChild(l1);t.appendChild(l2);g.appendChild(t);
+        }else{
+          const t=document.createElementNS(NS,'text');t.setAttribute('class','node-label');t.textContent=n.label;g.appendChild(t);
+        }
+        gNodes.appendChild(g);n.groupEl=g;
+        c.addEventListener('pointerdown',(ev)=>{ev.stopPropagation();igniteNode(n)});
+      }
+      Object.values(GROUPS).forEach(list=>list.forEach(buildNodeSVG));
+
+      // ————— Anchor apparatus behind/around the ring —————
+      const gAnchor=document.createElementNS(NS,'g');gCenter.appendChild(gAnchor);
+
+      const cShadow=document.createElementNS(NS,'ellipse');
+      cShadow.setAttribute('rx',CRADIUS*1.4);cShadow.setAttribute('ry','8');
+      cShadow.setAttribute('fill','rgba(20,40,55,0.38)');
+      cShadow.setAttribute('filter','url(#softGlow)');
+      gAnchor.appendChild(cShadow);
+
+      const flukes=document.createElementNS(NS,'path');
+      flukes.setAttribute('fill','#1B3A4B');
+      flukes.setAttribute('stroke','#0c1f2a');
+      flukes.setAttribute('stroke-width','1.2');
+      flukes.setAttribute('stroke-linejoin','round');
+      flukes.setAttribute('filter','url(#softGlow)');
+      gAnchor.appendChild(flukes);
+
+      const shank=document.createElementNS(NS,'rect');
+      shank.setAttribute('width','10');
+      shank.setAttribute('fill','#1B3A4B');
+      shank.setAttribute('stroke','#0c1f2a');
+      shank.setAttribute('stroke-width','0.8');
+      shank.setAttribute('rx','1.5');
+      gAnchor.appendChild(shank);
+
+      const stock=document.createElementNS(NS,'rect');
+      stock.setAttribute('height','7');
+      stock.setAttribute('width','120');
+      stock.setAttribute('fill','#C9A66B');
+      stock.setAttribute('stroke','#8E7238');
+      stock.setAttribute('stroke-width','0.8');
+      stock.setAttribute('rx','2');
+      gAnchor.appendChild(stock);
+      const stockL=document.createElementNS(NS,'circle');stockL.setAttribute('r','6');stockL.setAttribute('fill','#C9A66B');stockL.setAttribute('stroke','#8E7238');stockL.setAttribute('stroke-width','0.8');gAnchor.appendChild(stockL);
+      const stockR=document.createElementNS(NS,'circle');stockR.setAttribute('r','6');stockR.setAttribute('fill','#C9A66B');stockR.setAttribute('stroke','#8E7238');stockR.setAttribute('stroke-width','0.8');gAnchor.appendChild(stockR);
+
+      const beacons=[];for(let i=0;i<3;i++){const b=document.createElementNS(NS,'circle');b.setAttribute('class','beacon');b.setAttribute('cx',CX);b.setAttribute('cy',CY);b.setAttribute('r',CRADIUS+8+i*10);gCenter.appendChild(b);beacons.push(b)}
+
+      const centerCircle=document.createElementNS(NS,'circle');centerCircle.setAttribute('class','center');centerCircle.setAttribute('r',CRADIUS);centerCircle.setAttribute('fill','url(#centerFill)');centerCircle.setAttribute('stroke','#54130F');centerCircle.setAttribute('stroke-width','1');centerCircle.setAttribute('filter','url(#softGlow)');gCenter.appendChild(centerCircle);
+      const ringInner=document.createElementNS(NS,'circle');ringInner.setAttribute('r',CRADIUS-9);ringInner.setAttribute('fill','none');ringInner.setAttribute('stroke','rgba(255,230,200,0.18)');ringInner.setAttribute('stroke-width','1.2');ringInner.setAttribute('pointer-events','none');gCenter.appendChild(ringInner);
+      const lantern=document.createElementNS(NS,'circle');lantern.setAttribute('r','5');lantern.setAttribute('fill','#F4D06F');lantern.setAttribute('filter','url(#hotGlow)');gCenter.appendChild(lantern);
+      const tIP=document.createElementNS(NS,'text');tIP.setAttribute('class','center-label-top');tIP.setAttribute('text-anchor','middle');tIP.setAttribute('dy','-4');tIP.textContent='IP';gCenter.appendChild(tIP);
+      const tBay=document.createElementNS(NS,'text');tBay.setAttribute('class','center-label-bot');tBay.setAttribute('text-anchor','middle');tBay.setAttribute('dy','20');tBay.textContent='Bay';gCenter.appendChild(tBay);
+
+      let activeGroup='publishers';
+      function applyGroupVisibility(){
+        Object.entries(GROUPS).forEach(([key,list])=>{
+          const visible=(key===activeGroup);
+          list.forEach(n=>{
+            n.groupEl.style.opacity=visible?'1':'0';
+            n.groupEl.style.pointerEvents=visible?'auto':'none';
+            n.pathEl.style.opacity=visible?'0.85':'0';
+            if(!visible){n.lit=false;n.x=n.rx;n.y=n.ry;n.vx=0;n.vy=0}
+          });
+        });
+      }
+      applyGroupVisibility();
+      document.querySelectorAll('.tabs button').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          activeGroup=btn.dataset.group;
+          document.getElementById('card').classList.remove('open');
+          currentLit=null;
+          applyGroupVisibility();
+        });
+      });
+
+      let drag=null;
+      function stagePoint(e){
+        const r=stage.getBoundingClientRect();
+        const scale=Math.min(r.width/W,r.height/H);
+        const renderW=W*scale,renderH=H*scale;
+        const ox=(r.width-renderW)/2,oy=(r.height-renderH)/2;
+        return{x:(e.clientX-r.left-ox)/scale,y:(e.clientY-r.top-oy)/scale};
+      }
+      stage.addEventListener('pointerdown',(e)=>{
+        stage.classList.add('dragging','touched');
+        const p=stagePoint(e);
+        drag={offX:C.x-p.x,offY:C.y-p.y};
+        C.dragged=true;C.tx=p.x+drag.offX;C.ty=p.y+drag.offY;
+        stage.setPointerCapture(e.pointerId);
+      });
+      stage.addEventListener('pointermove',(e)=>{if(!drag)return;const p=stagePoint(e);C.tx=p.x+drag.offX;C.ty=p.y+drag.offY});
+      function endDrag(e){if(!drag)return;drag=null;C.dragged=false;C.tx=null;C.ty=null;stage.classList.remove('dragging');if(e&&e.pointerId!=null){try{stage.releasePointerCapture(e.pointerId)}catch(_){}}}
+      stage.addEventListener('pointerup',endDrag);
+      stage.addEventListener('pointercancel',endDrag);
+      stage.addEventListener('pointerleave',endDrag);
+
+      let currentLit=null;
+      const card=document.getElementById('card');
+      const cardEyebrow=document.getElementById('cardEyebrow');
+      const cardTitle=document.getElementById('cardTitle');
+      const cardBody=document.getElementById('cardBody');
+      const cardFounded=document.getElementById('cardFounded');
+      const cardHQ=document.getElementById('cardHQ');
+      document.getElementById('cardClose').addEventListener('click',()=>{card.classList.remove('open');if(currentLit){currentLit.lit=false;currentLit=null}});
+
+      function igniteNode(n){
+        if(currentLit&&currentLit!==n)currentLit.lit=false;
+        currentLit=n;n.lit=true;
+        const dx=n.x-C.x,dy=n.y-C.y,d=Math.hypot(dx,dy)||1;
+        n.vx+=(dx/d)*90;n.vy+=(dy/d)*90;
+        spawnRipple(n);showCard(n);
+        stage.classList.add('touched');
+      }
+      function spawnRipple(n){
+        const r=document.createElementNS(NS,'circle');r.setAttribute('class','ripple');r.setAttribute('cx',n.x);r.setAttribute('cy',n.y);r.setAttribute('r',RADIUS);gRipples.appendChild(r);
+        const start=performance.now(),DUR=1100;
+        (function step(t){
+          const k=(t-start)/DUR;
+          if(k>=1){r.remove();return}
+          const eased=1-Math.pow(1-k,3);
+          r.setAttribute('r',RADIUS+eased*130);
+          r.setAttribute('opacity',(1-k)*0.85);
+          r.setAttribute('stroke-width',1.5*(1-k*0.6));
+          requestAnimationFrame(step);
+        })(start);
+      }
+      function showCard(n){
+        cardEyebrow.textContent=n.eyebrow;
+        cardTitle.textContent=n.title;
+        cardBody.textContent=n.body;
+        cardFounded.textContent=n.founded;
+        cardHQ.textContent=n.hq;
+        card.classList.add('open');
+      }
+
+      let last=performance.now();
+      function wavePath(cfg,t){
+        const steps=40,baseY=cfg.y,phase=t*cfg.speed;
+        let d=`M 0 ${H} L 0 ${baseY}`;
+        for(let i=0;i<=steps;i++){
+          const x=(i/steps)*W;
+          const y=baseY+Math.sin((x/cfg.len)+phase)*cfg.amp+Math.sin((x/(cfg.len*0.47))+phase*1.3)*(cfg.amp*0.35);
+          d+=` L ${x.toFixed(1)} ${y.toFixed(2)}`;
+        }
+        d+=` L ${W} ${H} Z`;return d;
+      }
+      function tick(now){
+        const dt=Math.min(0.033,(now-last)/1000);last=now;
+        const tSec=now*0.001;
+        waveLayers.forEach(w=>w.el.setAttribute('d',wavePath(w.cfg,tSec)));
+
+        const idleX=C.rx+Math.cos(tSec*0.45)*4;
+        const idleY=C.ry+Math.sin(tSec*0.6)*5;
+        const tx=C.dragged&&C.tx!=null?C.tx:idleX;
+        const ty=C.dragged&&C.ty!=null?C.ty:idleY;
+        const K_C=C.dragged?22:4.8,D_C=C.dragged?8:2.0;
+        C.vx+=(tx-C.x)*K_C*dt;C.vy+=(ty-C.y)*K_C*dt;
+        C.vx*=Math.exp(-D_C*dt);C.vy*=Math.exp(-D_C*dt);
+        C.x+=C.vx*dt;C.y+=C.vy*dt;
+        C.pulse=(C.pulse+dt*0.5)%1;
+
+        GROUPS[activeGroup].forEach(n=>{
+          const a=n.angle*Math.PI/180;
+          const bob=Math.sin(tSec*n.bobSpd+n.phase)*n.bobAmp;
+          const sway=Math.cos(tSec*n.bobSpd*0.7+n.phase)*n.swayAmp;
+          const tx2=C.x+Math.cos(a)*(n.dist+sway);
+          const ty2=C.y+Math.sin(a)*(n.dist*0.82)+bob;
+          const K=5.2,D=2.4;
+          n.vx+=(tx2-n.x)*K*dt;n.vy+=(ty2-n.y)*K*dt;
+          n.vx*=Math.exp(-D*dt);n.vy*=Math.exp(-D*dt);
+          n.x+=n.vx*dt;n.y+=n.vy*dt;
+        });
+
+        render(tSec);
+        requestAnimationFrame(tick);
+      }
+      function render(tSec){
+        centerCircle.setAttribute('cx',C.x);centerCircle.setAttribute('cy',C.y);
+        ringInner.setAttribute('cx',C.x);ringInner.setAttribute('cy',C.y);
+
+        const flukeBottomY = C.y + CRADIUS + 78;
+        cShadow.setAttribute('cx',C.x);cShadow.setAttribute('cy',flukeBottomY+10);
+        cShadow.setAttribute('rx', CRADIUS*0.9);
+
+        const shankTop = C.y + CRADIUS - 3;
+        const shankH = 58;
+        shank.setAttribute('x', C.x - 3.5);
+        shank.setAttribute('y', shankTop);
+        shank.setAttribute('width', 7);
+        shank.setAttribute('height', shankH);
+
+        const stockY = C.y + CRADIUS + 4;
+        stock.setAttribute('x', C.x - 38);
+        stock.setAttribute('y', stockY);
+        stock.setAttribute('width', 76);
+        stock.setAttribute('height', 5);
+        stockL.setAttribute('cx', C.x - 38); stockL.setAttribute('cy', stockY + 2.5); stockL.setAttribute('r', 4);
+        stockR.setAttribute('cx', C.x + 38); stockR.setAttribute('cy', stockY + 2.5); stockR.setAttribute('r', 4);
+
+        const armY = shankTop + shankH;
+        const armSpan = 44;
+        const tipY = armY - 14;
+        const fd =
+          `M ${C.x-3.5} ${armY-4} ` +
+          `C ${C.x-26} ${armY+6}, ${C.x-armSpan} ${armY+7}, ${C.x-armSpan-5} ${tipY} ` +
+          `L ${C.x-armSpan-1} ${tipY+3} ` +
+          `C ${C.x-armSpan+5} ${armY+13}, ${C.x-18} ${armY+12}, ${C.x-3.5} ${armY+1} ` +
+          `L ${C.x+3.5} ${armY+1} ` +
+          `C ${C.x+18} ${armY+12}, ${C.x+armSpan-5} ${armY+13}, ${C.x+armSpan+1} ${tipY+3} ` +
+          `L ${C.x+armSpan+5} ${tipY} ` +
+          `C ${C.x+armSpan} ${armY+7}, ${C.x+26} ${armY+6}, ${C.x+3.5} ${armY-4} ` +
+          `Z`;
+        flukes.setAttribute('d', fd);
+
+        tIP.setAttribute('x',C.x);tIP.setAttribute('y',C.y);
+        tBay.setAttribute('x',C.x);tBay.setAttribute('y',C.y);
+        lantern.setAttribute('cx',C.x);lantern.setAttribute('cy',C.y-CRADIUS+6);
+        beacons.forEach((b,i)=>{
+          const k=((C.pulse+i*0.33)%1);
+          b.setAttribute('cx',C.x);b.setAttribute('cy',C.y);
+          b.setAttribute('r',CRADIUS+4+k*40);
+          b.setAttribute('opacity',(1-k)*0.35);
+        });
+        GROUPS[activeGroup].forEach(n=>{
+          const dx=n.x-C.x,dy=n.y-C.y,len=Math.hypot(dx,dy)||1;
+          const nx=-dy/len,ny=dx/len;
+          const curve=Math.sin(tSec*0.8+n.phase)*6;
+          const mx=(C.x+n.x)/2+nx*curve;
+          const my=(C.y+n.y)/2+ny*curve;
+          const d=`M ${C.x.toFixed(1)} ${C.y.toFixed(1)} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${n.x.toFixed(1)} ${n.y.toFixed(1)}`;
+          n.pathEl.setAttribute('d',d);
+          n.pathEl.classList.toggle('lit',!!n.lit);
+          n.groupEl.setAttribute('transform',`translate(${n.x.toFixed(2)} ${n.y.toFixed(2)})`);
+          if(n.lit){n.circleEl.setAttribute('fill','url(#litFill)');n.haloEl.setAttribute('opacity','0.9')}
+          else{n.circleEl.setAttribute('fill','url(#nodeFill)');n.haloEl.setAttribute('opacity','0')}
+        });
+      }
+      requestAnimationFrame((t)=>{last=t;tick(t)});
+    })();
+    </script>
+
   </div>
 </section>
 
@@ -497,202 +776,6 @@
     </svg>
   </div>
 </footer>
-
-<script>
-/* ===== Parting Seas: interactive boat scene (scoped to #ps-stage) ===== */
-(function() {
-  const stage = document.getElementById('ps-stage');
-  if (!stage) return;
-  const svg = stage.querySelector('.parting-scene-svg');
-  const wavesFar = document.getElementById('ps-wavesFar');
-  const wavesMid = document.getElementById('ps-wavesMid');
-  const wavesNear = document.getElementById('ps-wavesNear');
-  const wakeG = document.getElementById('ps-wake');
-  const boatG = document.getElementById('ps-boat');
-  const splashG = document.getElementById('ps-splashes');
-  const hint = document.getElementById('ps-hint');
-
-  const SVG_W = 1920, SVG_H = 1080, HORIZON = 560;
-  const TWEAKS = { waveScale: 1.0, windSpeed: 1.0, wakeSpread: 1.0 };
-  const boat = { x: SVG_W/2, y: 780, vx: 0, vy: 0, targetX: SVG_W/2, targetY: 780, rock: 0 };
-  let draggingBoat = false;
-  let running = false;
-  let rafId = 0;
-
-  // Boat (sail variant with Hinomaru flag)
-  boatG.innerHTML = ''
-    + '<g transform="scale(1.6)">'
-    +   '<g opacity="0.25" transform="translate(0,78) scale(1,-0.5)">'
-    +     '<path d="M -90 0 Q -70 22 0 24 Q 70 22 90 0 Z" fill="#000"/>'
-    +     '<rect x="-2" y="-120" width="4" height="120" fill="#000"/>'
-    +     '<path d="M 0 -110 L 0 -10 L 70 -10 Z" fill="#000"/>'
-    +   '</g>'
-    +   '<path d="M -96 0 Q -80 24 0 26 Q 80 24 96 0 L 82 -10 L -82 -10 Z" fill="#0F2A3D"/>'
-    +   '<path d="M -82 -10 L 82 -10 L 76 -18 L -76 -18 Z" fill="#C9A66B"/>'
-    +   '<line x1="-76" y1="-18" x2="76" y2="-18" stroke="#1B3A4B" stroke-width="1.2"/>'
-    +   '<line x1="-82" y1="-4" x2="82" y2="-4" stroke="rgba(247,241,229,0.25)" stroke-width="0.8"/>'
-    +   '<rect x="-1.5" y="-130" width="3" height="112" fill="#1B3A4B"/>'
-    +   '<path d="M 2 -128 L 2 -22 L 72 -22 Z" fill="#F7F1E5"/>'
-    +   '<path d="M 2 -128 L 2 -22 L 72 -22 Z" fill="url(#ps-sailShade)"/>'
-    +   '<path d="M -2 -120 L -2 -22 L -58 -22 Z" fill="#FEFAF2"/>'
-    +   '<line x1="-78" y1="-12" x2="-108" y2="-82" stroke="#1B3A4B" stroke-width="2.2" stroke-linecap="round"/>'
-    +   '<circle cx="-78" cy="-12" r="2.2" fill="#C9A66B"/>'
-    +   '<g transform="translate(-108 -82) rotate(-24)">'
-    +     '<rect x="0" y="0" width="58" height="38" fill="#FEFAF2" stroke="#1B3A4B" stroke-width="0.4"/>'
-    +     '<circle cx="29" cy="19" r="11.5" fill="#BC002D"/>'
-    +   '</g>'
-    + '</g>';
-
-  // Waves
-  function makeWaveLine(y, amp, freq, segs, speed) {
-    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    p.dataset.y = y; p.dataset.amp = amp; p.dataset.freq = freq;
-    p.dataset.speed = speed; p.dataset.segs = segs;
-    return p;
-  }
-  const waves = [];
-  for (let i=0; i<5; i++){ const y=580+i*12; const p=makeWaveLine(y, 1.2+i*0.3, 0.012+i*0.002, 60, 0.2+i*0.05); wavesFar.appendChild(p); waves.push({path:p}); }
-  for (let i=0; i<7; i++){ const y=660+i*18; const p=makeWaveLine(y, 2+i*0.8, 0.010+i*0.0015, 90, 0.35+i*0.04); wavesMid.appendChild(p); waves.push({path:p}); }
-  for (let i=0; i<8; i++){ const y=800+i*28; const p=makeWaveLine(y, 4+i*1.6, 0.008+i*0.0012, 140, 0.55+i*0.05); wavesNear.appendChild(p); waves.push({path:p}); }
-
-  function partingOffset(x, y) {
-    const dx = x - boat.x, dy = y - boat.y;
-    const depthFactor = Math.max(0, Math.min(1, (y - HORIZON) / (SVG_H - HORIZON)));
-    const spread = 120 * TWEAKS.wakeSpread * (0.4 + 0.9*depthFactor);
-    const d2 = dx*dx/(spread*spread*2.2) + dy*dy/(spread*spread*0.6);
-    const mag = Math.exp(-d2) * (10 + 22*depthFactor) * TWEAKS.wakeSpread;
-    return (dy >= 0 ? 1 : -1) * mag;
-  }
-
-  const wakeTrail = [];
-  function emitWake() {
-    if (!draggingBoat && Math.hypot(boat.vx, boat.vy) < 0.4) return;
-    wakeTrail.push({ x: boat.x - 30, y: boat.y + 6, t: 0, life: 1.3 });
-    wakeTrail.push({ x: boat.x + 30, y: boat.y + 6, t: 0, life: 1.3 });
-  }
-
-  const splashes = [];
-  function addSplash(x, y) {
-    for (let i=0; i<14; i++){
-      const a=(i/14)*Math.PI + (Math.random()-0.5)*0.3;
-      const sp=2 + Math.random()*3;
-      splashes.push({x,y,vx:Math.cos(a)*sp*(Math.random()>0.5?1:-1),vy:-Math.abs(Math.sin(a))*sp-1.5,t:0,life:0.9+Math.random()*0.4,r:1.5+Math.random()*2.2});
-    }
-    boat.rock = 1;
-  }
-
-  // RAF loop
-  let t = 0, lastTime = performance.now();
-  function tick(now) {
-    const dt = Math.min(0.05, (now - lastTime)/1000);
-    lastTime = now;
-    t += dt * TWEAKS.windSpeed;
-
-    const ax = (boat.targetX - boat.x) * 4.5 - boat.vx * 2.2;
-    const ay = (boat.targetY - boat.y) * 4.5 - boat.vy * 2.2;
-    boat.vx += ax * dt; boat.vy += ay * dt;
-    boat.x += boat.vx * dt; boat.y += boat.vy * dt;
-    const bob = Math.sin(t*1.3) * 2.4;
-    const tilt = Math.sin(t*1.1) * 1.4 + boat.vx * 0.4;
-    boat.rock = Math.max(0, boat.rock - dt*1.2);
-    const rockTilt = Math.sin(t*7) * boat.rock * 8;
-
-    for (const w of waves) {
-      const p = w.path;
-      const y0 = +p.dataset.y;
-      const amp = +p.dataset.amp * TWEAKS.waveScale;
-      const freq = +p.dataset.freq;
-      const speed = +p.dataset.speed;
-      const segs = +p.dataset.segs;
-      let d = '';
-      for (let i=0; i<=segs; i++) {
-        const x = i/segs*SVG_W;
-        const phase = t*speed*60;
-        const base = Math.sin(x*freq + phase*0.02)*amp + Math.sin(x*freq*2.3 + phase*0.035)*amp*0.35;
-        const off = partingOffset(x, y0+base);
-        const y = y0 + base + off;
-        d += (i===0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
-      }
-      p.setAttribute('d', d);
-    }
-
-    emitWake();
-    for (let i=wakeTrail.length-1; i>=0; i--){ wakeTrail[i].t += dt; if (wakeTrail[i].t > wakeTrail[i].life) wakeTrail.splice(i,1); }
-    let wakeSVG = '';
-    for (const w of wakeTrail) {
-      const k = w.t/w.life, alpha = (1-k)*0.55, r = 6 + k*60*TWEAKS.wakeSpread, yoff = k*20;
-      wakeSVG += '<ellipse cx="'+w.x.toFixed(1)+'" cy="'+(w.y+yoff).toFixed(1)+'" rx="'+r.toFixed(1)+'" ry="'+(r*0.25).toFixed(1)+'" fill="rgba(255,255,255,'+alpha.toFixed(3)+')"/>';
-    }
-    wakeSVG += '<path d="M '+(boat.x-110)+' '+(boat.y+8)+' Q '+(boat.x-60)+' '+(boat.y-6)+' '+boat.x+' '+(boat.y+6)+' Q '+(boat.x+60)+' '+(boat.y-6)+' '+(boat.x+110)+' '+(boat.y+8)+' Q '+(boat.x+60)+' '+(boat.y+18)+' '+boat.x+' '+(boat.y+14)+' Q '+(boat.x-60)+' '+(boat.y+18)+' '+(boat.x-110)+' '+(boat.y+8)+' Z" fill="rgba(255,255,255,0.75)" filter="url(#ps-foamBlur)"/>';
-    wakeG.innerHTML = wakeSVG;
-
-    for (let i=splashes.length-1; i>=0; i--) {
-      const s = splashes[i]; s.t += dt; s.x += s.vx; s.y += s.vy; s.vy += 0.22;
-      if (s.t > s.life) splashes.splice(i,1);
-    }
-    let splashSVG = '';
-    for (const s of splashes) {
-      const a = Math.max(0, 1 - s.t/s.life);
-      splashSVG += '<circle cx="'+s.x.toFixed(1)+'" cy="'+s.y.toFixed(1)+'" r="'+s.r.toFixed(2)+'" fill="rgba(255,255,255,'+(0.85*a).toFixed(3)+')"/>';
-    }
-    splashG.innerHTML = splashSVG;
-
-    boatG.setAttribute('transform', 'translate('+boat.x.toFixed(1)+', '+(boat.y+bob).toFixed(1)+') rotate('+(tilt+rockTilt).toFixed(2)+')');
-
-    if (running) rafId = requestAnimationFrame(tick);
-  }
-
-  // Pointer
-  function pointerToSVG(e) {
-    const rect = svg.getBoundingClientRect();
-    const sceneAspect = SVG_W / SVG_H;
-    const boxAspect = rect.width / rect.height;
-    let scale, ox, oy;
-    if (boxAspect > sceneAspect) { scale = rect.width / SVG_W; ox = 0; oy = (rect.height - SVG_H*scale)/2; }
-    else { scale = rect.height / SVG_H; oy = 0; ox = (rect.width - SVG_W*scale)/2; }
-    return { x: (e.clientX - rect.left - ox)/scale, y: (e.clientY - rect.top - oy)/scale };
-  }
-  function clampBoat(p) {
-    return { x: Math.max(120, Math.min(SVG_W-120, p.x)), y: Math.max(HORIZON+60, Math.min(SVG_H-40, p.y)) };
-  }
-  stage.addEventListener('pointerdown', function(e) {
-    draggingBoat = true;
-    stage.classList.add('dragging');
-    try { stage.setPointerCapture(e.pointerId); } catch(_) {}
-    const p = pointerToSVG(e);
-    const dist = Math.hypot(p.x - boat.x, p.y - boat.y);
-    if (dist > 140) addSplash(p.x, p.y); else boat.rock = Math.max(boat.rock, 0.6);
-    const c = clampBoat(p);
-    boat.targetX = c.x; boat.targetY = c.y;
-    if (hint) hint.style.opacity = 0;
-  });
-  stage.addEventListener('pointermove', function(e) {
-    if (!draggingBoat) return;
-    const c = clampBoat(pointerToSVG(e));
-    boat.targetX = c.x; boat.targetY = c.y;
-  });
-  function endBoatDrag() { draggingBoat = false; stage.classList.remove('dragging'); }
-  stage.addEventListener('pointerup', endBoatDrag);
-  stage.addEventListener('pointercancel', endBoatDrag);
-
-  // Visibility-gated RAF (pauses when off-screen)
-  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function start() { if (running || prefersReduced) return; running = true; lastTime = performance.now(); rafId = requestAnimationFrame(tick); }
-  function stop()  { running = false; if (rafId) cancelAnimationFrame(rafId); rafId = 0; }
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(function(entries) {
-      for (const ent of entries) { if (ent.isIntersecting) start(); else stop(); }
-    }, { threshold: 0.05 });
-    io.observe(stage);
-  } else {
-    start();
-  }
-  if (prefersReduced) { tick(performance.now()); } // render one still frame
-
-  // Fade the hint after a few seconds
-  setTimeout(function() { if (hint) hint.style.opacity = 0.4; }, 5500);
-})();
-</script>
 
 <script>
 (async function loadCovers() {
