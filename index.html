@@ -288,8 +288,8 @@
   .chrome-top {
     top: 0;
     background: linear-gradient(to bottom,
-      rgba(8, 18, 30, 0.55) 0%,
-      rgba(8, 18, 30, 0.28) 55%,
+      rgba(8, 18, 30, 0.78) 0%,
+      rgba(8, 18, 30, 0.42) 55%,
       rgba(8, 18, 30, 0) 100%);
     padding-bottom: 44px;
   }
@@ -512,7 +512,7 @@
           <stop offset="1" stop-color="#C9A66B" stop-opacity="0"/>
         </radialGradient>
         <filter id="foamBlur"><feGaussianBlur stdDeviation="1.4"/></filter>
-        <clipPath id="seaClip"><rect x="0" y="460" width="1920" height="620"/></clipPath>
+        <clipPath id="seaClip"><rect x="0" y="400" width="1920" height="680"/></clipPath>
         <radialGradient id="sunGrad" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stop-color="#F7F1E5" stop-opacity="0.95"/>
           <stop offset="0.4" stop-color="#C9A66B" stop-opacity="0.75"/>
@@ -523,11 +523,11 @@
           <stop offset="1" stop-color="rgba(15,42,61,0.28)"/>
         </linearGradient>
       </defs>
-      <circle cx="960" cy="280" r="150" fill="url(#sunGrad)"/>
-      <circle cx="960" cy="280" r="64" fill="#FFE4B0" opacity="0.95"/>
-      <rect x="0" y="460" width="1920" height="620" fill="url(#seaGrad)"/>
-      <rect x="0" y="460" width="1920" height="620" fill="url(#sunTrail)"/>
-      <line x1="80" y1="460" x2="1840" y2="460" stroke="rgba(247,241,229,0.16)" stroke-width="1"/>
+      <circle cx="960" cy="240" r="150" fill="url(#sunGrad)"/>
+      <circle cx="960" cy="240" r="64" fill="#FFE4B0" opacity="0.95"/>
+      <rect x="0" y="400" width="1920" height="680" fill="url(#seaGrad)"/>
+      <rect x="0" y="400" width="1920" height="680" fill="url(#sunTrail)"/>
+      <line x1="80" y1="400" x2="1840" y2="400" stroke="rgba(247,241,229,0.16)" stroke-width="1"/>
       <g clip-path="url(#seaClip)">
         <g id="wavesFar" opacity="0.5" stroke="rgba(201,166,107,0.4)" stroke-width="1" fill="none"></g>
         <g id="wavesMid" opacity="0.7" stroke="rgba(247,241,229,0.32)" stroke-width="1.2" fill="none"></g>
@@ -737,7 +737,7 @@ const wakeG = document.getElementById('wake');
 const boatG = document.getElementById('boat');
 const splashG = document.getElementById('splashes');
 
-const SVG_W = 1920, SVG_H = 1080, HORIZON = 460;
+const SVG_W = 1920, SVG_H = 1080, HORIZON = 400;
 // Boat starts off-screen left; sails to center as user scrolls past the title card
 const BOAT_REST_X = SVG_W/2;
 const BOAT_REST_Y = 870;
@@ -831,9 +831,9 @@ function makeWaveLine(y, amp, freq, segs=80, speed=0.6) {
 const waves = [];
 function buildWaves() {
   wavesFar.innerHTML=''; wavesMid.innerHTML=''; wavesNear.innerHTML=''; waves.length=0;
-  for (let i=0;i<5;i++){ const y=480+i*12; const p=makeWaveLine(y,1.2+i*0.3,0.012+i*0.002,60,0.2+i*0.05); wavesFar.appendChild(p); waves.push({path:p}); }
-  for (let i=0;i<7;i++){ const y=560+i*22; const p=makeWaveLine(y,2+i*0.8,0.010+i*0.0015,90,0.35+i*0.04); wavesMid.appendChild(p); waves.push({path:p}); }
-  for (let i=0;i<8;i++){ const y=720+i*30; const p=makeWaveLine(y,4+i*1.6,0.008+i*0.0012,140,0.55+i*0.05); wavesNear.appendChild(p); waves.push({path:p}); }
+  for (let i=0;i<5;i++){ const y=420+i*12; const p=makeWaveLine(y,1.2+i*0.3,0.012+i*0.002,60,0.2+i*0.05); wavesFar.appendChild(p); waves.push({path:p}); }
+  for (let i=0;i<7;i++){ const y=510+i*24; const p=makeWaveLine(y,2+i*0.8,0.010+i*0.0015,90,0.35+i*0.04); wavesMid.appendChild(p); waves.push({path:p}); }
+  for (let i=0;i<8;i++){ const y=680+i*32; const p=makeWaveLine(y,4+i*1.6,0.008+i*0.0012,140,0.55+i*0.05); wavesNear.appendChild(p); waves.push({path:p}); }
 }
 buildWaves();
 
@@ -990,8 +990,11 @@ function tick(now) {
   const ay = (boat.targetY - boat.y) * 4.5 - boat.vy * 2.2;
   boat.vx += ax * dt; boat.vy += ay * dt;
   boat.x += boat.vx * dt; boat.y += boat.vy * dt;
-  const bob = Math.sin(t*1.3) * 2.4;
-  const tilt = Math.sin(t*1.1) * 1.4 + boat.vx * 0.06;
+  // Boat rides waves: long ocean swell + small chop, with matching tilt
+  const swell = Math.sin(t*0.65) * 7;          // long, slow swell
+  const chop  = Math.sin(t*1.4 + 0.6) * 2.6;   // smaller faster chop
+  const bob = swell + chop;
+  const tilt = Math.sin(t*0.55) * 2.4 + Math.sin(t*1.2) * 1.6 + boat.vx * 0.06;
   boat.rock = Math.max(0, boat.rock - dt*1.2);
   const rockTilt = Math.sin(t*7) * boat.rock * 8;
 
@@ -1104,14 +1107,14 @@ stage.addEventListener('pointercancel', endBoatDrag);
 
 // ===== Scroll-driven sky: sunset → night → sunrise =====
 const skyStops = [
-  // 0% — Golden hour, sun above the new horizon
-  { sky:['#FFD9A0','#F0B888','#C28778','#5d4f6a','#1d2c44'], sea:['#3a708a','#1f4e66','#0d2942'], sunX:960, sunY:280, sunOp:0.78, disc:'#FFE4B0', ambient:0.22 },
+  // 0% — Golden hour, sun above the horizon
+  { sky:['#FFD9A0','#F0B888','#C28778','#5d4f6a','#1d2c44'], sea:['#3a708a','#1f4e66','#0d2942'], sunX:960, sunY:240, sunOp:0.78, disc:'#FFE4B0', ambient:0.22 },
   // 25% — Sun setting, sky warm pink → violet
-  { sky:['#E29973','#B8745f','#6e4a63','#332c4a','#0F2A3D'], sea:['#2a5d78','#1B3A4B','#0a1a2a'], sunX:960, sunY:380, sunOp:0.55, disc:'#F4B98A', ambient:0.16 },
+  { sky:['#E29973','#B8745f','#6e4a63','#332c4a','#0F2A3D'], sea:['#2a5d78','#1B3A4B','#0a1a2a'], sunX:960, sunY:330, sunOp:0.55, disc:'#F4B98A', ambient:0.16 },
   // 50% — Sun touching horizon, twilight
-  { sky:['#7d5a72','#4d3e58','#2a2a44','#15203a','#08192a'], sea:['#1B3A4B','#0F2A3D','#060f1a'], sunX:960, sunY:470, sunOp:0.22, disc:'#C9A66B', ambient:0.08 },
+  { sky:['#7d5a72','#4d3e58','#2a2a44','#15203a','#08192a'], sea:['#1B3A4B','#0F2A3D','#060f1a'], sunX:960, sunY:410, sunOp:0.22, disc:'#C9A66B', ambient:0.08 },
   // 75% — Sun gone behind water, deep night
-  { sky:['#0c1d2e','#060f1c','#030912','#01060d','#000306'], sea:['#0a1a28','#040d18','#01060d'], sunX:960, sunY:700, sunOp:0.02, disc:'#0F2A3D', ambient:0.02 },
+  { sky:['#0c1d2e','#060f1c','#030912','#01060d','#000306'], sea:['#0a1a28','#040d18','#01060d'], sunX:960, sunY:680, sunOp:0.02, disc:'#0F2A3D', ambient:0.02 },
   // 100% — Pure midnight void
   { sky:['#020610','#01040a','#000206','#000103','#000000'], sea:['#020610','#000206','#000000'], sunX:960, sunY:1100, sunOp:0, disc:'#0F2A3D', ambient:0.0 },
 ];
