@@ -153,9 +153,16 @@
   }
 
   @media (max-width: 720px) {
-    .title-card { padding: 80px 20px 16vh; }
-    .title-card-mark { font-size: clamp(64px, 22vw, 110px); }
-    .title-card-tagline { font-size: 17px; }
+    .title-card {
+      justify-content: flex-start;
+      padding: 14vh 20px 0;
+    }
+    .title-card-mark { font-size: clamp(58px, 18vw, 100px); margin: 8px 0; }
+    .title-card-tagline { font-size: 16px; margin: 18px auto 10px; max-width: 90%; }
+    .title-card-sub { font-size: 10px; }
+    .title-card-rule { width: min(360px, 80%); }
+    .title-card-scrollcue { bottom: 28px; font-size: 9px; }
+    .title-card-scrollcue::before { height: 26px; }
     .title-card-scrollcue { bottom: 36px; }
   }
 
@@ -469,17 +476,46 @@
   }
 
   @media (max-width: 720px) {
-    .chrome-top, .chrome-bottom { padding: 16px 20px; }
+    .chrome-top { padding: 14px 18px 28px; }
+    .chrome-bottom { padding: 14px 18px; }
     .rule-v { display: none; }
     .chrome-top .nav-links { display: none; }
-    .nav-toggle { display: block; position: fixed; top: 14px; right: 16px; }
-    section.chapter { padding: 100px 20px; }
-    .plate { padding: 36px 24px; }
-    .wordmark-nav { font-size: 26px !important; top: 16px !important; left: 20px !important; }
-    .cities-bottom { font-size: 9px; letter-spacing: 0.18em; }
-    .title-card { padding: 80px 20px 16vh; }
-    .title-card-mark { font-size: clamp(64px, 22vw, 110px); }
-    .title-card-tagline { font-size: 17px; }
+    .nav-toggle { display: block; }
+    section.chapter { padding: 80px 18px; min-height: 60vh; }
+    .plate { padding: 32px 22px; }
+    .wordmark-nav { font-size: 26px; }
+
+    .cities-bottom { font-size: 9px; letter-spacing: 0.16em; }
+    .cities-bottom .dot { margin: 0 4px; }
+
+    .title-card {
+      justify-content: flex-start;
+      padding: 14vh 20px 0;
+    }
+    .title-card-mark { font-size: clamp(58px, 18vw, 100px); margin: 8px 0; }
+    .title-card-tagline { font-size: 16px; margin: 18px auto 10px; max-width: 92%; }
+    .title-card-sub { font-size: 10px; letter-spacing: 0.2em; }
+    .title-card-rule { width: min(320px, 78%); }
+    .title-card-scrollcue { bottom: 26px; font-size: 9px; letter-spacing: 0.26em; }
+    .title-card-scrollcue::before { height: 24px; }
+
+    section.seabed { padding: 100px 24px 48px; min-height: 70vh; }
+    .seabed .wordmark { font-size: clamp(56px, 18vw, 96px); }
+    .seabed .lede { font-size: 15px; }
+    .seabed .cities-row { font-size: 9px; letter-spacing: 0.2em; margin-top: 28px; }
+    .seabed .cities-row .dot { margin: 0 6px; }
+
+    h2.display { font-size: clamp(26px, 6.5vw, 36px); }
+    p.lede { font-size: 16px; }
+    .eyebrow { font-size: 10px; letter-spacing: 0.2em; }
+  }
+
+  @media (max-width: 380px) {
+    .title-card-mark { font-size: clamp(48px, 16vw, 72px); }
+    .title-card-tagline { font-size: 14px; }
+    .seabed .wordmark { font-size: clamp(48px, 16vw, 72px); }
+    .cities-bottom { font-size: 8px; letter-spacing: 0.12em; }
+    .cities-bottom .dot { margin: 0 3px; }
   }
 </style>
 </head>
@@ -742,7 +778,7 @@ const SVG_W = 1920, SVG_H = 1080, HORIZON = 400;
 const BOAT_REST_X = SVG_W/2;
 const BOAT_REST_Y = 870;
 const BOAT_START_X = -300;            // off-screen left in scene coords
-const BOAT_SAIL_END = 0.50;           // scroll progress where boat reaches center & rests (longer = gentler)
+const BOAT_SAIL_END = 0.22;           // scroll progress where boat reaches center & rests (sooner)
 const boat = { x: BOAT_START_X, y: BOAT_REST_Y, vx: 0, vy: 0, targetX: BOAT_START_X, targetY: BOAT_REST_Y, rock: 0 };
 let draggingBoat = false;
 
@@ -948,7 +984,7 @@ function scrollProgress() {
   return Math.max(0, Math.min(1, window.scrollY / max));
 }
 // Anchor launch: begins after the boat has sailed in and reached the center
-const ANCHOR_LAUNCH = 0.42; // when progress exceeds this, anchor detaches
+const ANCHOR_LAUNCH = 0.24; // when progress exceeds this, anchor detaches
 function updateAnchorFromScroll() {
   const prog = scrollProgress();
   // seabed Y in document coords

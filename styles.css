@@ -1221,57 +1221,167 @@ footer {
   .hero-stat-label { font-size: 9px; letter-spacing: 0.06em; }
   .hero-stat-div { height: 28px; }
 
-  .page-header { padding: 160px 20px 52px; }
+  /* Page headers — scale down for mobile readability */
+  .page-header { padding: 130px 20px 48px; }
+  .page-header-sup { font-size: 10px; letter-spacing: 0.18em; margin-bottom: 18px; }
+  .page-header-title { font-size: clamp(40px, 10vw, 64px); margin-bottom: 18px; }
+  .page-header-lede { font-size: 16px; line-height: 1.55; padding: 0 8px; }
 
+  /* Photo panels stack — text cell breathes */
   .photo-cell { min-height: 80vw !important; }
   .text-cell { padding: 48px 24px; }
-  .pull-quote { padding: 14px 18px; }
-  .pull-quote p { font-size: 17px; }
-  .persons-row { flex-wrap: wrap; gap: 16px; }
+  .panel-headline { font-size: clamp(28px, 7vw, 40px); margin-bottom: 22px; }
+  .panel-body p { font-size: 15px; line-height: 1.7; margin-bottom: 14px; }
+  .pull-quote { padding: 14px 18px; margin: 22px 0; }
+  .pull-quote p { font-size: 17px; line-height: 1.5; }
+  .persons-row { flex-wrap: wrap; gap: 16px; padding-top: 24px; margin-top: 28px; }
   .person-div { display: none; }
   .photo-caption-year { font-size: 56px; }
+  .photo-caption-text { font-size: 11px; }
   .photo-badge { bottom: 20px; right: 20px; padding: 10px 16px; }
+  .photo-badge-title { font-size: 17px; }
+  .photo-tag { top: 20px; left: 20px; font-size: 9px; padding: 6px 10px; }
 
+  /* Timeline */
   .timeline-track { grid-template-columns: repeat(2, 1fr); }
   .tl-node { padding: 24px 20px; }
   .tl-year { font-size: 32px; }
+  .tl-title { font-size: 13px; }
 
+  /* Sections */
   section { padding: 60px 20px; }
-  .section-label { margin-bottom: 32px; }
+  .section-label { margin-bottom: 28px; font-size: 10px; letter-spacing: 0.18em; }
+  .section-label::after { width: 32px; }
 
+  /* Catalog */
   .catalog-grid-big { grid-template-columns: 1fr; }
-  .catalog-grid-big .catalog-card { height: 80vw; }
-  .catalog-grid-big .catalog-card:first-child { grid-column: auto; height: 90vw; }
+  .catalog-grid-big .catalog-card { height: 70vw; }
+  .catalog-grid-big .catalog-card:first-child { grid-column: auto; height: 80vw; }
+  .catalog-grid-big .catalog-card-content { padding: 22px 22px; }
+  .catalog-grid-big .catalog-card-title { font-size: 20px; }
+  .catalog-grid-big .catalog-card:first-child .catalog-card-title { font-size: 24px; }
   .catalog-grid-small { grid-template-columns: repeat(2, 1fr); }
   .catalog-header { gap: 20px; }
+  .catalog-headline { font-size: clamp(28px, 7vw, 40px); }
+  .catalog-sub { font-size: 14px; }
+  .catalog-count { font-size: 36px; }
 
-  .property-card { flex: 0 0 220px; }
+  /* Properties carousel */
+  .properties-track { padding: 0 18px; gap: 18px; }
+  .property-card { flex: 0 0 78vw; max-width: 320px; }
+  .property-card-title { font-size: 20px; }
 
+  /* Govt + service grids */
   .govt-cards { grid-template-columns: 1fr; }
+  .govt-card { padding: 26px 22px; }
+  .govt-card-title { font-size: 20px; }
+  .govt-card-desc { font-size: 13px; }
+  .govt-headline { font-size: clamp(28px, 6.5vw, 38px); }
+  .govt-desc { font-size: 15px; }
+
   .services-grid { grid-template-columns: 1fr; }
+  .services-headline { font-size: clamp(28px, 7vw, 40px); margin-bottom: 40px; }
+  .svc { padding: 32px 26px; }
+  .svc-num { font-size: 36px; margin-bottom: 18px; }
+  .svc-title { font-size: 19px; margin-bottom: 12px; }
+  .svc-desc { font-size: 14px; }
+
+  /* Team */
   .team-grid { grid-template-columns: 1fr; }
+  .team-headline { font-size: clamp(28px, 7vw, 40px); }
+  .team-desc { font-size: 15px; }
+  .team-card { display: flex; flex-direction: column; }
+  .team-photo { aspect-ratio: 4 / 4; max-height: 70vh; }
+  .team-photo img { object-position: center 18%; }
+  .team-content { padding: 24px 22px 28px; }
   .team-name { font-size: 26px; }
-  .team-photo { aspect-ratio: 4 / 3.5; }
+  .team-bio p { font-size: 14px; line-height: 1.65; }
+  .team-creds { gap: 6px; }
+  .team-cred { font-size: 9px; padding: 4px 8px; }
 
+  /* Cloverway editorial */
   .cwway-pillars { grid-template-columns: 1fr; }
-  .cwway-mark { font-size: clamp(52px, 14vw, 80px); }
+  .cwway-pillar { padding: 28px 24px; }
+  .cwway-pillar-title { font-size: 19px; }
+  .cwway-pillar-desc { font-size: 13px; }
+  .cwway-mark { font-size: clamp(48px, 13vw, 72px); }
+  .cwway-lede { font-size: clamp(17px, 4.5vw, 21px); }
+  .cwway-meta-row { padding-bottom: 10px; }
+  .cwway-meta-label { font-size: 9px; }
+  .cwway-meta-value { font-size: 12px; }
+  .cwway-col h4 { font-size: clamp(22px, 5.5vw, 28px); margin-bottom: 16px; }
+  .cwway-col p { font-size: 15px; }
+  .cwway-credits { padding: 36px 22px; }
+  .cwway-credits-label { margin-bottom: 22px; }
+  .cw-credit-title { font-size: 19px; }
+  .cwway-quote { padding: 24px 0; }
+  .cwway-quote-mark { font-size: 60px; }
+  .cwway-quote-text { font-size: clamp(18px, 5vw, 24px); }
 
+  /* Networks */
+  .networks-headline { font-size: clamp(28px, 7vw, 40px); }
+  .networks-desc { font-size: 15px; }
+  .network-tag { font-size: 12px; padding: 6px 12px; }
+
+  /* Form */
   .form-row { grid-template-columns: 1fr; }
   .form-submit { width: 100%; text-align: center; padding: 16px; }
+  .form-input, .form-textarea { font-size: 16px; padding: 12px 14px; } /* 16px prevents iOS auto-zoom */
+  .contact-headline { font-size: clamp(28px, 7vw, 40px); }
+  .contact-desc { font-size: 15px; margin-bottom: 32px; }
 
-  .closing { padding: 60px 24px; }
-  .closing-body { font-size: 15px; margin-bottom: 40px; }
-  .closing-cities { gap: 12px; font-size: 10px; }
+  /* Closing */
+  .closing { padding: 60px 24px; min-height: 70vh; }
+  .closing-sup { font-size: 9px; letter-spacing: 0.16em; margin-bottom: 22px; }
+  .closing-wordmark { font-size: clamp(64px, 18vw, 96px); margin: 12px 0; }
+  .closing-bridge { font-size: 9px; letter-spacing: 0.18em; }
+  .closing-title { font-size: clamp(20px, 5.5vw, 28px); margin-bottom: 24px; }
+  .closing-body { font-size: 15px; margin-bottom: 36px; max-width: 90%; }
+  .closing-cta { padding: 14px 32px; font-size: 11px; letter-spacing: 0.16em; }
+  .closing-cities { gap: 10px; font-size: 9px; letter-spacing: 0.18em; flex-wrap: wrap; justify-content: center; }
 
+  /* Pages grid (home) */
   .pages-grid { grid-template-columns: 1fr; padding: 1px 20px 60px 20px; }
-  .page-card { min-height: 220px; padding: 36px 28px; }
-  .page-card-title { font-size: 28px; }
+  .pages-intro { padding: 64px 24px 36px; }
+  .pages-intro h2 { font-size: clamp(24px, 6vw, 34px); }
+  .pages-intro p { font-size: 15px; }
+  .page-card { min-height: 200px; padding: 32px 24px; }
+  .page-card-title { font-size: 26px; }
+  .page-card-subhead { font-size: 16px; margin-bottom: 16px; }
+  .page-card-desc { font-size: 13px; }
 
-  footer { padding: 36px 20px 24px; gap: 14px; }
-  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  /* Footer */
+  footer { padding: 32px 18px 24px; gap: 14px; }
+  .footer-wordmark, .footer-logo { font-size: 18px; }
+  .footer-tagline { font-size: 13px; }
+  .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
   .footer-bottom-left { align-items: center; }
-  .harbor-coordinates { grid-template-columns: repeat(2, 1fr); gap: 18px 0; padding: 20px 0; }
+  .footer-copy { font-size: 11px; }
+  .harbor-coordinates { grid-template-columns: repeat(2, 1fr); gap: 18px 0; padding: 18px 0; margin: 14px 0; }
+  .harbor-port { padding: 0 10px; }
   .harbor-port:nth-child(2) { border-right: none; }
   .harbor-port:nth-child(-n+2) { padding-bottom: 16px; border-bottom: 0.5px solid rgba(247, 241, 229, 0.12); }
-  .port-name { font-size: 18px; }
+  .port-name { font-size: 17px; margin-bottom: 6px; }
+  .port-coord { font-size: 9px; }
+
+  /* Mobile nav overlay */
+  .mobile-nav-overlay { gap: 22px; padding: 100px 24px 24px; }
+  .mobile-nav-overlay a { font-size: 24px; padding: 6px 12px; }
+
+  /* Hanko adjustments */
+  .hanko-legacy { width: 76px; height: 76px; margin: 0 0 36px auto; }
+  .hanko-footer-seal { width: 38px; height: 38px; }
+}
+
+/* Extra-small phones */
+@media (max-width: 380px) {
+  .page-header-title { font-size: clamp(34px, 9vw, 48px); }
+  .page-header-lede { font-size: 15px; }
+  .panel-headline { font-size: clamp(24px, 6.5vw, 34px); }
+  .closing-wordmark { font-size: clamp(54px, 16vw, 78px); }
+  .cwway-mark { font-size: clamp(42px, 12vw, 60px); }
+  .closing-cities { font-size: 8px; gap: 6px; letter-spacing: 0.12em; }
+  .footer-cities { display: none; }
+  .nav-logo { font-size: 22px; }
+  .mobile-nav-overlay a { font-size: 22px; }
 }
