@@ -64,6 +64,101 @@
   .page { position: relative; z-index: 2; }
   .spacer { height: 100vh; pointer-events: none; }
 
+  /* ───── Hero title card (sits in the first viewport, scrolls away) ───── */
+  .title-card {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 100px 32px 140px;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .title-card-sup {
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(247, 241, 229, 0.65);
+    font-weight: 500;
+    margin-bottom: 32px;
+    text-shadow: 0 2px 24px rgba(15, 42, 61, 0.65);
+  }
+  .title-card-sup .dot { color: var(--accent-warm); margin: 0 10px; opacity: 0.85; }
+  .title-card-rule {
+    width: min(560px, 78%);
+    height: 1px;
+    background: rgba(247, 241, 229, 0.22);
+  }
+  .title-card-mark {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(80px, 16vw, 200px);
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    color: var(--text-on-dark);
+    margin: 18px 0;
+    text-shadow: 0 4px 40px rgba(15, 42, 61, 0.55);
+  }
+  .title-card-mark em {
+    font-style: italic;
+    color: var(--accent-warm);
+    font-weight: 400;
+  }
+  .title-card-tagline {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(18px, 2vw, 26px);
+    line-height: 1.45;
+    color: rgba(247, 241, 229, 0.92);
+    max-width: 720px;
+    margin: 28px auto 18px;
+    text-wrap: balance;
+    text-shadow: 0 2px 22px rgba(15, 42, 61, 0.7);
+  }
+  .title-card-sub {
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-warm);
+    font-weight: 500;
+    opacity: 0.85;
+  }
+  .title-card-scrollcue {
+    position: absolute;
+    bottom: 56px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-body);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(247, 241, 229, 0.55);
+    font-weight: 500;
+  }
+  .title-card-scrollcue::before {
+    content: ""; display: block;
+    width: 1px; height: 36px;
+    background: linear-gradient(to bottom, transparent, var(--accent-warm) 40%, transparent);
+    margin: 0 auto 14px;
+    animation: scrollPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: translateY(-4px); }
+    50% { opacity: 0.95; transform: translateY(4px); }
+  }
+
+  @media (max-width: 720px) {
+    .title-card { padding: 80px 20px 100px; }
+    .title-card-mark { font-size: clamp(64px, 22vw, 110px); }
+    .title-card-tagline { font-size: 17px; }
+    .title-card-scrollcue { bottom: 36px; }
+  }
+
   section.chapter {
     position: relative;
     padding: 140px 48px;
@@ -126,7 +221,12 @@
     min-height: 90vh;
     padding: 180px 48px 120px;
     background:
-      linear-gradient(to bottom, rgba(3,10,18,0) 0%, #030912 40%, #020711 100%);
+      linear-gradient(to bottom,
+        rgba(2,7,17,0) 0%,
+        rgba(2,7,17,0.85) 12%,
+        #020711 24%,
+        #010408 60%,
+        #000103 100%);
     display: flex; flex-direction: column;
     align-items: center; justify-content: flex-end;
     text-align: center;
@@ -136,9 +236,9 @@
     position: absolute; left: 0; right: 0; bottom: 0;
     height: 180px;
     background:
-      radial-gradient(ellipse at 50% 100%, rgba(201,166,107,0.10) 0%, transparent 70%),
-      linear-gradient(to top, #0a1420 0%, transparent 100%);
-    border-top: 1px solid rgba(201,166,107,0.18);
+      radial-gradient(ellipse at 50% 100%, rgba(27,58,75,0.18) 0%, transparent 70%),
+      linear-gradient(to top, #04101c 0%, transparent 100%);
+    border-top: 1px solid rgba(201,166,107,0.10);
   }
   /* sand ripples */
   .seabed-floor::before {
@@ -180,30 +280,49 @@
   .chrome-top, .chrome-bottom {
     position: fixed; left: 0; right: 0;
     z-index: 20;
-    padding: 26px 40px;
+    padding: 22px 40px;
     pointer-events: none;
-    display: flex; justify-content: space-between; align-items: baseline;
+    display: flex; justify-content: space-between; align-items: center;
   }
-  .chrome-top { top: 0; }
+  .chrome-top {
+    top: 0;
+    background: linear-gradient(to bottom,
+      rgba(8, 18, 30, 0.78) 0%,
+      rgba(8, 18, 30, 0.55) 60%,
+      rgba(8, 18, 30, 0) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding-bottom: 36px;
+  }
   .chrome-bottom { bottom: 0; }
   .chrome-top .nav-links, .chrome-bottom .side {
-    display: flex; gap: 28px;
+    display: flex; gap: 32px;
   }
   .chrome-top .nav-links a {
     pointer-events: auto;
-    font-size: 12px; letter-spacing: 0.08em;
-    color: rgba(247,241,229,0.65);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: rgba(247,241,229,0.92);
     text-decoration: none;
     transition: color 200ms;
+    padding: 4px 0;
+    border-bottom: 1px solid transparent;
   }
-  .chrome-top .nav-links a:hover { color: var(--accent-warm); }
+  .chrome-top .nav-links a:hover {
+    color: var(--accent-warm);
+    border-bottom-color: var(--accent-warm);
+  }
   .wordmark-nav {
     font-family: var(--font-display);
-    font-size: 22px; font-weight: 500;
+    font-size: 32px;
+    font-weight: 500;
     color: var(--text-on-dark);
-    letter-spacing: 0.01em;
+    letter-spacing: 0.005em;
     pointer-events: auto;
     text-decoration: none;
+    line-height: 1;
   }
   .wordmark-nav em { font-style: italic; color: var(--accent-warm); font-weight: 400; }
   .sup {
@@ -267,24 +386,6 @@
   #anchorWrap:hover { filter: drop-shadow(0 0 18px rgba(201,166,107,0.6)); }
   #anchorWrap.settled { filter: drop-shadow(0 8px 18px rgba(0,0,0,0.55)); }
 
-  /* Anchor CTA prompt */
-  .anchor-hint {
-    position: fixed;
-    z-index: 7;
-    pointer-events: none;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 13px;
-    color: rgba(247,241,229,0.85);
-    white-space: nowrap;
-    padding-left: 22px;
-    transition: opacity 400ms ease;
-  }
-  .anchor-hint::before {
-    content: ""; position: absolute; left: 0; top: 50%;
-    width: 14px; height: 1px; background: var(--accent-warm);
-    opacity: 0.8;
-  }
 
   /* ───── Tweaks ───── */
   #tweaks {
@@ -432,11 +533,10 @@
       <path d="M 41 24 L 44 34 L 41 30 L 42 38" stroke="#A0312B" stroke-width="1.2" fill="none" stroke-linecap="round"/>
     </svg>
   </div>
-  <div class="anchor-hint" id="anchorHint">drag the anchor · sail it to the seabed</div>
 </div>
 
 <!-- ─────────────── Chrome ─────────────── -->
-<a class="wordmark-nav" href="/ipbay/" style="position:fixed;top:26px;left:40px;z-index:25;">IP <em>Bay</em></a>
+<a class="wordmark-nav" href="/ipbay/" style="position:fixed;top:18px;left:40px;z-index:25;">IP <em>Bay</em></a>
 <div class="chrome-top">
   <span></span>
   <nav class="nav-links">
@@ -452,19 +552,29 @@
   <div class="cities-bottom">
     Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> Brooklyn
   </div>
-  <div class="hint" id="hint">drag the vessel · click the sea</div>
+  <span></span>
 </div>
 <div class="rule-v left"></div>
 <div class="rule-v right"></div>
 
 <!-- ─────────────── Scrollable page ─────────────── -->
 <main class="page">
-  <!-- Hero spacer — the scene occupies this viewport -->
-  <div class="spacer" aria-hidden="true"></div>
+  <!-- Hero title card — sits over the boat scene in the first viewport, scrolls away as you reach Fig. 01 -->
+  <header class="title-card">
+    <div class="title-card-sup">
+      Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> Brooklyn
+    </div>
+    <div class="title-card-rule"></div>
+    <h1 class="title-card-mark">IP <em>Bay</em></h1>
+    <div class="title-card-rule"></div>
+    <p class="title-card-tagline">A harbor for Japanese stories on their voyage to the world.</p>
+    <p class="title-card-sub">Japan first · Author first</p>
+    <div class="title-card-scrollcue">Set Sail</div>
+  </header>
 
   <section class="chapter" id="legacy">
     <div class="inner plate">
-      <div class="eyebrow">Fig. 01 · The Vessel</div>
+      <div class="eyebrow">The Vessel</div>
       <div class="fig-rule"></div>
       <h2 class="display">A harbor for Japanese stories on their <em>voyage</em> to the world.</h2>
       <p class="lede">Thirty-five years of publisher relationships. One company that sits at the table from the first Tokyo meeting to the last note on the mix stage — patiently, faithfully, and in direct partnership with the authors at the source.</p>
@@ -473,7 +583,7 @@
 
   <section class="chapter" id="crossing">
     <div class="inner plate">
-      <div class="eyebrow">Fig. 02 · The Crossing</div>
+      <div class="eyebrow">The Crossing</div>
       <div class="fig-rule"></div>
       <h2 class="display">Built on the Cloverway legacy of bringing Dragon Ball Z and Sailor Moon <em>across the Pacific.</em></h2>
       <p class="lede">Before there was a market for anime in the Americas, Yasuo Matsuo was building one. From Toei Animation's sole Americas representative to the trusted intermediary for Shueisha, Kodansha, and Nippon Animation — the relationships that took thirty years to build are the ones IP Bay carries forward.</p>
@@ -482,7 +592,7 @@
 
   <section class="chapter" id="harbor">
     <div class="inner plate">
-      <div class="eyebrow">Fig. 03 · The Harbor</div>
+      <div class="eyebrow">The Harbor</div>
       <div class="fig-rule"></div>
       <h2 class="display">Quality of work. Trust of our partners. <em>Respect for every author.</em></h2>
       <p class="lede">We are not brokers. We are not intermediaries. We are the company with the relationships — and we sit at the table throughout. Anchored in three decades of publisher trust, and committed to the patience the work deserves.</p>
@@ -491,7 +601,7 @@
 
   <section class="seabed" id="seabed">
     <div class="inner">
-      <div class="eyebrow" style="color:var(--accent-warm)">Fig. 04 · Anchored</div>
+      <div class="eyebrow" style="color:var(--accent-warm)">Anchored</div>
       <div class="rule"></div>
       <h1 class="wordmark">IP <em>Bay</em></h1>
       <div class="rule"></div>
@@ -558,7 +668,6 @@ const wavesNear = document.getElementById('wavesNear');
 const wakeG = document.getElementById('wake');
 const boatG = document.getElementById('boat');
 const splashG = document.getElementById('splashes');
-const hint = document.getElementById('hint');
 
 const SVG_W = 1920, SVG_H = 1080, HORIZON = 560;
 const boat = { x: SVG_W/2, y: 780, vx: 0, vy: 0, targetX: SVG_W/2, targetY: 780, rock: 0 };
@@ -687,7 +796,6 @@ function addSplash(x, y) {
 // During active drag, we update docY from pointer+scrollY.
 // Drop: physics — gravity-like sink, dampened sway, until it reaches the seabed target.
 const anchorWrap = document.getElementById('anchorWrap');
-const anchorHint = document.getElementById('anchorHint');
 const ropeSvg = document.getElementById('ropeSvg');
 const ropePath = document.getElementById('ropePath');
 
@@ -729,15 +837,6 @@ function initAnchor() {
   const p = boatDocAnchorPoint();
   anchor.docX = p.vx;
   anchor.docY = p.vy + window.scrollY - 10;
-  updateAnchorHint();
-}
-
-function updateAnchorHint() {
-  if (anchor.state !== 'stowed') { anchorHint.style.opacity = 0; return; }
-  anchorHint.style.opacity = 0.9;
-  const vy = anchor.docY - window.scrollY;
-  anchorHint.style.left = (anchor.docX + 42) + 'px';
-  anchorHint.style.top  = (vy - 6) + 'px';
 }
 
 function renderAnchor() {
@@ -746,7 +845,6 @@ function renderAnchor() {
   anchorWrap.style.top  = vy + 'px';
   const swayDeg = Math.sin(anchor.swayT) * anchor.sway;
   anchorWrap.style.transform = `translate(-50%, -50%) rotate(${swayDeg.toFixed(2)}deg)`;
-  updateAnchorHint();
   drawRope();
 }
 
@@ -921,7 +1019,6 @@ stage.addEventListener('pointerdown', (e) => {
   if (dist > 140) addSplash(p.x, p.y); else boat.rock = Math.max(boat.rock, 0.6);
   const c = clampBoat(p);
   boat.targetX = c.x; boat.targetY = c.y;
-  hint.style.opacity = 0;
 });
 stage.addEventListener('pointermove', (e) => {
   if (!draggingBoat) return;
@@ -936,9 +1033,9 @@ stage.addEventListener('pointercancel', endBoatDrag);
 const skyStops = [
   { sky:['#F7D9A8','#E6A88A','#8A6E8F','#2d3a55','#0F2A3D'], sea:['#2a5d78','#1B3A4B','#0a1a2a'], sunX:960, sunY:430, sunOp:0.60, disc:'#F7F1E5', ambient:0.18 },
   { sky:['#6d4a63','#3e3450','#1f2842','#102034','#08192a'], sea:['#1B3A4B','#0F2A3D','#060f1a'], sunX:960, sunY:570, sunOp:0.30, disc:'#C9A66B', ambient:0.10 },
-  { sky:['#081626','#050f1c','#030a14','#01060d','#000408'], sea:['#081b2a','#050f1c','#010610'], sunX:960, sunY:800, sunOp:0.05, disc:'#C9A66B', ambient:0.04 },
-  { sky:['#2a3a5a','#1a2646','#0f1a30','#08121f','#040a14'], sea:['#14334a','#0b2132','#050f1a'], sunX:960, sunY:640, sunOp:0.18, disc:'#F4D7A0', ambient:0.08 },
-  { sky:['#F5CDA2','#E88F6C','#A26A86','#3a4566','#0F2A3D'], sea:['#3a6b7c','#1B3A4B','#0a1a2a'], sunX:960, sunY:455, sunOp:0.60, disc:'#FFF0D4', ambient:0.20 },
+  { sky:['#0a1a2c','#060f1c','#030912','#01060d','#000306'], sea:['#0a1a28','#040d18','#01060d'], sunX:960, sunY:1100, sunOp:0.02, disc:'#0F2A3D', ambient:0.02 },
+  { sky:['#040a14','#020610','#01040a','#000206','#000103'], sea:['#040a14','#01040a','#000206'], sunX:960, sunY:1300, sunOp:0, disc:'#0F2A3D', ambient:0.0 },
+  { sky:['#000103','#000103','#000103','#000103','#000000'], sea:['#000103','#000000','#000000'], sunX:960, sunY:1500, sunOp:0, disc:'#0F2A3D', ambient:0.0 },
 ];
 function lerp(a,b,t){ return a+(b-a)*t; }
 function hexToRgb(h){ h=h.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
@@ -972,7 +1069,18 @@ function updateSkyFromScroll(){
   if (sunDiscs[1]) { sunDiscs[1].setAttribute('cx',p.sunX); sunDiscs[1].setAttribute('cy',p.sunY); sunDiscs[1].setAttribute('fill',p.disc); sunDiscs[1].setAttribute('opacity',Math.min(1,p.sunOp*1.5).toFixed(3)); }
 }
 updateSkyFromScroll();
-window.addEventListener('scroll', () => { updateSkyFromScroll(); updateAnchorFromScroll(); }, { passive: true });
+
+// Title card fade-out: as you scroll past the first viewport, the IP Bay title card eases away
+const titleCard = document.querySelector('.title-card');
+function updateTitleCard() {
+  if (!titleCard) return;
+  const vh = window.innerHeight || 1;
+  const prog = Math.max(0, Math.min(1, window.scrollY / (vh * 0.7)));
+  titleCard.style.opacity = String(1 - prog);
+  titleCard.style.transform = `translateY(${(-prog * 40).toFixed(1)}px)`;
+}
+updateTitleCard();
+window.addEventListener('scroll', () => { updateSkyFromScroll(); updateAnchorFromScroll(); updateTitleCard(); }, { passive: true });
 updateAnchorFromScroll();
 
 // ===== Tweaks =====
@@ -991,7 +1099,6 @@ tkBoat.addEventListener('change', e=>{ TWEAKS.boatStyle=e.target.value; renderBo
 window.addEventListener('message', (e)=>{ const d=e.data||{}; if (d.type==='__activate_edit_mode') tk.classList.add('on'); if (d.type==='__deactivate_edit_mode') tk.classList.remove('on'); });
 window.parent.postMessage({type:'__edit_mode_available'}, '*');
 
-setTimeout(()=>{ hint.style.opacity = 0.25; }, 5500);
 
 // Init & resize
 window.addEventListener('resize', () => { anchor.settledY = computeSeabedY(); updateAnchorFromScroll(); });
