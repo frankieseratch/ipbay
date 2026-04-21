@@ -218,8 +218,8 @@
   /* Seabed — final section. Acts as the landing zone for the anchor. */
   section.seabed {
     position: relative;
-    min-height: 90vh;
-    padding: 180px 48px 120px;
+    min-height: 75vh;
+    padding: 140px 48px 56px;
     background:
       linear-gradient(to bottom,
         rgba(2,7,17,0) 0%,
@@ -228,7 +228,7 @@
         #010408 60%,
         #000103 100%);
     display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-end;
+    align-items: center; justify-content: center;
     text-align: center;
     overflow: hidden;
   }
@@ -249,7 +249,7 @@
         transparent 1px 40px);
     opacity: 0.5;
   }
-  .seabed .inner { max-width: 760px; margin: 0 auto 120px; position: relative; z-index: 2; }
+  .seabed .inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 2; }
   .seabed .wordmark {
     font-family: var(--font-display);
     font-weight: 400;
@@ -513,7 +513,7 @@
           <stop offset="1" stop-color="#C9A66B" stop-opacity="0"/>
         </radialGradient>
         <filter id="foamBlur"><feGaussianBlur stdDeviation="1.4"/></filter>
-        <clipPath id="seaClip"><rect x="0" y="320" width="1920" height="760"/></clipPath>
+        <clipPath id="seaClip"><rect x="0" y="460" width="1920" height="620"/></clipPath>
         <radialGradient id="sunGrad" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stop-color="#F7F1E5" stop-opacity="0.95"/>
           <stop offset="0.4" stop-color="#C9A66B" stop-opacity="0.75"/>
@@ -524,11 +524,11 @@
           <stop offset="1" stop-color="rgba(15,42,61,0.28)"/>
         </linearGradient>
       </defs>
-      <circle cx="960" cy="180" r="140" fill="url(#sunGrad)"/>
-      <circle cx="960" cy="180" r="62" fill="#FFE4B0" opacity="0.95"/>
-      <rect x="0" y="320" width="1920" height="760" fill="url(#seaGrad)"/>
-      <rect x="0" y="320" width="1920" height="760" fill="url(#sunTrail)"/>
-      <line x1="80" y1="320" x2="1840" y2="320" stroke="rgba(247,241,229,0.16)" stroke-width="1"/>
+      <circle cx="960" cy="280" r="150" fill="url(#sunGrad)"/>
+      <circle cx="960" cy="280" r="64" fill="#FFE4B0" opacity="0.95"/>
+      <rect x="0" y="460" width="1920" height="620" fill="url(#seaGrad)"/>
+      <rect x="0" y="460" width="1920" height="620" fill="url(#sunTrail)"/>
+      <line x1="80" y1="460" x2="1840" y2="460" stroke="rgba(247,241,229,0.16)" stroke-width="1"/>
       <g clip-path="url(#seaClip)">
         <g id="wavesFar" opacity="0.5" stroke="rgba(201,166,107,0.4)" stroke-width="1" fill="none"></g>
         <g id="wavesMid" opacity="0.7" stroke="rgba(247,241,229,0.32)" stroke-width="1.2" fill="none"></g>
@@ -631,11 +631,8 @@
 
 <!-- ─────────────── Scrollable page ─────────────── -->
 <main class="page">
-  <!-- Hero title card — sits over the boat scene in the first viewport, scrolls away as you reach Fig. 01 -->
+  <!-- Hero title card — sits over the boat scene in the first viewport, scrolls away -->
   <header class="title-card">
-    <div class="title-card-sup">
-      Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> New York
-    </div>
     <div class="title-card-rule"></div>
     <h1 class="title-card-mark">IP <em>Bay</em></h1>
     <div class="title-card-rule"></div>
@@ -681,7 +678,7 @@
       <div class="cities-row">
         Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> New York
       </div>
-      <div style="margin-top: 56px; display: flex; justify-content: center;">
+      <div style="margin-top: 40px; display: flex; justify-content: center;">
         <svg width="96" height="96" viewBox="0 0 104 104" role="img" aria-label="IP Bay seal, authorized">
           <circle cx="52" cy="52" r="48" fill="none" stroke="#C0392B" stroke-width="3"/>
           <circle cx="52" cy="52" r="40" fill="none" stroke="#C0392B" stroke-width="0.75"/>
@@ -741,7 +738,7 @@ const wakeG = document.getElementById('wake');
 const boatG = document.getElementById('boat');
 const splashG = document.getElementById('splashes');
 
-const SVG_W = 1920, SVG_H = 1080, HORIZON = 320;
+const SVG_W = 1920, SVG_H = 1080, HORIZON = 460;
 // Boat starts off-screen left; sails to center as user scrolls past the title card
 const BOAT_REST_X = SVG_W/2;
 const BOAT_REST_Y = 870;
@@ -835,9 +832,9 @@ function makeWaveLine(y, amp, freq, segs=80, speed=0.6) {
 const waves = [];
 function buildWaves() {
   wavesFar.innerHTML=''; wavesMid.innerHTML=''; wavesNear.innerHTML=''; waves.length=0;
-  for (let i=0;i<5;i++){ const y=340+i*12; const p=makeWaveLine(y,1.2+i*0.3,0.012+i*0.002,60,0.2+i*0.05); wavesFar.appendChild(p); waves.push({path:p}); }
-  for (let i=0;i<7;i++){ const y=440+i*22; const p=makeWaveLine(y,2+i*0.8,0.010+i*0.0015,90,0.35+i*0.04); wavesMid.appendChild(p); waves.push({path:p}); }
-  for (let i=0;i<8;i++){ const y=620+i*36; const p=makeWaveLine(y,4+i*1.6,0.008+i*0.0012,140,0.55+i*0.05); wavesNear.appendChild(p); waves.push({path:p}); }
+  for (let i=0;i<5;i++){ const y=480+i*12; const p=makeWaveLine(y,1.2+i*0.3,0.012+i*0.002,60,0.2+i*0.05); wavesFar.appendChild(p); waves.push({path:p}); }
+  for (let i=0;i<7;i++){ const y=560+i*22; const p=makeWaveLine(y,2+i*0.8,0.010+i*0.0015,90,0.35+i*0.04); wavesMid.appendChild(p); waves.push({path:p}); }
+  for (let i=0;i<8;i++){ const y=720+i*30; const p=makeWaveLine(y,4+i*1.6,0.008+i*0.0012,140,0.55+i*0.05); wavesNear.appendChild(p); waves.push({path:p}); }
 }
 buildWaves();
 
@@ -1108,14 +1105,14 @@ stage.addEventListener('pointercancel', endBoatDrag);
 
 // ===== Scroll-driven sky: sunset → night → sunrise =====
 const skyStops = [
-  // 0% — Golden hour, sun high in the sky above the title
-  { sky:['#FFD9A0','#F0B888','#C28778','#5d4f6a','#1d2c44'], sea:['#3a708a','#1f4e66','#0d2942'], sunX:960, sunY:180, sunOp:0.78, disc:'#FFE4B0', ambient:0.22 },
+  // 0% — Golden hour, sun above the new horizon
+  { sky:['#FFD9A0','#F0B888','#C28778','#5d4f6a','#1d2c44'], sea:['#3a708a','#1f4e66','#0d2942'], sunX:960, sunY:280, sunOp:0.78, disc:'#FFE4B0', ambient:0.22 },
   // 25% — Sun setting, sky warm pink → violet
-  { sky:['#E29973','#B8745f','#6e4a63','#332c4a','#0F2A3D'], sea:['#2a5d78','#1B3A4B','#0a1a2a'], sunX:960, sunY:280, sunOp:0.55, disc:'#F4B98A', ambient:0.16 },
-  // 50% — Sun has touched the horizon, twilight
-  { sky:['#7d5a72','#4d3e58','#2a2a44','#15203a','#08192a'], sea:['#1B3A4B','#0F2A3D','#060f1a'], sunX:960, sunY:340, sunOp:0.22, disc:'#C9A66B', ambient:0.08 },
-  // 75% — Sun gone, deep night
-  { sky:['#0c1d2e','#060f1c','#030912','#01060d','#000306'], sea:['#0a1a28','#040d18','#01060d'], sunX:960, sunY:600, sunOp:0.02, disc:'#0F2A3D', ambient:0.02 },
+  { sky:['#E29973','#B8745f','#6e4a63','#332c4a','#0F2A3D'], sea:['#2a5d78','#1B3A4B','#0a1a2a'], sunX:960, sunY:380, sunOp:0.55, disc:'#F4B98A', ambient:0.16 },
+  // 50% — Sun touching horizon, twilight
+  { sky:['#7d5a72','#4d3e58','#2a2a44','#15203a','#08192a'], sea:['#1B3A4B','#0F2A3D','#060f1a'], sunX:960, sunY:470, sunOp:0.22, disc:'#C9A66B', ambient:0.08 },
+  // 75% — Sun gone behind water, deep night
+  { sky:['#0c1d2e','#060f1c','#030912','#01060d','#000306'], sea:['#0a1a28','#040d18','#01060d'], sunX:960, sunY:700, sunOp:0.02, disc:'#0F2A3D', ambient:0.02 },
   // 100% — Pure midnight void
   { sky:['#020610','#01040a','#000206','#000103','#000000'], sea:['#020610','#000206','#000000'], sunX:960, sunY:1100, sunOp:0, disc:'#0F2A3D', ambient:0.0 },
 ];
