@@ -177,40 +177,89 @@ body.nav-open .mobile-nav-overlay { display: flex; }
 }
 .nav-logo span { color: var(--accent-warm); font-style: italic; font-weight: 400; }
 
-/* Language toggle pill (EN / 日本語) — injected by i18n.js into every <nav> */
+/* Language toggle (🇺🇸 EN · 🇯🇵 日本語) — flows organically into the top nav */
 .lang-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  background: rgba(247, 241, 229, 0.06);
-  border: 1px solid rgba(247, 241, 229, 0.14);
-  border-radius: 999px;
-  padding: 3px;
-  margin-left: 14px;
+  margin-left: 18px;
   flex-shrink: 0;
-}
-.lang-toggle-btn {
-  font-family: var(--font-body);
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  color: rgba(247, 241, 229, 0.6);
-  background: transparent;
-  border: 0;
-  padding: 5px 11px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.25s ease, color 0.25s ease;
   line-height: 1;
 }
-.lang-toggle-btn:hover { color: var(--text-on-dark); }
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: 0;
+  padding: 6px 8px;
+  cursor: pointer;
+  line-height: 1;
+  color: rgba(247, 241, 229, 0.5);
+  transition: color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+  border-radius: 4px;
+}
+.lang-toggle-flag {
+  font-size: 16px;
+  line-height: 1;
+  display: inline-block;
+  filter: saturate(0.75) brightness(0.95);
+  transition: filter 0.3s ease, transform 0.3s ease;
+  /* Ensure emoji rendering on systems that support it */
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+}
+.lang-toggle-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+/* Japanese label uses the serif italic voice — same pattern as IP Bay with Bay in italic */
+.lang-toggle-btn[data-lang="ja"] .lang-toggle-label {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+.lang-toggle-btn:hover {
+  color: rgba(247, 241, 229, 0.92);
+  transform: translateY(-1px);
+}
+.lang-toggle-btn:hover .lang-toggle-flag {
+  filter: saturate(1.1) brightness(1);
+  transform: scale(1.08);
+}
 .lang-toggle-btn.active {
-  background: var(--accent-warm);
-  color: var(--bg-deep);
+  color: var(--accent-warm);
+}
+.lang-toggle-btn.active .lang-toggle-flag {
+  filter: saturate(1.15) brightness(1);
+  transform: scale(1.06);
+}
+.lang-toggle-sep {
+  color: var(--accent-warm);
+  margin: 0 4px;
+  opacity: 0.55;
+  font-size: 12px;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
 }
 @media (max-width: 720px) {
-  .lang-toggle { margin-left: 6px; padding: 2px; }
-  .lang-toggle-btn { font-size: 9.5px; padding: 4px 8px; letter-spacing: 0.08em; }
+  .lang-toggle { margin-left: 6px; }
+  .lang-toggle-btn { gap: 5px; padding: 5px 4px; }
+  .lang-toggle-flag { font-size: 15px; }
+  .lang-toggle-label { font-size: 10px; letter-spacing: 0.14em; }
+  .lang-toggle-btn[data-lang="ja"] .lang-toggle-label { font-size: 12px; letter-spacing: 0.01em; }
+  .lang-toggle-sep { margin: 0 2px; font-size: 11px; }
+}
+@media (max-width: 380px) {
+  /* On extra-small phones, hide the text label — flags alone are enough */
+  .lang-toggle-label { display: none; }
+  .lang-toggle-btn { gap: 0; padding: 5px 6px; }
+  .lang-toggle-flag { font-size: 18px; }
 }
 
 /* Current page label — hidden on desktop (nav-links shows it there), shown on mobile */

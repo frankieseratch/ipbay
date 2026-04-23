@@ -226,18 +226,26 @@
   }
 
   function injectToggle() {
-    var nav = document.querySelector('nav');
-    if (!nav || nav.querySelector('.lang-toggle')) return;
+    // Target the hamburger's parent so we land in the right container on every page:
+    // on subpages the parent is <nav>, on the homepage it's .chrome-top.
+    var hamburger = document.querySelector('.nav-toggle');
+    var container = hamburger ? hamburger.parentElement : document.querySelector('nav');
+    if (!container || container.querySelector('.lang-toggle')) return;
     var toggle = document.createElement('div');
     toggle.className = 'lang-toggle';
     toggle.setAttribute('role', 'group');
     toggle.setAttribute('aria-label', 'Switch language · 言語切替');
     toggle.innerHTML =
-      '<button type="button" class="lang-toggle-btn" data-lang="en" aria-pressed="true">EN</button>' +
-      '<button type="button" class="lang-toggle-btn" data-lang="ja" aria-pressed="false">日本語</button>';
-    var hamburger = nav.querySelector('.nav-toggle');
-    if (hamburger) nav.insertBefore(toggle, hamburger);
-    else nav.appendChild(toggle);
+      '<button type="button" class="lang-toggle-btn" data-lang="en" aria-pressed="true" aria-label="English">' +
+        '<span class="lang-toggle-flag" aria-hidden="true">\uD83C\uDDFA\uD83C\uDDF8</span>' +
+        '<span class="lang-toggle-label">EN</span>' +
+      '</button>' +
+      '<button type="button" class="lang-toggle-btn" data-lang="ja" aria-pressed="false" aria-label="日本語">' +
+        '<span class="lang-toggle-flag" aria-hidden="true">\uD83C\uDDEF\uD83C\uDDF5</span>' +
+        '<span class="lang-toggle-label">日本語</span>' +
+      '</button>';
+    if (hamburger) container.insertBefore(toggle, hamburger);
+    else container.appendChild(toggle);
     toggle.addEventListener('click', function (e) {
       var btn = e.target.closest && e.target.closest('.lang-toggle-btn');
       if (!btn) return;
@@ -249,7 +257,31 @@
     });
   }
 
+  function injectStyles() {
+    if (document.getElementById('ipbay-i18n-styles')) return;
+    var css =
+      '.lang-toggle{display:inline-flex;align-items:center;gap:2px;background:rgba(247,241,229,0.08);border:1px solid rgba(247,241,229,0.2);border-radius:999px;padding:3px;margin-left:14px;flex-shrink:0;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 2px 14px -4px rgba(0,0,0,0.28)}' +
+      '.lang-toggle-btn{display:inline-flex;align-items:center;gap:6px;font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;background:transparent;border:0;padding:5px 11px;border-radius:999px;cursor:pointer;line-height:1;color:rgba(247,241,229,0.65);transition:background 0.25s ease,color 0.25s ease}' +
+      '.lang-toggle-flag{font-size:13px;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}' +
+      '.lang-toggle-label{font-size:10.5px;letter-spacing:0.12em;font-weight:500}' +
+      '.lang-toggle-btn[data-lang="ja"] .lang-toggle-label{font-size:12.5px;letter-spacing:0.01em}' +
+      '.lang-toggle-btn:hover{color:#F7F1E5}' +
+      '.lang-toggle-btn.active{background:#C9A66B;color:#0F2A3D}' +
+      '@media (max-width:720px){' +
+        '.lang-toggle{margin-left:8px;padding:2px}' +
+        '.lang-toggle-btn{gap:4px;padding:4px 8px}' +
+        '.lang-toggle-flag{font-size:12px}' +
+        '.lang-toggle-label{font-size:9.5px;letter-spacing:0.08em}' +
+        '.lang-toggle-btn[data-lang="ja"] .lang-toggle-label{font-size:11px}' +
+      '}';
+    var style = document.createElement('style');
+    style.id = 'ipbay-i18n-styles';
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+
   function init() {
+    injectStyles();
     injectToggle();
     apply();
   }
