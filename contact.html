@@ -74,7 +74,15 @@
           <div class="contact-detail-value">Strategy and business development</div>
         </div>
       </div>
-      <form class="contact-form" action="https://formspree.io/f/placeholder" method="post">
+      <form class="contact-form" action="https://formsubmit.co/frankieseratch4@gmail.com" method="POST">
+        <!-- FormSubmit config -->
+        <input type="hidden" name="_subject" value="New inquiry from IP Bay website">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://ipbay.jp/contact.html?sent=1">
+        <!-- Honeypot (blank = real submit; bots fill it and get filtered) -->
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
         <div class="form-row">
           <div class="form-field">
             <label class="form-label" for="first-name">First Name</label>

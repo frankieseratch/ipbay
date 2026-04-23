@@ -827,7 +827,19 @@
 
   function autoScroll(el, direction) {
     if (!el) return;
-    let last = performance.now();
+    // For reverse-direction scrollers, park scrollLeft in the middle so it can decrease
+    // without getting clamped at 0 by the browser. Do it once layout has settled.
+    function primeStart() {
+      const half = el.scrollWidth / 2;
+      if (half <= 0) { requestAnimationFrame(primeStart); return; }
+      if (direction < 0) el.scrollLeft = half;
+      begin();
+    }
+    let last;
+    function begin() {
+      last = performance.now();
+      requestAnimationFrame(loop);
+    }
     function loop(now) {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
@@ -840,7 +852,7 @@
       }
       requestAnimationFrame(loop);
     }
-    requestAnimationFrame(loop);
+    requestAnimationFrame(primeStart);
   }
 
   if (!prefersReduced) {
