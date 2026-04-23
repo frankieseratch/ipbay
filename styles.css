@@ -492,12 +492,14 @@ section {
   line-height: 1.7; flex-shrink: 0; text-align: right;
 }
 
-/* properties marquee track (§3.5) — auto-scrolls continuously */
+/* properties track (§3.5) — auto-scrolls via JS; user can also swipe/drag */
 .properties-stage {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 20px 0 60px;
   position: relative;
   -ms-overflow-style: none; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   /* Soft fade at edges so the loop point reads as continuous motion */
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
           mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
@@ -507,18 +509,6 @@ section {
   display: flex; gap: 28px;
   padding: 0 48px;
   width: max-content;
-}
-/* Once cards have been duplicated (JS adds .marquee-ready), translate -50% for seamless loop */
-.properties-track.marquee-ready {
-  animation: propertiesMarquee 90s linear infinite;
-}
-.properties-track.marquee-ready:hover { animation-play-state: paused; }
-@keyframes propertiesMarquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .properties-track.marquee-ready { animation: none; }
 }
 .property-card {
   flex: 0 0 340px;
@@ -681,7 +671,18 @@ section {
   background: var(--bg-elevated);
   padding: 32px 28px;
   border-top: 2px solid var(--accent-warm);
+  display: flex; flex-direction: column;
+  text-decoration: none; color: inherit;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  position: relative;
 }
+.govt-card:hover {
+  background: #fff8e9;
+  transform: translateY(-3px);
+  box-shadow: 0 18px 36px -18px rgba(160, 49, 43, 0.22);
+}
+.govt-card:hover .govt-card-link { color: var(--accent-ink); }
 .govt-card-icon {
   font-size: 11px; letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -695,7 +696,18 @@ section {
   color: var(--text-primary);
   margin-bottom: 12px; line-height: 1.2;
 }
-.govt-card-desc { font-size: 14px; line-height: 1.75; color: var(--text-secondary); font-weight: 400; }
+.govt-card-desc { font-size: 14px; line-height: 1.75; color: var(--text-secondary); font-weight: 400; flex: 1; }
+.govt-card-link {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-body);
+  font-size: 10.5px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+  font-weight: 500;
+  transition: color 0.25s ease;
+}
 
 /* ─── Services ────────────────────────────────────────────── */
 .services { background: var(--bg-elevated); border-bottom: 1px solid var(--rule); }
