@@ -17,28 +17,29 @@
 <body>
 
 <nav>
-  <a href="/ipbay/" class="nav-logo">IP <span>Bay</span></a>
+  <a href="/" class="nav-logo">IP <span>Bay</span></a>
+  <span class="nav-current">Legacy</span>
   <ul class="nav-links">
-    <li><a href="/ipbay/">Home</a></li>
-    <li><a href="/ipbay/legacy.html" class="active">Legacy</a></li>
-    <li><a href="/ipbay/cloverway.html">The Cloverway Way</a></li>
-    <li><a href="/ipbay/services.html">Services</a></li>
-    <li><a href="/ipbay/japan.html">Japan Access</a></li>
-    <li><a href="/ipbay/team.html">On Board</a></li>
-    <li><a href="/ipbay/contact.html">Contact</a></li>
+    <li><a href="/">Home</a></li>
+    <li><a href="/legacy.html" class="active">Legacy</a></li>
+    <li><a href="/cloverway.html">The Cloverway Way</a></li>
+    <li><a href="/services.html">Services</a></li>
+    <li><a href="/japan.html">Japan Access</a></li>
+    <li><a href="/team.html">On Board</a></li>
+    <li><a href="/contact.html">Contact</a></li>
   </ul>
   <button class="nav-toggle" aria-label="Open menu" onclick="document.body.classList.toggle('nav-open')">
     <span></span><span></span><span></span>
   </button>
 </nav>
 <div class="mobile-nav-overlay">
-  <a href="/ipbay/">Home</a>
-  <a href="/ipbay/legacy.html" class="active">Legacy</a>
-  <a href="/ipbay/cloverway.html">The Cloverway Way</a>
-  <a href="/ipbay/services.html">Services</a>
-  <a href="/ipbay/japan.html">Japan Access</a>
-  <a href="/ipbay/team.html">On Board</a>
-  <a href="/ipbay/contact.html">Contact</a>
+  <a href="/">Home</a>
+  <a href="/legacy.html" class="active">Legacy</a>
+  <a href="/cloverway.html">The Cloverway Way</a>
+  <a href="/services.html">Services</a>
+  <a href="/japan.html">Japan Access</a>
+  <a href="/team.html">On Board</a>
+  <a href="/contact.html">Contact</a>
 </div>
 
 <!-- PAGE HEADER -->
@@ -338,6 +339,7 @@
       @media (max-width:640px){.tabs{flex-direction:column;border-radius:14px}.tabs button{border-radius:10px}}
       .stage-wrap{width:min(1100px,100%);position:relative}
       .stage{position:relative;width:100%;aspect-ratio:1100/640;border-radius:24px;overflow:hidden;touch-action:none;cursor:grab;user-select:none;background:var(--cream);box-shadow:inset 0 0 0 1px rgba(120,95,50,.12),0 1px 0 rgba(255,255,255,.6),0 30px 60px -30px rgba(94,60,10,.22)}
+      @media (max-width:720px){.stage{aspect-ratio:1/1}}
       .stage.dragging{cursor:grabbing}
       .stage svg.net{position:absolute;inset:0;width:100%;height:100%;display:block}
       .hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);opacity:.6;pointer-events:none;background:rgba(242,235,221,.7);padding:6px 12px;border-radius:999px;backdrop-filter:blur(4px);transition:opacity .6s ease}
@@ -733,27 +735,12 @@
   </div>
 </section>
 
-<!-- HANKO SEAL before closing -->
-<section style="background: var(--bg-primary); padding: 60px 48px 20px; border-bottom: none;">
-  <div class="section-inner">
-    <svg class="hanko-seal hanko-legacy" viewBox="0 0 104 104" role="img" aria-label="IP Bay seal, authorized">
-      <circle cx="52" cy="52" r="48" fill="none" stroke="#C0392B" stroke-width="3"/>
-      <circle cx="52" cy="52" r="40" fill="none" stroke="#C0392B" stroke-width="0.75"/>
-      <text x="52" y="33" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-size="11" letter-spacing="2">IP BAY</text>
-      <line x1="24" y1="42" x2="80" y2="42" stroke="#C0392B" stroke-width="0.5"/>
-      <text x="52" y="60" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-style="italic" font-size="14">認可</text>
-      <line x1="24" y1="68" x2="80" y2="68" stroke="#C0392B" stroke-width="0.5"/>
-      <text x="52" y="82" text-anchor="middle" fill="#C0392B" font-family="'Crimson Pro', Georgia, serif" font-size="11" letter-spacing="2">MMXXVI</text>
-    </svg>
-  </div>
-</section>
-
 <!-- CLOSING CTA -->
 <div class="closing">
   <div class="closing-bg"></div>
   <div class="closing-content">
     <h2 class="closing-title">The operating principles<br>we continue to honor.<br><em>The Cloverway Way.</em></h2>
-    <a href="/ipbay/cloverway.html" class="closing-cta">Read the record</a>
+    <a href="/cloverway.html" class="closing-cta">Read the record</a>
   </div>
 </div>
 
@@ -778,6 +765,7 @@
 </footer>
 
 <script>
+/* Properties: load cover art, then clone cards for seamless marquee loop */
 (async function loadCovers() {
   const cards = document.querySelectorAll('.property-card[data-mal]');
   const arr = [...cards];
@@ -798,6 +786,32 @@
       imgEl.src = url;
     } catch (e) { /* leave fallback gradient */ }
   }
+  // Clone the row so the CSS marquee can translate -50% and loop seamlessly
+  const track = document.querySelector('.properties-track');
+  if (track) {
+    arr.forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.removeAttribute('data-mal');
+      track.appendChild(clone);
+    });
+    track.classList.add('marquee-ready');
+  }
+})();
+
+/* Publisher map: letterbox (meet) on mobile so all buoys stay visible; crop (slice) on desktop */
+(function() {
+  const net = document.getElementById('net');
+  if (!net) return;
+  function syncAspect() {
+    net.setAttribute('preserveAspectRatio', window.innerWidth <= 720 ? 'xMidYMid meet' : 'xMidYMid slice');
+  }
+  syncAspect();
+  let t;
+  window.addEventListener('resize', function() {
+    clearTimeout(t);
+    t = setTimeout(syncAspect, 120);
+  });
 })();
 </script>
 

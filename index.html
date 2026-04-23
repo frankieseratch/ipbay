@@ -155,7 +155,7 @@
   @media (max-width: 720px) {
     .title-card {
       justify-content: flex-start;
-      padding: 14vh 20px 0;
+      padding: 55vh 20px 0;
     }
     .title-card-mark { font-size: clamp(58px, 18vw, 100px); margin: 8px 0; }
     .title-card-tagline { font-size: 16px; margin: 18px auto 10px; max-width: 90%; }
@@ -282,6 +282,26 @@
     margin-top: 40px;
   }
   .seabed .cities-row .dot { color: var(--accent-warm); margin: 0 10px; }
+
+  /* Landing page CTA to Legacy */
+  .landing-legacy-cta {
+    display: inline-flex; align-items: center;
+    padding: 16px 40px;
+    background: var(--accent-warm);
+    color: var(--bg-deep);
+    font-family: var(--font-body);
+    font-size: 11px; letter-spacing: 0.28em;
+    text-transform: uppercase; font-weight: 600;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px -12px rgba(201, 166, 107, 0.6);
+  }
+  .landing-legacy-cta:hover {
+    background: #d9b87f;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px -12px rgba(201, 166, 107, 0.75);
+  }
 
   /* ───── Editorial chrome ───── */
   .chrome-top, .chrome-bottom {
@@ -490,7 +510,7 @@
 
     .title-card {
       justify-content: flex-start;
-      padding: 14vh 20px 0;
+      padding: 55vh 20px 0;
     }
     .title-card-mark { font-size: clamp(58px, 18vw, 100px); margin: 8px 0; }
     .title-card-tagline { font-size: 16px; margin: 18px auto 10px; max-width: 92%; }
@@ -633,27 +653,27 @@
 
 <!-- ─────────────── Chrome ─────────────── -->
 <div class="chrome-top">
-  <a class="wordmark-nav" href="/ipbay/">IP <em>Bay</em></a>
+  <a class="wordmark-nav" href="/">IP <em>Bay</em></a>
   <nav class="nav-links">
-    <a href="/ipbay/legacy.html">Legacy</a>
-    <a href="/ipbay/cloverway.html">Cloverway</a>
-    <a href="/ipbay/services.html">Services</a>
-    <a href="/ipbay/japan.html">Japan Access</a>
-    <a href="/ipbay/team.html">On Board</a>
-    <a href="/ipbay/contact.html">Contact</a>
+    <a href="/legacy.html">Legacy</a>
+    <a href="/cloverway.html">Cloverway</a>
+    <a href="/services.html">Services</a>
+    <a href="/japan.html">Japan Access</a>
+    <a href="/team.html">On Board</a>
+    <a href="/contact.html">Contact</a>
   </nav>
   <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </div>
 <div class="mobile-nav-overlay" id="mobileNav">
-  <a href="/ipbay/">Home</a>
-  <a href="/ipbay/legacy.html">Legacy</a>
-  <a href="/ipbay/cloverway.html">Cloverway</a>
-  <a href="/ipbay/services.html">Services</a>
-  <a href="/ipbay/japan.html">Japan Access</a>
-  <a href="/ipbay/team.html">On Board</a>
-  <a href="/ipbay/contact.html">Contact</a>
+  <a href="/">Home</a>
+  <a href="/legacy.html">Legacy</a>
+  <a href="/cloverway.html">Cloverway</a>
+  <a href="/services.html">Services</a>
+  <a href="/japan.html">Japan Access</a>
+  <a href="/team.html">On Board</a>
+  <a href="/contact.html">Contact</a>
 </div>
 <div class="chrome-bottom">
   <div class="cities-bottom">
@@ -713,7 +733,10 @@
       <div class="cities-row">
         Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> New York
       </div>
-      <div style="margin-top: 40px; display: flex; justify-content: center;">
+      <div style="margin-top: 44px; display: flex; justify-content: center;">
+        <a href="/legacy.html" class="landing-legacy-cta">Enter the Legacy <span style="margin-left:10px;color:inherit;">→</span></a>
+      </div>
+      <div style="margin-top: 36px; display: flex; justify-content: center;">
         <svg width="96" height="96" viewBox="0 0 104 104" role="img" aria-label="IP Bay seal, authorized">
           <circle cx="52" cy="52" r="48" fill="none" stroke="#C0392B" stroke-width="3"/>
           <circle cx="52" cy="52" r="40" fill="none" stroke="#C0392B" stroke-width="0.75"/>
@@ -778,7 +801,7 @@ const SVG_W = 1920, SVG_H = 1080, HORIZON = 400;
 const BOAT_REST_X = SVG_W/2;
 const BOAT_REST_Y = 870;
 const BOAT_START_X = -300;            // off-screen left in scene coords
-const BOAT_SAIL_END = 0.22;           // scroll progress where boat reaches center & rests (sooner)
+const BOAT_SAIL_END = 0.70;           // scroll progress where boat reaches center — slow, organic sail-in across most of the scroll
 const boat = { x: BOAT_START_X, y: BOAT_REST_Y, vx: 0, vy: 0, targetX: BOAT_START_X, targetY: BOAT_REST_Y, rock: 0 };
 let draggingBoat = false;
 
@@ -984,7 +1007,7 @@ function scrollProgress() {
   return Math.max(0, Math.min(1, window.scrollY / max));
 }
 // Anchor launch: begins after the boat has sailed in and reached the center
-const ANCHOR_LAUNCH = 0.24; // when progress exceeds this, anchor detaches
+const ANCHOR_LAUNCH = 0.72; // when progress exceeds this, anchor detaches (just after the boat has settled at center)
 function updateAnchorFromScroll() {
   const prog = scrollProgress();
   // seabed Y in document coords

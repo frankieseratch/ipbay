@@ -176,6 +176,22 @@ body.nav-open .mobile-nav-overlay { display: flex; }
   line-height: 1;
 }
 .nav-logo span { color: var(--accent-warm); font-style: italic; font-weight: 400; }
+
+/* Current page label — hidden on desktop (nav-links shows it there), shown on mobile */
+.nav-current {
+  display: none;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+  font-weight: 500;
+  opacity: 0.92;
+  flex: 1;
+  text-align: center;
+  pointer-events: none;
+  padding: 0 8px;
+}
 .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
 .nav-links a {
   font-family: var(--font-body);
@@ -476,13 +492,15 @@ section {
   line-height: 1.7; flex-shrink: 0; text-align: right;
 }
 
-/* properties scroll track (§3.5) */
+/* properties marquee track (§3.5) — auto-scrolls continuously */
 .properties-stage {
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  overflow: hidden;
   padding: 20px 0 60px;
   position: relative;
   -ms-overflow-style: none; scrollbar-width: none;
+  /* Soft fade at edges so the loop point reads as continuous motion */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
 }
 .properties-stage::-webkit-scrollbar { display: none; }
 .properties-track {
@@ -490,9 +508,20 @@ section {
   padding: 0 48px;
   width: max-content;
 }
+/* Once cards have been duplicated (JS adds .marquee-ready), translate -50% for seamless loop */
+.properties-track.marquee-ready {
+  animation: propertiesMarquee 90s linear infinite;
+}
+.properties-track.marquee-ready:hover { animation-play-state: paused; }
+@keyframes propertiesMarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .properties-track.marquee-ready { animation: none; }
+}
 .property-card {
   flex: 0 0 340px;
-  scroll-snap-align: center;
   transition: transform 0.4s ease;
   background: var(--bg-elevated);
   border: 1px solid var(--rule);
@@ -1208,9 +1237,10 @@ footer {
 
 @media (max-width: 720px) {
   nav { padding: 14px 18px; }
-  .nav-logo { font-size: 26px; }
+  .nav-logo { font-size: 24px; flex-shrink: 0; }
   .nav-links { display: none; }
-  .nav-toggle { display: block; }
+  .nav-toggle { display: block; flex-shrink: 0; }
+  .nav-current { display: block; }
 
   .hero { padding: 140px 24px 60px; }
   .hero-tagline { font-size: clamp(18px, 5vw, 24px); }
@@ -1329,14 +1359,14 @@ footer {
   .contact-headline { font-size: clamp(28px, 7vw, 40px); }
   .contact-desc { font-size: 15px; margin-bottom: 32px; }
 
-  /* Closing */
-  .closing { padding: 60px 24px; min-height: 70vh; }
-  .closing-sup { font-size: 9px; letter-spacing: 0.16em; margin-bottom: 22px; }
-  .closing-wordmark { font-size: clamp(64px, 18vw, 96px); margin: 12px 0; }
+  /* Closing — tightened on mobile */
+  .closing { padding: 44px 24px 36px; min-height: auto; }
+  .closing-sup { font-size: 9px; letter-spacing: 0.16em; margin-bottom: 18px; }
+  .closing-wordmark { font-size: clamp(60px, 17vw, 92px); margin: 8px 0; }
   .closing-bridge { font-size: 9px; letter-spacing: 0.18em; }
-  .closing-title { font-size: clamp(20px, 5.5vw, 28px); margin-bottom: 24px; }
-  .closing-body { font-size: 15px; margin-bottom: 36px; max-width: 90%; }
-  .closing-cta { padding: 14px 32px; font-size: 11px; letter-spacing: 0.16em; }
+  .closing-title { font-size: clamp(20px, 5.5vw, 28px); margin-bottom: 18px; line-height: 1.2; }
+  .closing-body { font-size: 15px; margin-bottom: 28px; max-width: 90%; }
+  .closing-cta { padding: 13px 28px; font-size: 11px; letter-spacing: 0.16em; }
   .closing-cities { gap: 10px; font-size: 9px; letter-spacing: 0.18em; flex-wrap: wrap; justify-content: center; }
 
   /* Pages grid (home) */
@@ -1349,11 +1379,11 @@ footer {
   .page-card-subhead { font-size: 16px; margin-bottom: 16px; }
   .page-card-desc { font-size: 13px; }
 
-  /* Footer */
-  footer { padding: 32px 18px 24px; gap: 14px; }
+  /* Footer — tightened on mobile */
+  footer { padding: 22px 18px 18px; gap: 8px; }
   .footer-wordmark, .footer-logo { font-size: 18px; }
-  .footer-tagline { font-size: 13px; }
-  .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
+  .footer-tagline { font-size: 13px; margin-bottom: 2px; }
+  .footer-bottom { flex-direction: column; gap: 10px; text-align: center; padding-top: 8px; }
   .footer-bottom-left { align-items: center; }
   .footer-copy { font-size: 11px; }
   .harbor-coordinates { grid-template-columns: repeat(2, 1fr); gap: 18px 0; padding: 18px 0; margin: 14px 0; }
