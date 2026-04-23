@@ -799,7 +799,8 @@ const splashG = document.getElementById('splashes');
 const SVG_W = 1920, SVG_H = 1080, HORIZON = 400;
 // Boat starts off-screen left; sails to center as user scrolls past the title card
 const BOAT_REST_X = SVG_W/2;
-const BOAT_REST_Y = 720;          // middle of ocean (horizon at 400, sea floor at 1080 → midpoint ~740)
+// Desktop: middle of viewport (y=540 is vertical center of 1080 SVG). Mobile: middle of ocean (y=720).
+const BOAT_REST_Y = window.innerWidth <= 720 ? 720 : 540;
 const BOAT_START_X = -300;            // off-screen left in scene coords
 const BOAT_SAIL_END = 0.28;           // scroll progress where boat reaches center — boat starts moving right away and arrives by the first third of scroll
 const boat = { x: BOAT_START_X, y: BOAT_REST_Y, vx: 0, vy: 0, targetX: BOAT_START_X, targetY: BOAT_REST_Y, rock: 0 };
@@ -1228,8 +1229,8 @@ function updateBoatFromScroll() {
   const prog = scrollProgress();
   if (prog <= BOAT_SAIL_END) {
     const k = Math.max(0, Math.min(1, prog / BOAT_SAIL_END));
-    // sine ease-in-out — gentle start, gentle stop, smooth middle
-    const eased = (1 - Math.cos(k * Math.PI)) / 2;
+    // Ease-out quadratic — boat responds immediately to scroll input, then decelerates into center
+    const eased = 1 - Math.pow(1 - k, 2);
     const x = BOAT_START_X + (BOAT_REST_X - BOAT_START_X) * eased;
     boat.x = x;
     boat.targetX = x;
