@@ -73,7 +73,7 @@
     align-items: center;
     justify-content: flex-end;
     text-align: center;
-    padding: 100px 32px 22vh;
+    padding: 100px 32px 30vh;
     pointer-events: none;
     z-index: 3;
   }
@@ -799,9 +799,9 @@ const splashG = document.getElementById('splashes');
 const SVG_W = 1920, SVG_H = 1080, HORIZON = 400;
 // Boat starts off-screen left; sails to center as user scrolls past the title card
 const BOAT_REST_X = SVG_W/2;
-const BOAT_REST_Y = 870;
+const BOAT_REST_Y = 720;          // middle of ocean (horizon at 400, sea floor at 1080 → midpoint ~740)
 const BOAT_START_X = -300;            // off-screen left in scene coords
-const BOAT_SAIL_END = 0.40;           // scroll progress where boat reaches center — organic but arrives in the first half of scroll
+const BOAT_SAIL_END = 0.28;           // scroll progress where boat reaches center — boat starts moving right away and arrives by the first third of scroll
 const boat = { x: BOAT_START_X, y: BOAT_REST_Y, vx: 0, vy: 0, targetX: BOAT_START_X, targetY: BOAT_REST_Y, rock: 0 };
 let draggingBoat = false;
 
@@ -1007,7 +1007,7 @@ function scrollProgress() {
   return Math.max(0, Math.min(1, window.scrollY / max));
 }
 // Anchor launch: begins after the boat has sailed in and reached the center
-const ANCHOR_LAUNCH = 0.44; // when progress exceeds this, anchor detaches (just after the boat has settled at center)
+const ANCHOR_LAUNCH = 0.32; // when progress exceeds this, anchor detaches (just after the boat has settled at center)
 function updateAnchorFromScroll() {
   const prog = scrollProgress();
   // seabed Y in document coords
