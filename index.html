@@ -73,7 +73,7 @@
     align-items: center;
     justify-content: flex-end;
     text-align: center;
-    padding: 100px 32px 30vh;
+    padding: 100px 32px 24vh;
     pointer-events: none;
     z-index: 3;
   }
@@ -569,7 +569,7 @@
           <stop offset="1" stop-color="#C9A66B" stop-opacity="0"/>
         </radialGradient>
         <filter id="foamBlur"><feGaussianBlur stdDeviation="1.4"/></filter>
-        <clipPath id="seaClip"><rect x="0" y="400" width="1920" height="680"/></clipPath>
+        <clipPath id="seaClip"><rect x="0" y="360" width="1920" height="720"/></clipPath>
         <radialGradient id="sunGrad" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stop-color="#F7F1E5" stop-opacity="0.95"/>
           <stop offset="0.4" stop-color="#C9A66B" stop-opacity="0.75"/>
@@ -582,8 +582,8 @@
       </defs>
       <circle cx="960" cy="240" r="150" fill="url(#sunGrad)"/>
       <circle cx="960" cy="240" r="64" fill="#FFE4B0" opacity="0.95"/>
-      <rect x="0" y="400" width="1920" height="680" fill="url(#seaGrad)"/>
-      <rect x="0" y="400" width="1920" height="680" fill="url(#sunTrail)"/>
+      <rect x="0" y="360" width="1920" height="720" fill="url(#seaGrad)"/>
+      <rect x="0" y="360" width="1920" height="720" fill="url(#sunTrail)"/>
       <line x1="80" y1="400" x2="1840" y2="400" stroke="rgba(247,241,229,0.16)" stroke-width="1"/>
       <g clip-path="url(#seaClip)">
         <g id="wavesFar" opacity="0.5" stroke="rgba(201,166,107,0.4)" stroke-width="1" fill="none"></g>
@@ -797,7 +797,7 @@ const wakeG = document.getElementById('wake');
 const boatG = document.getElementById('boat');
 const splashG = document.getElementById('splashes');
 
-const SVG_W = 1920, SVG_H = 1080, HORIZON = 400;
+const SVG_W = 1920, SVG_H = 1080, HORIZON = 360;
 // Boat starts off-screen left; sails to center as user scrolls past the title card
 const BOAT_REST_X = SVG_W/2;
 // Boat rests on the water (sea starts at y=560). y=620 = just below waterline so hull sits on the surface.
