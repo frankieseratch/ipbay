@@ -155,7 +155,7 @@
   @media (max-width: 720px) {
     .title-card {
       justify-content: flex-start;
-      padding: 55vh 20px 0;
+      padding: 42vh 20px 0;
     }
     .title-card-mark { font-size: clamp(58px, 18vw, 100px); margin: 8px 0; }
     .title-card-tagline { font-size: 16px; margin: 18px auto 10px; max-width: 90%; }
@@ -510,7 +510,7 @@
 
     .title-card {
       justify-content: flex-start;
-      padding: 55vh 20px 0;
+      padding: 42vh 20px 0;
     }
     .title-card-mark { font-size: clamp(58px, 18vw, 100px); margin: 8px 0; }
     .title-card-tagline { font-size: 16px; margin: 18px auto 10px; max-width: 92%; }
@@ -801,7 +801,7 @@ const SVG_W = 1920, SVG_H = 1080, HORIZON = 400;
 const BOAT_REST_X = SVG_W/2;
 const BOAT_REST_Y = 870;
 const BOAT_START_X = -300;            // off-screen left in scene coords
-const BOAT_SAIL_END = 0.70;           // scroll progress where boat reaches center — slow, organic sail-in across most of the scroll
+const BOAT_SAIL_END = 0.40;           // scroll progress where boat reaches center — organic but arrives in the first half of scroll
 const boat = { x: BOAT_START_X, y: BOAT_REST_Y, vx: 0, vy: 0, targetX: BOAT_START_X, targetY: BOAT_REST_Y, rock: 0 };
 let draggingBoat = false;
 
@@ -1007,7 +1007,7 @@ function scrollProgress() {
   return Math.max(0, Math.min(1, window.scrollY / max));
 }
 // Anchor launch: begins after the boat has sailed in and reached the center
-const ANCHOR_LAUNCH = 0.72; // when progress exceeds this, anchor detaches (just after the boat has settled at center)
+const ANCHOR_LAUNCH = 0.44; // when progress exceeds this, anchor detaches (just after the boat has settled at center)
 function updateAnchorFromScroll() {
   const prog = scrollProgress();
   // seabed Y in document coords
