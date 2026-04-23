@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300..700;1,300..700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<script src="i18n.js" defer></script>
 </head>
 <body>
 
@@ -42,9 +43,9 @@
 <div class="page-header">
   <div class="page-header-bg"></div>
   <div class="page-header-inner">
-    <div class="page-header-sup">Contact</div>
-    <h1 class="page-header-title">Come <em>aboard.</em></h1>
-    <p class="page-header-lede">For producers, studios, financiers, and partners interested in working with Japanese intellectual property, we welcome the conversation.</p>
+    <div class="page-header-sup" data-i18n="contact.sup">Contact</div>
+    <h1 class="page-header-title"><span data-i18n="contact.title">Come</span> <em data-i18n="contact.titleEm">aboard.</em></h1>
+    <p class="page-header-lede" data-i18n="contact.lede">For producers, studios, financiers, and partners interested in working with Japanese intellectual property, we welcome the conversation.</p>
   </div>
 </div>
 
@@ -85,27 +86,27 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label class="form-label" for="first-name">First Name</label>
-            <input class="form-input" type="text" id="first-name" name="First Name" placeholder="First name" required>
+            <label class="form-label" for="first-name" data-i18n="form.firstName">First Name</label>
+            <input class="form-input" type="text" id="first-name" name="First Name" data-i18n-placeholder="form.firstNamePh" placeholder="First name" required>
           </div>
           <div class="form-field">
-            <label class="form-label" for="last-name">Last Name</label>
-            <input class="form-input" type="text" id="last-name" name="Last Name" placeholder="Last name" required>
+            <label class="form-label" for="last-name" data-i18n="form.lastName">Last Name</label>
+            <input class="form-input" type="text" id="last-name" name="Last Name" data-i18n-placeholder="form.lastNamePh" placeholder="Last name" required>
           </div>
         </div>
         <div class="form-field">
-          <label class="form-label" for="company">Company</label>
-          <input class="form-input" type="text" id="company" name="Company" placeholder="Company name">
+          <label class="form-label" for="company" data-i18n="form.company">Company</label>
+          <input class="form-input" type="text" id="company" name="Company" data-i18n-placeholder="form.companyPh" placeholder="Company name">
         </div>
         <div class="form-field">
-          <label class="form-label" for="email">Email</label>
-          <input class="form-input" type="email" id="email" name="Email" placeholder="your@email.com" required>
+          <label class="form-label" for="email" data-i18n="form.email">Email</label>
+          <input class="form-input" type="email" id="email" name="Email" data-i18n-placeholder="form.emailPh" placeholder="your@email.com" required>
         </div>
         <div class="form-field">
-          <label class="form-label" for="message">Message</label>
-          <textarea class="form-textarea" id="message" name="Message" placeholder="Tell us about your project or inquiry" required></textarea>
+          <label class="form-label" for="message" data-i18n="form.message">Message</label>
+          <textarea class="form-textarea" id="message" name="Message" data-i18n-placeholder="form.messagePh" placeholder="Tell us about your project or inquiry" required></textarea>
         </div>
-        <button type="submit" class="form-submit">Send Message</button>
+        <button type="submit" class="form-submit" data-i18n="form.submit">Send Message</button>
       </form>
     </div>
   </div>

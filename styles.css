@@ -177,6 +177,42 @@ body.nav-open .mobile-nav-overlay { display: flex; }
 }
 .nav-logo span { color: var(--accent-warm); font-style: italic; font-weight: 400; }
 
+/* Language toggle pill (EN / 日本語) — injected by i18n.js into every <nav> */
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(247, 241, 229, 0.06);
+  border: 1px solid rgba(247, 241, 229, 0.14);
+  border-radius: 999px;
+  padding: 3px;
+  margin-left: 14px;
+  flex-shrink: 0;
+}
+.lang-toggle-btn {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(247, 241, 229, 0.6);
+  background: transparent;
+  border: 0;
+  padding: 5px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease;
+  line-height: 1;
+}
+.lang-toggle-btn:hover { color: var(--text-on-dark); }
+.lang-toggle-btn.active {
+  background: var(--accent-warm);
+  color: var(--bg-deep);
+}
+@media (max-width: 720px) {
+  .lang-toggle { margin-left: 6px; padding: 2px; }
+  .lang-toggle-btn { font-size: 9.5px; padding: 4px 8px; letter-spacing: 0.08em; }
+}
+
 /* Current page label — hidden on desktop (nav-links shows it there), shown on mobile */
 .nav-current {
   display: none;

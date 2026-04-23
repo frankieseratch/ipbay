@@ -13,6 +13,7 @@
   .legacy-h1 { font-size: clamp(3rem, 8vw, 7rem); white-space: nowrap; line-height: 1; }
   @media (max-width: 600px) { .legacy-h1 { white-space: normal; } }
 </style>
+<script src="i18n.js" defer></script>
 </head>
 <body>
 
@@ -46,9 +47,9 @@
 <div class="page-header">
   <div class="page-header-bg"></div>
   <div class="page-header-inner">
-    <div class="page-header-sup">Legacy</div>
-    <h1 class="page-header-title legacy-h1">Cloverway Inc<em>.</em></h1>
-    <p class="page-header-lede">Founded 1991, onward. IP Bay carries forward the relationships Yasuo Matsuo built across three decades as one of the earliest harbors between Japanese animation and audiences in the Americas.</p>
+    <div class="page-header-sup" data-i18n="legacy.sup">Legacy</div>
+    <h1 class="page-header-title legacy-h1" data-i18n="legacy.title">Cloverway Inc.</h1>
+    <p class="page-header-lede" data-i18n="legacy.lede">Founded 1991, onward. IP Bay carries forward the relationships Yasuo Matsuo built across three decades as one of the earliest harbors between Japanese animation and audiences in the Americas.</p>
   </div>
 </div>
 
@@ -741,8 +742,8 @@
 <div class="closing">
   <div class="closing-bg"></div>
   <div class="closing-content">
-    <h2 class="closing-title">The operating principles<br>we continue to honor.<br><em>The Cloverway Way.</em></h2>
-    <a href="cloverway.html" class="closing-cta">Read the record</a>
+    <h2 class="closing-title"><span data-i18n="legacy.closing">The operating principles we continue to honor.</span><br><em data-i18n="legacy.closingEm">The Cloverway Way.</em></h2>
+    <a href="cloverway.html" class="closing-cta" data-i18n="legacy.closingCta">Read the record</a>
   </div>
 </div>
 
