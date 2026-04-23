@@ -203,7 +203,7 @@
   </div>
 
   <div class="properties-stage">
-    <div class="properties-track">
+    <div class="properties-track" data-row="1">
 
       <article class="property-card" data-mal="813">
         <img class="property-card-img" alt="Dragon Ball Z">
@@ -302,6 +302,8 @@
       </article>
 
     </div>
+    <!-- Second row, populated by JS on mobile only; leads with Saint Seiya and drifts right -->
+    <div class="properties-track properties-track-alt" data-row="2" aria-hidden="true"></div>
   </div>
 
   <div class="section-inner">
@@ -765,65 +767,127 @@
 </footer>
 
 <script>
-/* Properties: load cover art, then clone cards for seamless marquee loop */
-(async function loadCovers() {
-  const cards = document.querySelectorAll('.property-card[data-mal]');
-  const arr = [...cards];
-  for (let i = 0; i < arr.length; i++) {
-    const card = arr[i];
-    const malId = card.dataset.mal;
-    const imgEl = card.querySelector('.property-card-img');
-    if (!imgEl) continue;
-    await new Promise(r => setTimeout(r, i * 140));
-    try {
-      const res = await fetch('https://api.jikan.moe/v4/anime/' + malId, { headers: { 'Accept': 'application/json' } });
-      if (!res.ok) continue;
-      const json = await res.json();
-      const url = (json && json.data && json.data.images && json.data.images.jpg)
-        ? (json.data.images.jpg.large_image_url || json.data.images.jpg.image_url)
-        : null;
-      if (!url) continue;
-      imgEl.src = url;
-    } catch (e) { /* leave fallback gradient */ }
-  }
-  // Clone the row so the JS auto-scroll can loop seamlessly
-  const track = document.querySelector('.properties-track');
+/* Properties: immediate auto-scroll + two-row mobile layout (rows drift in opposite directions) */
+(function() {
   const stage = document.querySelector('.properties-stage');
-  if (track && stage) {
-    arr.forEach(card => {
-      const clone = card.cloneNode(true);
-      clone.setAttribute('aria-hidden', 'true');
-      clone.removeAttribute('data-mal');
-      track.appendChild(clone);
+  const row1 = document.querySelector('.properties-track[data-row="1"]');
+  const row2 = document.querySelector('.properties-track[data-row="2"]');
+  if (!stage || !row1) return;
+
+  const isMobile = window.innerWidth <= 720;
+  const originalCards = [...row1.querySelectorAll('.property-card[data-mal]')];
+  const mirror = []; // parallel arrays of imgs to update when Jikan returns, keyed by original card index
+
+  function buildMirror(card) {
+    const slot = [];
+    originalCards.forEach((orig, i) => { if (orig === card) slot.push(i); });
+    return slot;
+  }
+
+  // Register original imgs
+  const imgsByOriginalIndex = originalCards.map(c => [c.querySelector('.property-card-img')]);
+
+  // 1) Clone row1 cards for seamless loop
+  originalCards.forEach((card, i) => {
+    const clone = card.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.removeAttribute('data-mal');
+    row1.appendChild(clone);
+    imgsByOriginalIndex[i].push(clone.querySelector('.property-card-img'));
+  });
+
+  // 2) On mobile, populate row2: rotated to lead with Saint Seiya (index 2), then clone for loop
+  if (isMobile && row2) {
+    const startIdx = 2; // Saint Seiya — user wants this as the leading card
+    const rotated = [...originalCards.slice(startIdx), ...originalCards.slice(0, startIdx)];
+    // First pass: the visible set
+    rotated.forEach((card) => {
+      const origIdx = originalCards.indexOf(card);
+      const c = card.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      c.removeAttribute('data-mal');
+      row2.appendChild(c);
+      imgsByOriginalIndex[origIdx].push(c.querySelector('.property-card-img'));
     });
-    // Auto-scroll: advance stage.scrollLeft every frame; wrap around at half width.
-    // Never pauses — user swipes/drags add to the flow instead of stopping it.
-    const SPEED = 100; // pixels per second
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!prefersReduced) {
-      let last = performance.now();
-      function loop(now) {
-        const dt = Math.min(0.05, (now - last) / 1000);
-        last = now;
-        const half = track.scrollWidth / 2;
-        if (half > 0) {
-          let next = stage.scrollLeft + SPEED * dt;
-          if (next >= half) next -= half;
-          stage.scrollLeft = next;
-        }
-        requestAnimationFrame(loop);
+    // Second pass: clones for seamless wraparound
+    rotated.forEach((card) => {
+      const origIdx = originalCards.indexOf(card);
+      const c = card.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      c.removeAttribute('data-mal');
+      row2.appendChild(c);
+      imgsByOriginalIndex[origIdx].push(c.querySelector('.property-card-img'));
+    });
+  }
+
+  // 3) Auto-scroll loops. On mobile: each row has its own scroll container (row1/row2 themselves
+  //    become horizontally scrollable via CSS). On desktop: only the outer .properties-stage scrolls.
+  const SPEED = 100; // pixels per second
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function autoScroll(el, direction) {
+    if (!el) return;
+    let last = performance.now();
+    function loop(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      const half = el.scrollWidth / 2;
+      if (half > 0) {
+        let next = el.scrollLeft + direction * SPEED * dt;
+        if (next >= half) next -= half;
+        if (next < 0) next += half;
+        el.scrollLeft = next;
       }
       requestAnimationFrame(loop);
     }
+    requestAnimationFrame(loop);
   }
+
+  if (!prefersReduced) {
+    if (isMobile) {
+      // Each row scrolls itself on mobile (stage is a column container)
+      autoScroll(row1, 1);   // top row drifts left (content moves right-to-left)
+      autoScroll(row2, -1);  // bottom row drifts right (opposite)
+    } else {
+      autoScroll(stage, 1);
+    }
+  }
+
+  // 4) Load cover art in background; mirror into every copy (original + all clones)
+  (async function loadCovers() {
+    for (let i = 0; i < originalCards.length; i++) {
+      const card = originalCards[i];
+      const malId = card.dataset.mal;
+      if (!malId) continue;
+      await new Promise(r => setTimeout(r, i * 140));
+      try {
+        const res = await fetch('https://api.jikan.moe/v4/anime/' + malId, { headers: { 'Accept': 'application/json' } });
+        if (!res.ok) continue;
+        const json = await res.json();
+        const url = (json && json.data && json.data.images && json.data.images.jpg)
+          ? (json.data.images.jpg.large_image_url || json.data.images.jpg.image_url)
+          : null;
+        if (!url) continue;
+        imgsByOriginalIndex[i].forEach(img => { if (img) img.src = url; });
+      } catch (e) { /* leave gradient fallback */ }
+    }
+  })();
 })();
 
-/* Publisher map: letterbox (meet) on mobile so all buoys stay visible; crop (slice) on desktop */
+/* Publisher map: on mobile, zoom in by tightening the viewBox around the content
+   (and use 'meet' so nothing gets cropped). On desktop, the original viewBox + slice. */
 (function() {
   const net = document.getElementById('net');
   if (!net) return;
   function syncAspect() {
-    net.setAttribute('preserveAspectRatio', window.innerWidth <= 720 ? 'xMidYMid meet' : 'xMidYMid slice');
+    if (window.innerWidth <= 720) {
+      net.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      // Tighter viewBox = content fills more of the container (zoomed effect)
+      net.setAttribute('viewBox', '140 50 820 540');
+    } else {
+      net.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+      net.setAttribute('viewBox', '0 0 1100 640');
+    }
   }
   syncAspect();
   let t;

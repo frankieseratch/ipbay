@@ -510,6 +510,8 @@ section {
   padding: 0 48px;
   width: max-content;
 }
+/* Second row is hidden on desktop; revealed by the mobile media query below */
+.properties-track-alt { display: none; }
 .property-card {
   flex: 0 0 340px;
   transition: transform 0.4s ease;
@@ -1307,10 +1309,31 @@ footer {
   .catalog-sub { font-size: 14px; }
   .catalog-count { font-size: 36px; }
 
-  /* Properties carousel */
-  .properties-track { padding: 0 18px; gap: 18px; }
-  .property-card { flex: 0 0 78vw; max-width: 320px; }
-  .property-card-title { font-size: 20px; }
+  /* Properties carousel — two stacked rows, smaller cards, opposite drift directions */
+  .properties-stage {
+    overflow: visible;  /* outer no longer scrolls; each row scrolls itself */
+    display: flex; flex-direction: column;
+    gap: 10px;
+    padding: 14px 0 40px;
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+  .properties-track {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-style: none; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 16px; gap: 10px;
+    /* soft edge fade per row */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
+  }
+  .properties-track::-webkit-scrollbar { display: none; }
+  .properties-track-alt { display: flex; }  /* reveal second row on mobile */
+  .property-card { flex: 0 0 140px; max-width: none; border: 1px solid var(--rule); }
+  .property-card-body { padding: 10px 12px; }
+  .property-card-title { font-size: 13px; line-height: 1.2; margin-bottom: 3px; }
+  .property-card-meta { font-size: 9px; letter-spacing: 0; }
 
   /* Govt + service grids */
   .govt-cards { grid-template-columns: 1fr; }
