@@ -451,7 +451,7 @@
           {id:'tokyopop',label:'Tokyopop',angle:255,dist:260,eyebrow:'North American Publisher · Los Angeles',title:'Tokyopop',body:'Pioneering U.S. manga publisher that helped introduce unflipped right-to-left reading to American audiences, expanding the market for translated Japanese comics in the early 2000s.',founded:'Est. 1997',hq:'Los Angeles, CA'},
           {id:'pioneer',label:'Pioneer',angle:305,dist:340,eyebrow:'North American Distributor · Long Beach',title:'Pioneer Entertainment',body:'U.S. home video arm of Pioneer Corporation, an early anime distributor that brought titles such as Tenchi Muyo! and Serial Experiments Lain to North American viewers.',founded:'Est. 1989',hq:'Long Beach, CA'},
           {id:'adv',label:'ADV Films',angle:35,dist:340,eyebrow:'North American Distributor · Houston',title:'ADV Films',body:'One of the largest independent U.S. anime distributors of its era, licensing and dubbing hundreds of titles, including Neon Genesis Evangelion, for the American market.',founded:'Est. 1992',hq:'Houston, TX'},
-          {id:'bandai-us',label:['Bandai','Entertainment'],angle:85,dist:200,eyebrow:'North American Distributor · Cypress, CA',title:'Bandai Entertainment',body:'The North American anime distribution arm of Bandai, releasing Gundam, Cowboy Bebop, and Lucky Star in the U.S. until its retirement from new releases in 2012.',founded:'Est. 1998',hq:'Cypress, CA'},
+          {id:'bandai-us',label:['Bandai','Ent.'],angle:85,dist:280,eyebrow:'North American Distributor · Cypress, CA',title:'Bandai Entertainment',body:'The North American anime distribution arm of Bandai, releasing Gundam, Cowboy Bebop, and Lucky Star in the U.S. until its retirement from new releases in 2012.',founded:'Est. 1998',hq:'Cypress, CA'},
           {id:'viz-comm',label:['Viz','Comm.'],angle:140,dist:340,eyebrow:'North American Publisher · San Francisco',title:'Viz Communications',body:'The predecessor to today\u2019s Viz Media, a crucial Cloverway-era partner for English manga publishing and one of the earliest companies bringing Shueisha and Shogakukan titles to the U.S.',founded:'Est. 1986',hq:'San Francisco, CA'},
         ],
         broadcast:[
@@ -797,41 +797,23 @@
       track.appendChild(clone);
     });
     // Auto-scroll: advance stage.scrollLeft every frame; wrap around at half width.
-    // Pauses briefly while user is touching/dragging/scrolling manually.
-    const SPEED = 75; // pixels per second — moderately faster than the old 90s CSS marquee
+    // Never pauses — user swipes/drags add to the flow instead of stopping it.
+    const SPEED = 100; // pixels per second
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!prefersReduced) {
-      let paused = false;
-      let resumeTimer;
       let last = performance.now();
       function loop(now) {
         const dt = Math.min(0.05, (now - last) / 1000);
         last = now;
-        if (!paused) {
-          const half = track.scrollWidth / 2;
-          if (half > 0) {
-            let next = stage.scrollLeft + SPEED * dt;
-            if (next >= half) next -= half;
-            // Use direct assignment (no smooth behavior) so the jump at the loop point is invisible
-            stage.scrollLeft = next;
-          }
+        const half = track.scrollWidth / 2;
+        if (half > 0) {
+          let next = stage.scrollLeft + SPEED * dt;
+          if (next >= half) next -= half;
+          stage.scrollLeft = next;
         }
         requestAnimationFrame(loop);
       }
       requestAnimationFrame(loop);
-      function pause() { paused = true; clearTimeout(resumeTimer); }
-      function resumeLater() {
-        clearTimeout(resumeTimer);
-        resumeTimer = setTimeout(function() { paused = false; last = performance.now(); }, 1800);
-      }
-      stage.addEventListener('pointerdown', pause);
-      stage.addEventListener('pointerup', resumeLater);
-      stage.addEventListener('pointercancel', resumeLater);
-      stage.addEventListener('touchstart', pause, { passive: true });
-      stage.addEventListener('touchend', resumeLater, { passive: true });
-      stage.addEventListener('wheel', function() { pause(); resumeLater(); }, { passive: true });
-      stage.addEventListener('mouseenter', pause);
-      stage.addEventListener('mouseleave', resumeLater);
     }
   }
 })();
