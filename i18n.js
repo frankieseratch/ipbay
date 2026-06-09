@@ -22,6 +22,7 @@
       'home.scrollcue': 'Set Sail',
       'home.seabedLede': 'A harbor for Japanese stories. Est. 2026.',
       'home.enterLegacy': 'Enter the Legacy',
+      'home.press': 'Featured in <em style="font-style:italic;font-weight:500;">Variety</em> · May 2026 <span style="margin-left:2px;">→</span>',
       'home.ch1.eyebrow': 'The Vessel',
       'home.ch1.display': 'A harbor for Japanese stories on their <em>voyage</em> to the world.',
       'home.ch1.lede': 'Thirty-five years of publisher relationships. One company that sits at the table from the first Tokyo meeting to the last note on the mix stage. Patiently, faithfully, and in direct partnership with the authors at the source.',
@@ -144,6 +145,7 @@
       'cloverway.quote.attr': 'The Cloverway Operating Principle',
       'cloverway.sources.label': 'Public Record · Independently Verifiable',
       'cloverway.closingCta': 'See services',
+      'cloverway.src.variety': 'Variety, IP Bay Launch (Exclusive), May 2026',
 
       // ───────── Services page
       'services.sup': 'Services',
@@ -271,7 +273,15 @@
       'form.messagePh': 'Tell us about your project or inquiry',
 
       // ───────── Footer
-      'footer.tagline': 'A harbor for Japanese stories.'
+      'footer.tagline': 'A harbor for Japanese stories.',
+
+      // ───────── Cities & ports (landing strips + team footer coords)
+      'cities.home': 'Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> New York',
+      'ports.ashiya': 'Ashiya',
+      'ports.tokyo': 'Tokyo',
+      'ports.la': 'Los Angeles',
+      'ports.brooklyn': 'Brooklyn',
+      'scene.anchorAria': 'Anchor, drag down the page'
     },
 
     ja: {
@@ -290,12 +300,13 @@
       'home.scrollcue': '出航',
       'home.seabedLede': '日本の物語のための港。令和8年（2026）創立。',
       'home.enterLegacy': '沿革を見る',
+      'home.press': '<em style="font-style:normal;font-weight:500;">Variety</em>誌掲載 · 令和8年（2026）5月 <span style="margin-left:2px;">→</span>',
       'home.ch1.eyebrow': '船',
       'home.ch1.display': '日本の物語が、世界への<em>航海</em>に出るための港。',
       'home.ch1.lede': '出版社との三十五年にわたる関係。東京での最初の打ち合わせから、音声仕上げの最後のひと音まで、ずっと同じ席に座り続ける一社。辛抱強く、誠実に、そして原作の著者と直接手を取り合いながら。',
       'home.ch2.eyebrow': '渡航',
       'home.ch2.display': 'ドラゴンボールZ、セーラームーンを太平洋の向こうへ届けた、<em>クローバーウェイ（Cloverway）</em>の歩みの上に。',
-      'home.ch2.lede': '米州（アメリカ大陸）にアニメ市場が生まれる前から、松尾康雄はその市場を築いていました。東映アニメーションの米州における唯一の代理人として、そして集英社、講談社、日本アニメーションから信頼される取次役として。三十年をかけて築かれた関係を、IP Bayが受け継いでいます。',
+      'home.ch2.lede': '米州（アメリカ大陸）にアニメ市場が生まれる前から、松尾泰男はその市場を築いていました。東映アニメーションの米州における唯一の代理人として、そして集英社、講談社、日本アニメーションから信頼される取次役として。三十年をかけて築かれた関係を、IP Bayが受け継いでいます。',
       'home.ch3.eyebrow': '港',
       'home.ch3.display': '仕事の質。パートナーからの信頼。<em>すべての著者への敬意。</em>',
       'home.ch3.lede': '私たちは仲介業者ではありません。取次でもありません。関係を持つ当事者として、最初から最後まで同じ席に座り続けます。三十年にわたる出版社からの信頼に錨を下ろし、この仕事にふさわしい辛抱強さを大切にしています。',
@@ -304,18 +315,18 @@
       // ───────── Legacy
       'legacy.sup': '沿革',
       'legacy.title': 'クローバーウェイ・インク',
-      'legacy.lede': '1991年創立、そして現在へ。IP Bayは、松尾康雄が三十年にわたって築いた関係を受け継いでいます。日本のアニメーションと米州の観客をつないだ、最も初期の港のひとつでした。',
+      'legacy.lede': '1991年創立、そして現在へ。IP Bayは、松尾泰男が三十年にわたって築いた関係を受け継いでいます。日本のアニメーションと米州の観客をつないだ、最も初期の港のひとつでした。',
       'legacy.p1.eyebrow': '私たちの礎',
       'legacy.p1.headline': '<em>日本の作り手</em>への<br>敬意のうえに築かれた<br>礎。',
       'legacy.p1.photoTag': 'クローバーウェイ・インク（Cloverway Inc.）・ロングビーチ、カリフォルニア',
-      'legacy.p1.captionText': '松尾康雄、創業者兼社長、2000年代',
-      'legacy.p1.body1': '1991年、<strong>松尾康雄</strong>はカリフォルニア州ロングビーチにてクローバーウェイ・インク（Cloverway Inc.）を創業しました。日本のアニメーションスタジオと米州の観客をつなぐ独立系の港として、最も早い時期に生まれた会社のひとつです。',
+      'legacy.p1.captionText': '松尾泰男、創業者兼社長、2000年代',
+      'legacy.p1.body1': '1991年、<strong>松尾泰男</strong>はカリフォルニア州ロングビーチにてクローバーウェイ・インク（Cloverway Inc.）を創業しました。日本のアニメーションスタジオと米州の観客をつなぐ独立系の港として、最も早い時期に生まれた会社のひとつです。',
       'legacy.p1.body2': 'セーラームーン、ドラゴンボールZ、聖闘士星矢、スラムダンク。クローバーウェイは一作ずつに敬意をもって向き合い、原作者の創作意図を損なわぬ形で西洋の観客に届けようとする、原権利者と配給パートナーと共に仕事をしてきました。',
-      'legacy.p1.body3': '日本アニメーションを米州で届けようとする者がまだほとんどいなかった時代に、松尾康雄はその市場を築く一助となりました。',
-      'legacy.p2.eyebrow': '松尾康雄、会長',
+      'legacy.p1.body3': '日本アニメーションを米州で届けようとする者がまだほとんどいなかった時代に、松尾泰男はその市場を築く一助となりました。',
+      'legacy.p2.eyebrow': '松尾泰男、会長',
       'legacy.p2.headline': '日本を代表する<br>出版社からの<br><em>信頼できるパートナー。</em>',
-      'legacy.p2.photoTag': '松尾康雄・ロングビーチCA',
-      'legacy.p2.body1': 'クローバーウェイを通じて、松尾康雄は<strong>東映アニメーション米州代理人</strong>を務め、<strong>集英社、小学館、日本アニメーション、手塚プロダクション</strong>から信頼されるパートナーでした。',
+      'legacy.p2.photoTag': '松尾泰男・ロングビーチCA',
+      'legacy.p2.body1': 'クローバーウェイを通じて、松尾泰男は<strong>東映アニメーション米州代理人</strong>を務め、<strong>集英社、小学館、日本アニメーション、手塚プロダクション</strong>から信頼されるパートナーでした。',
       'legacy.p2.body2': 'クローバーウェイは米国にてヴィズ・コミュニケーションズ（Viz Communications）、トーキョーポップ（Tokyopop）、パイオニア・エンタテインメント（Pioneer Entertainment）、バンダイと協業し、ラテンアメリカにおいてはテレビサ（Televisa）、TVアステカ（TV Azteca）、カートゥーン ネットワーク（Cartoon Network）、テレムンド（Telemundo）と共に仕事をしてきました。',
       'legacy.p2.quote': '「集英社や日本アニメーションを含む多くの日本のプロデューサーにとって、クローバーウェイはまだ知り得なかった市場への道案内を信頼して任せられる会社でした。」',
       'legacy.p2.body3': '松尾の姿勢は一貫していました——<strong>原作の創作的な完全性を守ること。</strong>そのような取り組みが一般的ではなかった時代においても、クローバーウェイは扱う作品を検閲することはありませんでした。',
@@ -340,7 +351,7 @@
       'legacy.p4.eyebrow': '敬意の系譜',
       'legacy.p4.headline': '著者の構想が<br>まず最初に来ます。<br><em>常に。</em>',
       'legacy.p4.body1': 'IP Bayでは東京の日本の作り手と密に仕事をしています。これらの物語は、それを生み出した人々のものだからです。<strong>著者への敬意が、私たちの仕事の礎です。</strong>',
-      'legacy.p4.body2': '松尾康雄はひとつの原則のうえにその歩みを築きました——原作の創作的な完全性は守られなければならない。クローバーウェイは扱う作品を検閲せず、その原則は今日のIP Bayのあらゆる仕事の中心に息づいています。',
+      'legacy.p4.body2': '松尾泰男はひとつの原則のうえにその歩みを築きました——原作の創作的な完全性は守られなければならない。クローバーウェイは扱う作品を検閲せず、その原則は今日のIP Bayのあらゆる仕事の中心に息づいています。',
       'legacy.p4.body3': 'そして私たちは、日本の出版社の皆様が今もなお打ち合わせの席を設けてくださる理由もそこにあると考えています。',
       'legacy.p4.badgeTitle': '著者第一',
       'legacy.p4.badgeSub': '創作の完全性・東京',
@@ -412,6 +423,7 @@
       'cloverway.quote.attr': 'クローバーウェイの運営原則',
       'cloverway.sources.label': '公的記録・独立して検証可能',
       'cloverway.closingCta': 'サービスを見る',
+      'cloverway.src.variety': 'Variety誌 — IP Bay発足記事（独占）2026年5月',
 
       // ───────── Services
       'services.sup': 'サービス',
@@ -539,7 +551,15 @@
       'form.messagePh': 'プロジェクトやお問い合わせ内容をお聞かせください',
 
       // ───────── Footer
-      'footer.tagline': '日本の物語のための港。'
+      'footer.tagline': '日本の物語のための港。',
+
+      // ───────── Cities & ports
+      'cities.home': '芦屋 <span class="dot">·</span> 東京 <span class="dot">·</span> ロサンゼルス <span class="dot">·</span> ニューヨーク',
+      'ports.ashiya': '芦屋',
+      'ports.tokyo': '東京',
+      'ports.la': 'ロサンゼルス',
+      'ports.brooklyn': 'ブルックリン',
+      'scene.anchorAria': '錨を下へドラッグしてください'
     }
   };
 
@@ -588,6 +608,11 @@
       var v = t(el.getAttribute('data-i18n-placeholder'));
       if (v) el.setAttribute('placeholder', v);
     });
+    // data-i18n-aria → aria-label attribute (for non-visible screen-reader text)
+    document.querySelectorAll('[data-i18n-aria]').forEach(function (el) {
+      var v = t(el.getAttribute('data-i18n-aria'));
+      if (v) el.setAttribute('aria-label', v);
+    });
     // Nav anchors by href (skip the brand .nav-logo / .wordmark-nav)
     document.querySelectorAll('nav a, .mobile-nav-overlay a, .chrome-top .nav-links a').forEach(function (a) {
       if (a.classList.contains('nav-logo') || a.classList.contains('wordmark-nav')) return;
@@ -614,6 +639,8 @@
       btn.classList.toggle('active', active);
       btn.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
+    // Notify components that render text dynamically (Publisher Network, etc.) to re-render
+    try { window.dispatchEvent(new CustomEvent('ipbay:langchange', { detail: { lang: lang } })); } catch (_) {}
   }
 
   function injectStyles() {

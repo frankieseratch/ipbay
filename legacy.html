@@ -439,31 +439,169 @@
       const gNodes=document.createElementNS(NS,'g');svg.appendChild(gNodes);
       const gCenter=document.createElementNS(NS,'g');svg.appendChild(gCenter);
 
+      // Helpers for Japanese mode — pick _ja field when user has toggled to 日本語
+      function currentLang(){ try { return localStorage.getItem('ipbay:lang')||'en'; } catch(_){ return 'en'; } }
+      function fieldFor(n, f){ var l=currentLang(); return (l==='ja' && n[f+'_ja']) ? n[f+'_ja'] : n[f]; }
+      function labelFor(n){ var l=currentLang(); return (l==='ja' && n.label_ja) ? n.label_ja : n.label; }
+
       const GROUPS={
         publishers:[
-          {id:'shueisha',label:'Shueisha',angle:215,dist:340,eyebrow:'Japanese Publisher · Tokyo',title:'Shueisha',body:'Founded in 1926, Shueisha is one of Japan\u2019s largest publishers and home to Weekly Shōnen Jump, publishers of One Piece, Dragon Ball, and much of the manga that reached the world through Cloverway.',founded:'Est. 1926',hq:'Chiyoda, Tokyo'},
-          {id:'kodansha',label:'Kodansha',angle:260,dist:255,eyebrow:'Japanese Publisher · Tokyo',title:'Kodansha',body:'Founded by Seiji Noma in 1909, Kodansha is among Japan\u2019s largest publishers, the home of Sailor Moon, Attack on Titan, Ghost in the Shell, and Cardcaptor Sakura.',founded:'Est. 1909',hq:'Bunkyō, Tokyo'},
-          {id:'kadokawa',label:'Kadokawa',angle:305,dist:335,eyebrow:'Japanese Publisher · Tokyo',title:'Kadokawa',body:'Founded in 1945 to "revitalize Japanese culture through publishing," Kadokawa is today a major entertainment conglomerate spanning books, anime, film, and games.',founded:'Est. 1945',hq:'Chiyoda, Tokyo'},
-          {id:'bandai',label:'Bandai',angle:355,dist:360,eyebrow:'Toy & IP Holder · Tokyo',title:'Bandai',body:'Japan\u2019s leading toy company and a global entertainment IP owner, home to Gundam, Digimon, and Tamagotchi, now part of Bandai Namco.',founded:'Est. 1950',hq:'Taitō, Tokyo'},
-          {id:'nippon',label:['Nippon','Animation'],angle:35,dist:355,eyebrow:'Animation Studio · Tokyo',title:'Nippon Animation',body:'Longtime producer of the World Masterpiece Theater series and classic adaptations, and a key Cloverway partner for Latin-American broadcast distribution.',founded:'Est. 1975',hq:'Tama, Tokyo'},
-          {id:'shogak',label:['Shogaku-','kan'],angle:85,dist:260,eyebrow:'Japanese Publisher · Tokyo',title:'Shogakukan',body:'Founded in 1922, Shogakukan is one of Japan\u2019s largest publishers and co-owner of Viz Media, publishers of Doraemon, Detective Conan, and Ranma \u00bd.',founded:'Est. 1922',hq:'Chiyoda, Tokyo'},
-          {id:'toei',label:'Toei',angle:175,dist:355,eyebrow:'Animation Studio · Tokyo',title:'Toei Animation',body:'One of the oldest animation studios in Japan, behind Dragon Ball, Sailor Moon, Saint Seiya, Digimon, and One Piece. Cloverway served as its official representative for the Americas.',founded:'Est. 1948',hq:'Nerima, Tokyo'},
+          {id:'shueisha',angle:215,dist:340,
+            label:'Shueisha', label_ja:'集英社',
+            eyebrow:'Japanese Publisher · Tokyo', eyebrow_ja:'日本の出版社・東京',
+            title:'Shueisha', title_ja:'集英社',
+            body:'Founded in 1926, Shueisha is one of Japan\u2019s largest publishers and home to Weekly Shōnen Jump, publishers of One Piece, Dragon Ball, and much of the manga that reached the world through Cloverway.',
+            body_ja:'1926年創立の集英社は日本有数の出版社であり、ONE PIECE、ドラゴンボールをはじめ、クローバーウェイを通じて世界へ届けられたマンガの多くを刊行する週刊少年ジャンプの版元でもあります。',
+            founded:'Est. 1926', founded_ja:'1926年設立',
+            hq:'Chiyoda, Tokyo', hq_ja:'東京・千代田'},
+          {id:'kodansha',angle:260,dist:255,
+            label:'Kodansha', label_ja:'講談社',
+            eyebrow:'Japanese Publisher · Tokyo', eyebrow_ja:'日本の出版社・東京',
+            title:'Kodansha', title_ja:'講談社',
+            body:'Founded by Seiji Noma in 1909, Kodansha is among Japan\u2019s largest publishers, the home of Sailor Moon, Attack on Titan, Ghost in the Shell, and Cardcaptor Sakura.',
+            body_ja:'1909年に野間清治によって創立された講談社は日本有数の出版社であり、セーラームーン、進撃の巨人、攻殻機動隊、カードキャプターさくらの版元です。',
+            founded:'Est. 1909', founded_ja:'1909年設立',
+            hq:'Bunkyō, Tokyo', hq_ja:'東京・文京'},
+          {id:'kadokawa',angle:305,dist:335,
+            label:'Kadokawa', label_ja:'KADOKAWA',
+            eyebrow:'Japanese Publisher · Tokyo', eyebrow_ja:'日本の出版社・東京',
+            title:'Kadokawa', title_ja:'KADOKAWA',
+            body:'Founded in 1945 to "revitalize Japanese culture through publishing," Kadokawa is today a major entertainment conglomerate spanning books, anime, film, and games.',
+            body_ja:'「出版を通じて日本文化を活性化する」ことを旨として1945年に創立されたKADOKAWAは、今日では書籍・アニメ・映画・ゲームにまたがる大手エンタテインメント企業です。',
+            founded:'Est. 1945', founded_ja:'1945年設立',
+            hq:'Chiyoda, Tokyo', hq_ja:'東京・千代田'},
+          {id:'bandai',angle:355,dist:360,
+            label:'Bandai', label_ja:'バンダイ',
+            eyebrow:'Toy & IP Holder · Tokyo', eyebrow_ja:'玩具・IP保有者・東京',
+            title:'Bandai', title_ja:'バンダイ',
+            body:'Japan\u2019s leading toy company and a global entertainment IP owner, home to Gundam, Digimon, and Tamagotchi, now part of Bandai Namco.',
+            body_ja:'日本を代表する玩具メーカーであり、世界的なエンタテインメントIPの保有企業。ガンダム、デジモン、たまごっちを擁し、現在はバンダイナムコの一員です。',
+            founded:'Est. 1950', founded_ja:'1950年設立',
+            hq:'Taitō, Tokyo', hq_ja:'東京・台東'},
+          {id:'nippon',angle:35,dist:355,
+            label:['Nippon','Animation'], label_ja:['日本','アニメーション'],
+            eyebrow:'Animation Studio · Tokyo', eyebrow_ja:'アニメーション制作・東京',
+            title:'Nippon Animation', title_ja:'日本アニメーション',
+            body:'Longtime producer of the World Masterpiece Theater series and classic adaptations, and a key Cloverway partner for Latin-American broadcast distribution.',
+            body_ja:'長年にわたり世界名作劇場シリーズや古典の翻案を手がける制作会社。クローバーウェイにとっては、ラテンアメリカへの放送配給における重要なパートナーでした。',
+            founded:'Est. 1975', founded_ja:'1975年設立',
+            hq:'Tama, Tokyo', hq_ja:'東京・多摩'},
+          {id:'shogak',angle:85,dist:260,
+            label:['Shogaku-','kan'], label_ja:'小学館',
+            eyebrow:'Japanese Publisher · Tokyo', eyebrow_ja:'日本の出版社・東京',
+            title:'Shogakukan', title_ja:'小学館',
+            body:'Founded in 1922, Shogakukan is one of Japan\u2019s largest publishers and co-owner of Viz Media, publishers of Doraemon, Detective Conan, and Ranma \u00bd.',
+            body_ja:'1922年創立の小学館は日本有数の出版社であり、ヴィズ・メディアの共同所有者でもあります。ドラえもん、名探偵コナン、らんま1/2の版元です。',
+            founded:'Est. 1922', founded_ja:'1922年設立',
+            hq:'Chiyoda, Tokyo', hq_ja:'東京・千代田'},
+          {id:'toei',angle:175,dist:355,
+            label:'Toei', label_ja:'東映',
+            eyebrow:'Animation Studio · Tokyo', eyebrow_ja:'アニメーション制作・東京',
+            title:'Toei Animation', title_ja:'東映アニメーション',
+            body:'One of the oldest animation studios in Japan, behind Dragon Ball, Sailor Moon, Saint Seiya, Digimon, and One Piece. Cloverway served as its official representative for the Americas.',
+            body_ja:'日本で最も古いアニメーション制作会社のひとつ。ドラゴンボール、セーラームーン、聖闘士星矢、デジモン、ONE PIECEを手がけ、クローバーウェイは同社の米州における公式代理人を務めました。',
+            founded:'Est. 1948', founded_ja:'1948年設立',
+            hq:'Nerima, Tokyo', hq_ja:'東京・練馬'},
         ],
         us:[
-          {id:'viz',label:['Viz','Media'],angle:200,dist:330,eyebrow:'North American Publisher · San Francisco',title:'Viz Media',body:'The dominant English-language manga and anime publisher in North America, jointly owned by Shueisha and Shogakukan, and a partner to Cloverway since the 1990s.',founded:'Est. 1986',hq:'San Francisco, CA'},
-          {id:'tokyopop',label:'Tokyopop',angle:255,dist:260,eyebrow:'North American Publisher · Los Angeles',title:'Tokyopop',body:'Pioneering U.S. manga publisher that helped introduce unflipped right-to-left reading to American audiences, expanding the market for translated Japanese comics in the early 2000s.',founded:'Est. 1997',hq:'Los Angeles, CA'},
-          {id:'pioneer',label:'Pioneer',angle:305,dist:340,eyebrow:'North American Distributor · Long Beach',title:'Pioneer Entertainment',body:'U.S. home video arm of Pioneer Corporation, an early anime distributor that brought titles such as Tenchi Muyo! and Serial Experiments Lain to North American viewers.',founded:'Est. 1989',hq:'Long Beach, CA'},
-          {id:'adv',label:'ADV Films',angle:35,dist:340,eyebrow:'North American Distributor · Houston',title:'ADV Films',body:'One of the largest independent U.S. anime distributors of its era, licensing and dubbing hundreds of titles, including Neon Genesis Evangelion, for the American market.',founded:'Est. 1992',hq:'Houston, TX'},
-          {id:'bandai-us',label:['Bandai','Ent.'],angle:85,dist:280,eyebrow:'North American Distributor · Cypress, CA',title:'Bandai Entertainment',body:'The North American anime distribution arm of Bandai, releasing Gundam, Cowboy Bebop, and Lucky Star in the U.S. until its retirement from new releases in 2012.',founded:'Est. 1998',hq:'Cypress, CA'},
-          {id:'viz-comm',label:['Viz','Comm.'],angle:140,dist:340,eyebrow:'North American Publisher · San Francisco',title:'Viz Communications',body:'The predecessor to today\u2019s Viz Media, a crucial Cloverway-era partner for English manga publishing and one of the earliest companies bringing Shueisha and Shogakukan titles to the U.S.',founded:'Est. 1986',hq:'San Francisco, CA'},
+          {id:'viz',angle:200,dist:330,
+            label:['Viz','Media'], label_ja:['ヴィズ','メディア'],
+            eyebrow:'North American Publisher · San Francisco', eyebrow_ja:'北米出版社・サンフランシスコ',
+            title:'Viz Media', title_ja:'ヴィズ・メディア（Viz Media）',
+            body:'The dominant English-language manga and anime publisher in North America, jointly owned by Shueisha and Shogakukan, and a partner to Cloverway since the 1990s.',
+            body_ja:'北米における英語版マンガ・アニメの最大手出版社。集英社と小学館の共同出資による運営で、クローバーウェイとは1990年代以来のパートナーです。',
+            founded:'Est. 1986', founded_ja:'1986年設立',
+            hq:'San Francisco, CA', hq_ja:'サンフランシスコ、カリフォルニア'},
+          {id:'tokyopop',angle:255,dist:260,
+            label:'Tokyopop', label_ja:'トーキョーポップ',
+            eyebrow:'North American Publisher · Los Angeles', eyebrow_ja:'北米出版社・ロサンゼルス',
+            title:'Tokyopop', title_ja:'トーキョーポップ（Tokyopop）',
+            body:'Pioneering U.S. manga publisher that helped introduce unflipped right-to-left reading to American audiences, expanding the market for translated Japanese comics in the early 2000s.',
+            body_ja:'右から左へのページ読みを反転せずにアメリカの読者へ紹介した先駆的な米国マンガ出版社。2000年代初頭、翻訳マンガの市場を拡大しました。',
+            founded:'Est. 1997', founded_ja:'1997年設立',
+            hq:'Los Angeles, CA', hq_ja:'ロサンゼルス、カリフォルニア'},
+          {id:'pioneer',angle:305,dist:340,
+            label:'Pioneer', label_ja:'パイオニア',
+            eyebrow:'North American Distributor · Long Beach', eyebrow_ja:'北米配給会社・ロングビーチ',
+            title:'Pioneer Entertainment', title_ja:'パイオニア・エンタテインメント',
+            body:'U.S. home video arm of Pioneer Corporation, an early anime distributor that brought titles such as Tenchi Muyo! and Serial Experiments Lain to North American viewers.',
+            body_ja:'パイオニア株式会社の米国ホームビデオ部門。天地無用！やシリアルエクスペリメンツ・レインなど、初期のアニメを北米の視聴者へ届けた配給会社です。',
+            founded:'Est. 1989', founded_ja:'1989年設立',
+            hq:'Long Beach, CA', hq_ja:'ロングビーチ、カリフォルニア'},
+          {id:'adv',angle:35,dist:340,
+            label:'ADV Films', label_ja:'ADV フィルムズ',
+            eyebrow:'North American Distributor · Houston', eyebrow_ja:'北米配給会社・ヒューストン',
+            title:'ADV Films', title_ja:'ADV フィルムズ（ADV Films）',
+            body:'One of the largest independent U.S. anime distributors of its era, licensing and dubbing hundreds of titles, including Neon Genesis Evangelion, for the American market.',
+            body_ja:'当時の米国における最大級の独立系アニメ配給会社のひとつ。新世紀エヴァンゲリオンを含む数百作品をアメリカ市場向けにライセンスし吹替制作しました。',
+            founded:'Est. 1992', founded_ja:'1992年設立',
+            hq:'Houston, TX', hq_ja:'ヒューストン、テキサス'},
+          {id:'bandai-us',angle:85,dist:280,
+            label:['Bandai','Ent.'], label_ja:['バンダイ','エンタ'],
+            eyebrow:'North American Distributor · Cypress, CA', eyebrow_ja:'北米配給会社・サイプレス、CA',
+            title:'Bandai Entertainment', title_ja:'バンダイ・エンタテインメント',
+            body:'The North American anime distribution arm of Bandai, releasing Gundam, Cowboy Bebop, and Lucky Star in the U.S. until its retirement from new releases in 2012.',
+            body_ja:'バンダイの北米アニメ配給部門。ガンダム、カウボーイビバップ、らき☆すたを米国で発売し、2012年に新作のリリースから退きました。',
+            founded:'Est. 1998', founded_ja:'1998年設立',
+            hq:'Cypress, CA', hq_ja:'サイプレス、カリフォルニア'},
+          {id:'viz-comm',angle:140,dist:340,
+            label:['Viz','Comm.'], label_ja:['ヴィズ','コム'],
+            eyebrow:'North American Publisher · San Francisco', eyebrow_ja:'北米出版社・サンフランシスコ',
+            title:'Viz Communications', title_ja:'ヴィズ・コミュニケーションズ',
+            body:'The predecessor to today\u2019s Viz Media, a crucial Cloverway-era partner for English manga publishing and one of the earliest companies bringing Shueisha and Shogakukan titles to the U.S.',
+            body_ja:'今日のヴィズ・メディアの前身。クローバーウェイの時代における英語版マンガ出版の重要なパートナーであり、集英社・小学館の作品を米国へ最も早期に届けた会社のひとつです。',
+            founded:'Est. 1986', founded_ja:'1986年設立',
+            hq:'San Francisco, CA', hq_ja:'サンフランシスコ、カリフォルニア'},
         ],
         broadcast:[
-          {id:'televisa',label:'Televisa',angle:210,dist:340,eyebrow:'Broadcaster · Mexico City',title:'Televisa',body:'The largest Spanish-language broadcaster in the world, and a key Cloverway partner for bringing Saint Seiya, Dragon Ball Z, and Sailor Moon to audiences across Latin America.',founded:'Est. 1973',hq:'Mexico City, MX'},
-          {id:'azteca',label:['TV','Azteca'],angle:270,dist:270,eyebrow:'Broadcaster · Mexico City',title:'TV Azteca',body:'Mexico\u2019s second-largest broadcaster. Alongside Televisa, TV Azteca aired many of the anime properties that defined a generation of Mexican and Latin-American viewers.',founded:'Est. 1993',hq:'Mexico City, MX'},
-          {id:'cn',label:['Cartoon','Network'],angle:325,dist:340,eyebrow:'Broadcaster · Atlanta',title:'Cartoon Network',body:'The U.S. cable channel whose Toonami block made anime a mainstream phenomenon, airing Dragon Ball Z, Sailor Moon, and Gundam to millions of American viewers.',founded:'Est. 1992',hq:'Atlanta, GA'},
-          {id:'foxkids',label:'Fox Kids',angle:35,dist:340,eyebrow:'Broadcaster · United States',title:'Fox Kids',body:'Saturday-morning children\u2019s block on the Fox network, an early U.S. broadcaster of Japanese animation alongside its Mighty Morphin Power Rangers franchise.',founded:'Est. 1990',hq:'Los Angeles, CA'},
-          {id:'telemundo',label:'Telemundo',angle:90,dist:260,eyebrow:'Broadcaster · Miami',title:'Telemundo',body:'The second-largest Spanish-language broadcaster in the United States, and a Cloverway-era distribution partner that carried Dragon Ball Z to the U.S. Hispanic market in 1995.',founded:'Est. 1984',hq:'Miami, FL'},
-          {id:'univision',label:'Univision',angle:150,dist:340,eyebrow:'Broadcaster · Miami',title:'Univision',body:'The largest Spanish-language broadcaster in the United States, and a key network in Cloverway\u2019s distribution reach across the U.S. Hispanic audience.',founded:'Est. 1962',hq:'Miami, FL'},
+          {id:'televisa',angle:210,dist:340,
+            label:'Televisa', label_ja:'テレビサ',
+            eyebrow:'Broadcaster · Mexico City', eyebrow_ja:'放送局・メキシコシティ',
+            title:'Televisa', title_ja:'テレビサ（Televisa）',
+            body:'The largest Spanish-language broadcaster in the world, and a key Cloverway partner for bringing Saint Seiya, Dragon Ball Z, and Sailor Moon to audiences across Latin America.',
+            body_ja:'世界最大のスペイン語放送局。クローバーウェイにとっては、聖闘士星矢、ドラゴンボールZ、セーラームーンをラテンアメリカ各地の視聴者へ届けるうえでの中心的なパートナーでした。',
+            founded:'Est. 1973', founded_ja:'1973年設立',
+            hq:'Mexico City, MX', hq_ja:'メキシコシティ、メキシコ'},
+          {id:'azteca',angle:270,dist:270,
+            label:['TV','Azteca'], label_ja:['TV','アステカ'],
+            eyebrow:'Broadcaster · Mexico City', eyebrow_ja:'放送局・メキシコシティ',
+            title:'TV Azteca', title_ja:'TVアステカ（TV Azteca）',
+            body:'Mexico\u2019s second-largest broadcaster. Alongside Televisa, TV Azteca aired many of the anime properties that defined a generation of Mexican and Latin-American viewers.',
+            body_ja:'メキシコ第二の放送局。テレビサと共に、メキシコおよびラテンアメリカのひと世代の視聴者を形づくった多くのアニメ作品を放映しました。',
+            founded:'Est. 1993', founded_ja:'1993年設立',
+            hq:'Mexico City, MX', hq_ja:'メキシコシティ、メキシコ'},
+          {id:'cn',angle:325,dist:340,
+            label:['Cartoon','Network'], label_ja:['カートゥーン','ネットワーク'],
+            eyebrow:'Broadcaster · Atlanta', eyebrow_ja:'放送局・アトランタ',
+            title:'Cartoon Network', title_ja:'カートゥーン ネットワーク（Cartoon Network）',
+            body:'The U.S. cable channel whose Toonami block made anime a mainstream phenomenon, airing Dragon Ball Z, Sailor Moon, and Gundam to millions of American viewers.',
+            body_ja:'アニメを主流文化の現象へと押し上げたトゥナミ（Toonami）枠を擁する米国のケーブル放送局。ドラゴンボールZ、セーラームーン、ガンダムを数百万人のアメリカの視聴者へ届けました。',
+            founded:'Est. 1992', founded_ja:'1992年設立',
+            hq:'Atlanta, GA', hq_ja:'アトランタ、ジョージア'},
+          {id:'foxkids',angle:35,dist:340,
+            label:'Fox Kids', label_ja:'フォックス・キッズ',
+            eyebrow:'Broadcaster · United States', eyebrow_ja:'放送局・米国',
+            title:'Fox Kids', title_ja:'フォックス・キッズ（Fox Kids）',
+            body:'Saturday-morning children\u2019s block on the Fox network, an early U.S. broadcaster of Japanese animation alongside its Mighty Morphin Power Rangers franchise.',
+            body_ja:'フォックス系列の土曜朝の子ども向け番組枠。マイティ・モーフィン・パワーレンジャー・シリーズと並び、日本アニメの初期の米国における放送局のひとつでした。',
+            founded:'Est. 1990', founded_ja:'1990年設立',
+            hq:'Los Angeles, CA', hq_ja:'ロサンゼルス、カリフォルニア'},
+          {id:'telemundo',angle:90,dist:260,
+            label:'Telemundo', label_ja:'テレムンド',
+            eyebrow:'Broadcaster · Miami', eyebrow_ja:'放送局・マイアミ',
+            title:'Telemundo', title_ja:'テレムンド（Telemundo）',
+            body:'The second-largest Spanish-language broadcaster in the United States, and a Cloverway-era distribution partner that carried Dragon Ball Z to the U.S. Hispanic market in 1995.',
+            body_ja:'米国内で第二位のスペイン語放送局。クローバーウェイの時代における配給パートナーとして、1995年にドラゴンボールZを米国のヒスパニック市場へ届けました。',
+            founded:'Est. 1984', founded_ja:'1984年設立',
+            hq:'Miami, FL', hq_ja:'マイアミ、フロリダ'},
+          {id:'univision',angle:150,dist:340,
+            label:'Univision', label_ja:'ユニビジョン',
+            eyebrow:'Broadcaster · Miami', eyebrow_ja:'放送局・マイアミ',
+            title:'Univision', title_ja:'ユニビジョン（Univision）',
+            body:'The largest Spanish-language broadcaster in the United States, and a key network in Cloverway\u2019s distribution reach across the U.S. Hispanic audience.',
+            body_ja:'米国最大のスペイン語放送局。クローバーウェイの米国ヒスパニック視聴者向け配給網における重要なネットワークのひとつでした。',
+            founded:'Est. 1962', founded_ja:'1962年設立',
+            hq:'Miami, FL', hq_ja:'マイアミ、フロリダ'},
         ],
       };
 
@@ -482,24 +620,38 @@
 
       const C={x:CX,y:CY,vx:0,vy:0,rx:CX,ry:CY,dragged:false,tx:null,ty:null,pulse:0};
 
+      function renderLabel(n){
+        // Reset and rebuild the text/tspan content of a node label based on current language
+        if(!n.labelEl) return;
+        while(n.labelEl.firstChild) n.labelEl.removeChild(n.labelEl.firstChild);
+        const lbl = labelFor(n);
+        if(Array.isArray(lbl)){
+          const l1=document.createElementNS(NS,'tspan');l1.setAttribute('x','0');l1.setAttribute('dy','-7');l1.textContent=lbl[0];
+          const l2=document.createElementNS(NS,'tspan');l2.setAttribute('x','0');l2.setAttribute('dy','16');l2.textContent=lbl[1];
+          n.labelEl.appendChild(l1);n.labelEl.appendChild(l2);
+        }else{
+          n.labelEl.textContent=lbl;
+        }
+      }
       function buildNodeSVG(n){
         const p=document.createElementNS(NS,'path');p.setAttribute('class','link');gLinks.appendChild(p);n.pathEl=p;
         const g=document.createElementNS(NS,'g');g.setAttribute('class','node-grp');
         const sh=document.createElementNS(NS,'ellipse');sh.setAttribute('cx','0');sh.setAttribute('cy',RADIUS+10);sh.setAttribute('rx',RADIUS*0.65);sh.setAttribute('ry','4');sh.setAttribute('fill','rgba(40,60,60,0.25)');sh.setAttribute('filter','url(#softGlow)');g.appendChild(sh);
         const halo=document.createElementNS(NS,'circle');halo.setAttribute('class','node-halo');halo.setAttribute('r',RADIUS*1.9);halo.setAttribute('fill','url(#litFill)');halo.setAttribute('filter','url(#hotGlow)');halo.setAttribute('opacity','0');g.appendChild(halo);n.haloEl=halo;
         const c=document.createElementNS(NS,'circle');c.setAttribute('class','node');c.setAttribute('r',RADIUS);c.setAttribute('fill','url(#nodeFill)');c.setAttribute('filter','url(#softGlow)');g.appendChild(c);n.circleEl=c;
-        if(Array.isArray(n.label)){
-          const t=document.createElementNS(NS,'text');t.setAttribute('class','node-label');
-          const l1=document.createElementNS(NS,'tspan');l1.setAttribute('x','0');l1.setAttribute('dy','-7');l1.textContent=n.label[0];
-          const l2=document.createElementNS(NS,'tspan');l2.setAttribute('x','0');l2.setAttribute('dy','16');l2.textContent=n.label[1];
-          t.appendChild(l1);t.appendChild(l2);g.appendChild(t);
-        }else{
-          const t=document.createElementNS(NS,'text');t.setAttribute('class','node-label');t.textContent=n.label;g.appendChild(t);
-        }
+        const t=document.createElementNS(NS,'text');t.setAttribute('class','node-label');g.appendChild(t);
+        n.labelEl=t;
+        renderLabel(n);
         gNodes.appendChild(g);n.groupEl=g;
         c.addEventListener('pointerdown',(ev)=>{ev.stopPropagation();igniteNode(n)});
       }
       Object.values(GROUPS).forEach(list=>list.forEach(buildNodeSVG));
+
+      // Re-render labels and open card when user toggles EN/日本語
+      window.addEventListener('ipbay:langchange', function(){
+        Object.values(GROUPS).forEach(list=>list.forEach(renderLabel));
+        if(currentLit) showCard(currentLit);
+      });
 
       // ————— Anchor apparatus behind/around the ring —————
       const gAnchor=document.createElementNS(NS,'g');gCenter.appendChild(gAnchor);
@@ -621,11 +773,11 @@
         })(start);
       }
       function showCard(n){
-        cardEyebrow.textContent=n.eyebrow;
-        cardTitle.textContent=n.title;
-        cardBody.textContent=n.body;
-        cardFounded.textContent=n.founded;
-        cardHQ.textContent=n.hq;
+        cardEyebrow.textContent=fieldFor(n,'eyebrow');
+        cardTitle.textContent=fieldFor(n,'title');
+        cardBody.textContent=fieldFor(n,'body');
+        cardFounded.textContent=fieldFor(n,'founded');
+        cardHQ.textContent=fieldFor(n,'hq');
         card.classList.add('open');
       }
 

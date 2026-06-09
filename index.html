@@ -604,7 +604,7 @@
     </svg>
   </div>
   <!-- Anchor itself (HTML, positioned in viewport coords) -->
-  <div id="anchorWrap" aria-label="Anchor, drag down the page">
+  <div id="anchorWrap" aria-label="Anchor, drag down the page" data-i18n-aria="scene.anchorAria">
     <svg viewBox="0 0 72 96" width="40" height="54" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="ironG" x1="0" y1="0" x2="0" y2="1">
@@ -678,7 +678,7 @@
 </div>
 <div class="chrome-bottom">
   <div class="cities-bottom">
-    Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> New York
+    <span data-i18n-html="cities.home">Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> New York</span>
   </div>
   <span></span>
 </div>
@@ -732,7 +732,14 @@
       <div class="rule"></div>
       <p class="lede" data-i18n="home.seabedLede" style="margin-top:28px;">A harbor for Japanese stories. Est. 2026.</p>
       <div class="cities-row">
-        Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> New York
+        <span data-i18n-html="cities.home">Ashiya <span class="dot">·</span> Tokyo <span class="dot">·</span> Los Angeles <span class="dot">·</span> New York</span>
+      </div>
+      <div style="margin-top: 36px; text-align: center;">
+        <a href="https://variety.com/2026/film/markets-festivals/dragon-ball-z-yasuo-matsuo-ip-bay-1236747229/" target="_blank" rel="noopener noreferrer"
+           style="display:inline-flex;align-items:baseline;gap:8px;font-family:var(--font-serif);font-style:italic;font-size:14px;letter-spacing:0.02em;color:var(--accent-warm);text-decoration:none;opacity:0.88;transition:opacity 0.3s ease,transform 0.3s ease;"
+           onmouseover="this.style.opacity=1;this.style.transform='translateY(-1px)'"
+           onmouseout="this.style.opacity=0.88;this.style.transform='translateY(0)'"
+           data-i18n-html="home.press">Featured in <em style="font-style:italic;font-weight:500;">Variety</em> · May 2026 <span style="margin-left:2px;">→</span></a>
       </div>
       <div style="margin-top: 24px; display: flex; justify-content: center;">
         <a href="legacy.html" class="landing-legacy-cta"><span data-i18n="home.enterLegacy">Enter the Legacy</span> <span style="margin-left:10px;color:inherit;">→</span></a>
